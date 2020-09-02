@@ -1,3 +1,6 @@
 add_cpp_library_tests(SHARED ${PROJECT_NAME}
                       STATIC ${PROJECT_NAME}-static
-                      SOURCES core_tests.cpp)
+                      SOURCES
+                      uuid_tests.cpp
+                      hash_tests.cpp
+                      )

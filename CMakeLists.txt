@@ -16,8 +16,8 @@ set_build_type_if_undefined()
 
 project(core
         VERSION 0.1.0
-#        DESCRIPTION ""
-#        HOMEPAGE_URL ""
+        DESCRIPTION "C++ core functions."
+        HOMEPAGE_URL "https://github.com/arapelle/core"
         LANGUAGES CXX)
 
 message(STATUS "BUILD   : ${CMAKE_BUILD_TYPE}")
@@ -32,12 +32,14 @@ library_build_options(${PROJECT_NAME} STATIC SHARED EXAMPLE TEST)
 
 # Headers:
 set(headers
-include/core/core.hpp
+include/core/hash.hpp
+include/core/uuid.hpp
 )
 
 # Sources:
 set(sources
-src/core.cpp
+src/hash.cpp
+src/uuid.cpp
 )
 
 # Add C++ library
