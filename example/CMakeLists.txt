@@ -1,3 +1,3 @@
 add_cpp_library_examples(SHARED ${PROJECT_NAME}
                          STATIC ${PROJECT_NAME}-static
-                         SOURCES core_example.cpp)
+                         SOURCES uuid_example.cpp)
