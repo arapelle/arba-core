@@ -15,7 +15,7 @@ set_build_type_if_undefined()
 # C++ PROJECT
 
 project(core
-        VERSION 0.1.0
+        VERSION 0.1.1
         DESCRIPTION "C++ core functions."
         HOMEPAGE_URL "https://github.com/arapelle/core"
         LANGUAGES CXX)
@@ -58,6 +58,7 @@ add_cpp_library(${PROJECT_NAME} ${PROJECT_NAME}_BUILD_SHARED_LIB ${PROJECT_NAME}
 install_cpp_library_targets(${PROJECT_NAME}
                             TARGETS ${project_targets}
                             INCLUDE_DIRECTORIES "include/${PROJECT_NAME}"
+                            NAMESPACE ${PROJECT_NAME}::
                             )
 
 # Install package
