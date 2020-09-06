@@ -1,6 +1,6 @@
 # Concept #
 
-C++ core tools (UUID class, hash function, ...)
+C++ core tools (UUID class, hash functions, htow/wtoh...)
 
 See [task board](https://app.gitkraken.com/glo/board/X0_o9z2bBQARuity) for future updates and features.
 

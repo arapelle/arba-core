@@ -15,7 +15,7 @@ set_build_type_if_undefined()
 # C++ PROJECT
 
 project(core
-        VERSION 0.2.0
+        VERSION 0.3.0
         DESCRIPTION "C++ core functions."
         HOMEPAGE_URL "https://github.com/arapelle/core"
         LANGUAGES CXX)
@@ -34,6 +34,8 @@ library_build_options(${PROJECT_NAME} STATIC SHARED EXAMPLE TEST)
 set(headers
 include/core/hash.hpp
 include/core/uuid.hpp
+include/core/byte_swap.hpp
+include/core/htow.hpp
 )
 
 # Sources:
