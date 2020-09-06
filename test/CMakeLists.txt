@@ -3,4 +3,6 @@ add_cpp_library_tests(SHARED ${PROJECT_NAME}
                       SOURCES
                       uuid_tests.cpp
                       hash_tests.cpp
+                      byte_swap_tests.cpp
+                      htow_tests.cpp
                       )

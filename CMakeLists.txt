@@ -34,6 +34,8 @@ library_build_options(${PROJECT_NAME} STATIC SHARED EXAMPLE TEST)
 set(headers
 include/core/hash.hpp
 include/core/uuid.hpp
+include/core/byte_swap.hpp
+include/core/htow.hpp
 )
 
 # Sources:
