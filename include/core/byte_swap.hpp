@@ -70,15 +70,29 @@ inline char32_t byte_swap(char32_t value)
 inline float byte_swap(float value)
 {
     static_assert(sizeof(float) == sizeof(uint32_t));
-    uint32_t result = byte_swap(*reinterpret_cast<uint32_t*>(&value));
-    return *reinterpret_cast<float*>(&result);
+    static_assert(std::numeric_limits<float>::is_iec559);
+    union float_uint_convertor
+    {
+        float fval;
+        uint32_t uval;
+    }
+    convertor{.fval=value};
+    convertor.uval = byte_swap(convertor.uval);
+    return convertor.fval;
 }
 
 inline double byte_swap(double value)
 {
     static_assert(sizeof(double) == sizeof(uint64_t));
-    uint64_t result = byte_swap(*reinterpret_cast<uint64_t*>(&value));
-    return *reinterpret_cast<double*>(&result);
+    static_assert(std::numeric_limits<double>::is_iec559);
+    union double_uint_convertor
+    {
+        double dval;
+        uint64_t uval;
+    }
+    convertor{.dval=value};
+    convertor.uval = byte_swap(convertor.uval);
+    return convertor.dval;
 }
 
 template <typename T>
