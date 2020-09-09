@@ -4,8 +4,8 @@ project(basic_cmake_project)
 
 add_executable(${PROJECT_NAME} main.cpp)
 # Find package core:
-find_package(core 0.3.0 CONFIG REQUIRED)
+find_package(core 0.3.1 CONFIG REQUIRED)
 # Use core release shared target:
-target_link_libraries(${PROJECT_NAME} PRIVATE core::core)
+target_link_libraries(${PROJECT_NAME} PRIVATE arba::core)
 # Use core release static target:
-#target_link_libraries(${PROJECT_NAME} PRIVATE core::core-static)
+#target_link_libraries(${PROJECT_NAME} PRIVATE arba::core-static)
