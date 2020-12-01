@@ -84,7 +84,6 @@ public:
     intrusive_ptr(std::nullptr_t = nullptr) {}
     explicit intrusive_ptr(value_type* node);
     intrusive_ptr(const intrusive_ptr& node);
-    intrusive_ptr(intrusive_ptr& node);
     intrusive_ptr(intrusive_ptr&& node);
 
     template <typename Up>
@@ -108,16 +107,12 @@ public:
     value_type* release() noexcept;
     void reset(value_type* pointer = nullptr) noexcept;
 
-    inline const value_type& operator*() const noexcept { return *get(); }
-    inline value_type& operator*() noexcept { return *get(); }
-    inline operator const value_type*() const noexcept { return get(); }
-    inline operator value_type*() noexcept { return get(); }
-    inline const value_type* operator->() const noexcept { return get(); }
-    inline value_type* operator->() noexcept { return get(); }
+    inline value_type& operator*() const noexcept { return *get(); }
+    inline operator value_type*() const noexcept { return get(); }
+    inline value_type* operator->() const noexcept { return get(); }
     inline operator bool() const { return get() != nullptr; }
 
-    inline const value_type* get() const { return pointer_; }
-    inline value_type* get() { return pointer_; }
+    inline value_type* get() const { return pointer_; }
 
     inline void swap(intrusive_ptr& other) { std::swap(pointer_, other.pointer_); }
     inline auto operator<=>(const intrusive_ptr&) const = default;
@@ -136,15 +131,7 @@ inline intrusive_ptr<Type>::intrusive_ptr(Type* node)
 
 template <class Type>
 inline intrusive_ptr<Type>::intrusive_ptr(const intrusive_ptr& node)
-    : pointer_(node.get())
-{
-    if (pointer_)
-        intrusive_ptr_add_ref(pointer_);
-}
-
-template <class Type>
-inline intrusive_ptr<Type>::intrusive_ptr(intrusive_ptr& node)
-    : pointer_(node.get())
+    : pointer_(node.pointer_)
 {
     if (pointer_)
         intrusive_ptr_add_ref(pointer_);
