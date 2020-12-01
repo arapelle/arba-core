@@ -1,4 +1,6 @@
 #include <core/intrusive_ptr.hpp>
+#include <unordered_set>
+#include <set>
 #include <gtest/gtest.h>
 
 struct simple_data
@@ -390,6 +392,20 @@ TEST(intrusive_ptr_ircnt_data_tests, test_iptr_hash)
         ASSERT_EQ(std::hash<core::intrusive_ptr<ircnt_data>>{}(iptr), std::hash<core::intrusive_ptr<ircnt_data>>{}(ptr));
     }
     ASSERT_FALSE(valid);
+}
+
+TEST(intrusive_ptr_ircnt_data_tests, test_iptr_set_and_uset)
+{
+    bool b_set = true;
+    bool b_uset = true;
+    {
+        std::set<core::intrusive_ptr<ircnt_data>> iptr_set;
+        iptr_set.insert(core::intrusive_ptr<ircnt_data>(new ircnt_data(b_set)));
+        std::unordered_set<core::intrusive_ptr<ircnt_data>> iptr_uset;
+        iptr_uset.insert(core::intrusive_ptr<ircnt_data>(new ircnt_data(b_uset)));
+    }
+    ASSERT_FALSE(b_set);
+    ASSERT_FALSE(b_uset);
 }
 
 int main(int argc, char** argv)
