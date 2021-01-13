@@ -32,10 +32,12 @@ library_build_options(${PROJECT_NAME} STATIC SHARED EXAMPLE TEST)
 
 # Headers:
 set(headers
-include/core/hash.hpp
-include/core/uuid.hpp
 include/core/byte_swap.hpp
+include/core/hash.hpp
 include/core/htow.hpp
+include/core/intrusive_ptr.hpp
+include/core/string_tokenizer.hpp
+include/core/uuid.hpp
 )
 
 # Sources:
