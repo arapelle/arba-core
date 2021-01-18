@@ -37,6 +37,7 @@ include/core/hash.hpp
 include/core/htow.hpp
 include/core/intrusive_ptr.hpp
 include/core/string_tokenizer.hpp
+include/core/string.hpp
 include/core/uuid.hpp
 )
 
