@@ -180,6 +180,12 @@ inline void intrusive_ptr<Type>::reset(Type* pointer) noexcept
         intrusive_ptr_add_ref(pointer_);
 }
 
+
+template <class val_type, class... args_types>
+intrusive_ptr<val_type> make_intrusive_ptr(args_types&&... args)
+{
+    return intrusive_ptr<val_type>(new val_type(std::forward<args_types>(args)...));
+}
 }
 
 namespace std

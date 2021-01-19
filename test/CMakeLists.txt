@@ -6,4 +6,6 @@ add_cpp_library_tests(SHARED ${PROJECT_NAME}
                       byte_swap_tests.cpp
                       htow_tests.cpp
                       intrusive_ptr_tests.cpp
+                      string_tokenizer_tests.cpp
+                      string_tests.cpp
                       )
