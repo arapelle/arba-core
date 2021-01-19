@@ -408,6 +408,43 @@ TEST(intrusive_ptr_ircnt_data_tests, test_iptr_set_and_uset)
     ASSERT_FALSE(b_uset);
 }
 
+//-------------------------------------------------------
+
+TEST(intrusive_ptr_ircnt_data_tests, test_make_iptr)
+{
+    bool valid = false;
+    {
+        core::intrusive_ptr<ircnt_data> iptr = core::make_intrusive_ptr<ircnt_data>(valid, "make_iptr");
+        ASSERT_TRUE(valid);
+        ASSERT_NE(iptr.get(), nullptr);
+        ASSERT_EQ(iptr->text, "make_iptr");
+    }
+    ASSERT_FALSE(valid);
+}
+
+struct mkiptr_data : public core::intrusive_ref_counter<mkiptr_data>
+{
+    std::string text;
+    bool* valid = nullptr;
+
+    explicit mkiptr_data(bool& valid, std::string&& text) : text(std::forward<std::string>(text)), valid(&valid) { valid = true; }
+    ~mkiptr_data() { *valid = false; }
+};
+
+TEST(intrusive_ptr_ircnt_data_tests, test_make_iptr_2)
+{
+    bool valid = false;
+    {
+        std::string str("move!");
+        core::intrusive_ptr<mkiptr_data> iptr = core::make_intrusive_ptr<mkiptr_data>(valid, std::move(str));
+        ASSERT_TRUE(valid);
+        ASSERT_NE(iptr.get(), nullptr);
+        ASSERT_EQ(iptr->text, "move!");
+        ASSERT_EQ(str, "");
+    }
+    ASSERT_FALSE(valid);
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
