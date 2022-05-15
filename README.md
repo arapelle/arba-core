@@ -27,7 +27,7 @@ cmake -P cmake_quick_install.cmake
 ```
 Use the following to quickly install a different mode.
 ```
-cmake -DCMAKE_BUILD_TYPE=Debug -P cmake_quick_install.cmake
+cmake -P cmake_quick_install.cmake -- TESTS BUILD Debug DIR /tmp/local
 ```
 
 ## Uninstall ##
