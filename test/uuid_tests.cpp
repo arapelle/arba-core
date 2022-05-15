@@ -2,7 +2,6 @@
 #include <gtest/gtest.h>
 #include <sstream>
 #include <cstdlib>
-#include <iostream>
 
 TEST(core_tests, test_uuid_constructor)
 {
