@@ -14,8 +14,10 @@ set_build_type_if_undefined()
 #-----
 # C++ PROJECT
 
-project(core
-        VERSION 0.9
+set(PROJECT_NAME core)
+set(PROJECT_VERSION 0.10)
+project(${PROJECT_NAME}
+        VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
         HOMEPAGE_URL "https://github.com/arapelle/core"
         LANGUAGES CXX)
@@ -40,12 +42,14 @@ include/core/string_tokenizer.hpp
 include/core/string.hpp
 include/core/uuid.hpp
 include/core/type_helpers.hpp
+include/core/copy_stream.hpp
 )
 
 # Sources:
 set(sources
 src/hash.cpp
 src/uuid.cpp
+src/copy_stream.cpp
 )
 
 # Add C++ library
