@@ -14,8 +14,10 @@ set_build_type_if_undefined()
 #-----
 # C++ PROJECT
 
-project(core
-        VERSION 0.9
+set(PROJECT_NAME core)
+set(PROJECT_VERSION 0.10)
+project(${PROJECT_NAME}
+        VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
         HOMEPAGE_URL "https://github.com/arapelle/core"
         LANGUAGES CXX)
