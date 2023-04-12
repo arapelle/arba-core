@@ -39,6 +39,7 @@ include/core/intrusive_ptr.hpp
 include/core/string_tokenizer.hpp
 include/core/string.hpp
 include/core/uuid.hpp
+include/core/type_helpers.hpp
 )
 
 # Sources:

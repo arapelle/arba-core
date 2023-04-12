@@ -8,4 +8,5 @@ add_cpp_library_tests(SHARED ${PROJECT_NAME}
                       intrusive_ptr_tests.cpp
                       string_tokenizer_tests.cpp
                       string_tests.cpp
+                      type_helpers_tests.cpp
                       )
