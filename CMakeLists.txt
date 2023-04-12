@@ -42,12 +42,14 @@ include/core/string_tokenizer.hpp
 include/core/string.hpp
 include/core/uuid.hpp
 include/core/type_helpers.hpp
+include/core/copy_stream.hpp
 )
 
 # Sources:
 set(sources
 src/hash.cpp
 src/uuid.cpp
+src/copy_stream.cpp
 )
 
 # Add C++ library
