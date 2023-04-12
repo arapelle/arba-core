@@ -10,4 +10,6 @@ add_cpp_library_tests(SHARED ${PROJECT_NAME}
                       string_tests.cpp
                       type_helpers_tests.cpp
                       copy_stream_tests.cpp
+                      check_file_tests.cpp
+                      open_file_tests.cpp
                       )
