@@ -15,7 +15,7 @@ set_build_type_if_undefined()
 # C++ PROJECT
 
 set(PROJECT_NAME core)
-set(PROJECT_VERSION 0.10)
+set(PROJECT_VERSION 0.11)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
@@ -42,14 +42,18 @@ include/core/string_tokenizer.hpp
 include/core/string.hpp
 include/core/uuid.hpp
 include/core/type_helpers.hpp
-include/core/copy_stream.hpp
+include/core/io/copy_stream.hpp
+include/core/io/check_file.hpp
+include/core/io/open_file.hpp
 )
 
 # Sources:
 set(sources
 src/hash.cpp
 src/uuid.cpp
-src/copy_stream.cpp
+src/io/copy_stream.cpp
+src/io/check_file.cpp
+src/io/open_file.cpp
 )
 
 # Add C++ library

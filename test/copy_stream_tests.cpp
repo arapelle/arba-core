@@ -1,9 +1,8 @@
-#include <core/copy_stream.hpp>
+#include <core/io/copy_stream.hpp>
 #include <gtest/gtest.h>
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
-
 
 std::filesystem::path create_resource()
 {
@@ -50,6 +49,44 @@ TEST(core_tests, test_copy_file)
     std::ostringstream oss(std::ios::binary);
     core::copy_file(create_resource(), oss);
     ASSERT_EQ(oss.str(), "Once upon a time");
+}
+
+TEST(core_tests, test_copy_file_exception_file_not_found)
+{
+    std::ostringstream oss(std::ios::binary);
+    try
+    {
+        core::copy_file("/__does_not_exists__", oss);
+        FAIL() << "core::copy_file(\"/__does_not_exists__\", oss) should throw an error\n";
+    }
+    catch (const std::filesystem::filesystem_error& err)
+    {
+        EXPECT_EQ(err.code().message(), "No such file or directory");
+        SUCCEED();
+    }
+    catch (const std::iostream::failure& err)
+    {
+        FAIL();
+    }
+}
+
+TEST(core_tests, test_copy_file_exception_not_regular_file)
+{
+    std::ostringstream oss(std::ios::binary);
+    try
+    {
+        core::copy_file(std::filesystem::temp_directory_path(), oss);
+        FAIL() << "core::copy_file(std::filesystem::temp_directory_path(), oss) should throw an error\n";
+    }
+    catch (const std::filesystem::filesystem_error& err)
+    {
+        EXPECT_EQ(err.code().message(), "No such file or directory");
+        SUCCEED();
+    }
+    catch (const std::iostream::failure& err)
+    {
+        FAIL();
+    }
 }
 
 int main(int argc, char** argv)
