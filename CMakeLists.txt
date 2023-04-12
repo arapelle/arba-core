@@ -15,7 +15,7 @@ set_build_type_if_undefined()
 # C++ PROJECT
 
 project(core
-        VERSION 0.8
+        VERSION 0.9
         DESCRIPTION "C++ core functions."
         HOMEPAGE_URL "https://github.com/arapelle/core"
         LANGUAGES CXX)
@@ -39,6 +39,7 @@ include/core/intrusive_ptr.hpp
 include/core/string_tokenizer.hpp
 include/core/string.hpp
 include/core/uuid.hpp
+include/core/type_helpers.hpp
 )
 
 # Sources:
