@@ -15,7 +15,7 @@ set_build_type_if_undefined()
 # C++ PROJECT
 
 set(PROJECT_NAME core)
-set(PROJECT_VERSION 0.11)
+set(PROJECT_VERSION 0.12)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
@@ -45,6 +45,7 @@ include/core/type_helpers.hpp
 include/core/io/copy_stream.hpp
 include/core/io/check_file.hpp
 include/core/io/open_file.hpp
+include/core/sbrm.hpp
 )
 
 # Sources:
