@@ -12,4 +12,5 @@ add_cpp_library_tests(SHARED ${PROJECT_NAME}
                       copy_stream_tests.cpp
                       check_file_tests.cpp
                       open_file_tests.cpp
+                      sbrm_tests.cpp
                       )

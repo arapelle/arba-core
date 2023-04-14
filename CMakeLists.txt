@@ -45,6 +45,7 @@ include/core/type_helpers.hpp
 include/core/io/copy_stream.hpp
 include/core/io/check_file.hpp
 include/core/io/open_file.hpp
+include/core/sbrm.hpp
 )
 
 # Sources:
