@@ -15,7 +15,7 @@ set_build_type_if_undefined()
 # C++ PROJECT
 
 set(PROJECT_NAME core)
-set(PROJECT_VERSION 0.12)
+set(PROJECT_VERSION 0.13)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
