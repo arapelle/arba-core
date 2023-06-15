@@ -19,7 +19,7 @@ std::filesystem::path create_resource()
     return story_fpath;
 }
 
-TEST(core_tests, test_check_input_file)
+TEST(check_file_tests, test_check_input_file)
 {
     try
     {
@@ -32,7 +32,7 @@ TEST(core_tests, test_check_input_file)
     }
 }
 
-TEST(core_tests, test_check_input_file_exception_file_not_found)
+TEST(check_file_tests, test_check_input_file_exception_file_not_found)
 {
     try
     {
@@ -50,7 +50,7 @@ TEST(core_tests, test_check_input_file_exception_file_not_found)
     }
 }
 
-TEST(core_tests, test_check_input_file_exception_not_regular_file)
+TEST(check_file_tests, test_check_input_file_exception_not_regular_file)
 {
     try
     {

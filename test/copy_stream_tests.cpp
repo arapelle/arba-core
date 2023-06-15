@@ -19,7 +19,7 @@ std::filesystem::path create_resource()
     return story_fpath;
 }
 
-TEST(core_tests, test_copy_stream)
+TEST(copy_stream_tests, test_copy_stream)
 {
     std::istringstream iss("hello world", std::ios::binary);
     std::ostringstream oss(std::ios::binary);
@@ -27,7 +27,7 @@ TEST(core_tests, test_copy_stream)
     ASSERT_EQ(oss.str(), "hell");
 }
 
-TEST(core_tests, test_copy_fstream)
+TEST(copy_stream_tests, test_copy_fstream)
 {
     std::ifstream ifs(create_resource(), std::ios::binary);
     std::ostringstream oss(std::ios::binary);
@@ -35,7 +35,7 @@ TEST(core_tests, test_copy_fstream)
     ASSERT_EQ(oss.str(), "Once upon a time");
 }
 
-TEST(core_tests, test_copy_fstream_2)
+TEST(copy_stream_tests, test_copy_fstream_2)
 {
     std::ifstream ifs(create_resource(), std::ios::binary);
     ifs.get();
@@ -44,14 +44,14 @@ TEST(core_tests, test_copy_fstream_2)
     ASSERT_EQ(oss.str(), "nce upon a time");
 }
 
-TEST(core_tests, test_copy_file)
+TEST(copy_stream_tests, test_copy_file)
 {
     std::ostringstream oss(std::ios::binary);
     core::copy_file(create_resource(), oss);
     ASSERT_EQ(oss.str(), "Once upon a time");
 }
 
-TEST(core_tests, test_copy_file_exception_file_not_found)
+TEST(copy_stream_tests, test_copy_file_exception_file_not_found)
 {
     std::ostringstream oss(std::ios::binary);
     try
@@ -70,7 +70,7 @@ TEST(core_tests, test_copy_file_exception_file_not_found)
     }
 }
 
-TEST(core_tests, test_copy_file_exception_not_regular_file)
+TEST(copy_stream_tests, test_copy_file_exception_not_regular_file)
 {
     std::ostringstream oss(std::ios::binary);
     try

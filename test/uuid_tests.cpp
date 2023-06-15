@@ -3,21 +3,21 @@
 #include <sstream>
 #include <cstdlib>
 
-TEST(core_tests, test_uuid_constructor)
+TEST(uuid_tests, test_uuid_constructor)
 {
     core::uuid uuid;
     ASSERT_TRUE(uuid.is_nil());
     ASSERT_EQ(uuid.to_string(), "00000000-0000-0000-0000-000000000000");
 }
 
-TEST(core_tests, test_uuid_constructor_strv)
+TEST(uuid_tests, test_uuid_constructor_strv)
 {
     core::uuid uuid("d84ec443-f5f5-4cbc-89d0-733f656caf5b");
     ASSERT_TRUE(!uuid.is_nil());
     ASSERT_EQ(uuid.to_string(), "d84ec443-f5f5-4cbc-89d0-733f656caf5b");
 }
 
-TEST(core_tests, test_uuid_cmp_eq)
+TEST(uuid_tests, test_uuid_cmp_eq)
 {
     core::uuid uuid;
     core::uuid uuid_a("d84ec443-f5f5-4cbc-89d0-733f656caf5b");
