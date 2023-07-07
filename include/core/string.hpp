@@ -49,7 +49,7 @@ inline string_view_type& right_trim(string_view_type& str)
 }
 
 template <class string_type>
-inline string_type trim(string_type& str)
+inline string_type& trim(string_type& str)
 {
     return left_trim(right_trim(str));
 }

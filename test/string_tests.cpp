@@ -5,22 +5,25 @@
 TEST(string_tests, test_left_trim_string)
 {
     std::string str("   \t \n hot chocolate!  \t \n ");
-    core::left_trim(str);
+    std::string& ref = core::left_trim(str);
     ASSERT_EQ(str, "hot chocolate!  \t \n ");
+    ASSERT_EQ(&ref, &str);
 }
 
 TEST(string_tests, test_right_trim_string)
 {
     std::string str("   \t \n hot chocolate!  \t \n ");
-    core::right_trim(str);
+    std::string& ref = core::right_trim(str);
     ASSERT_EQ(str, "   \t \n hot chocolate!");
+    ASSERT_EQ(&ref, &str);
 }
 
 TEST(string_tests, test_trim_string)
 {
     std::string str("   \t \n hot chocolate!  \t \n ");
-    core::trim(str);
+    std::string& ref = core::trim(str);
     ASSERT_EQ(str, "hot chocolate!");
+    ASSERT_EQ(&ref, &str);
 }
 
 TEST(string_tests, test_left_trim_string_copy)
@@ -50,22 +53,25 @@ TEST(string_tests, test_trim_string_copy)
 TEST(string_tests, test_left_trim_string_view)
 {
     std::string_view str("   \t \n hot chocolate!  \t \n ");
-    core::left_trim(str);
+    std::string_view& ref = core::left_trim(str);
     ASSERT_EQ(str, "hot chocolate!  \t \n ");
+    ASSERT_EQ(&ref, &str);
 }
 
 TEST(string_tests, test_right_trim_string_view)
 {
     std::string_view str("   \t \n hot chocolate!  \t \n ");
-    core::right_trim(str);
+    std::string_view& ref = core::right_trim(str);
     ASSERT_EQ(str, "   \t \n hot chocolate!");
+    ASSERT_EQ(&ref, &str);
 }
 
 TEST(string_tests, test_trim_string_view)
 {
     std::string_view str("   \t \n hot chocolate!  \t \n ");
-    core::trim(str);
+    std::string_view& ref = core::trim(str);
     ASSERT_EQ(str, "hot chocolate!");
+    ASSERT_EQ(&ref, &str);
 }
 
 TEST(string_tests, test_left_trim_string_view_copy)
