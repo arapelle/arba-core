@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include <sstream>
+#include <format>
 #include <cstdlib>
 
 std::filesystem::path create_resource()
@@ -60,7 +61,10 @@ TEST(open_file_tests, test_open_input_file_exception_not_regular_file)
     catch (const std::filesystem::filesystem_error& err)
     {
         EXPECT_EQ(err.code().message(), "No such file or directory");
-        EXPECT_STREQ(err.what(), "filesystem error: Input path is not a regular file: No such file or directory [/tmp]");
+        std::string_view err_message(err.what());
+        std::string expected_err_string = std::format("filesystem error: Input path is not a regular file: No such file or directory [{}]",
+                                                      std::filesystem::temp_directory_path().string());
+        EXPECT_EQ(err_message, expected_err_string);
         SUCCEED();
     }
     catch (const std::iostream::failure& err)
