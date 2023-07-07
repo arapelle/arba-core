@@ -444,10 +444,3 @@ TEST(intrusive_ptr_ircnt_data_tests, test_make_iptr_2)
     }
     ASSERT_FALSE(valid);
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}

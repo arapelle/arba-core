@@ -26,10 +26,3 @@ TEST(type_helper_tests, test_requested_type_or_undefined)
     static_assert(!std::is_same_v<serializable_string_type, std::u8string>);
     static_assert(std::is_same_v<serializable_string_type, std::u32string>);
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}

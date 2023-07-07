@@ -88,10 +88,3 @@ TEST(copy_stream_tests, test_copy_file_exception_not_regular_file)
         FAIL();
     }
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}

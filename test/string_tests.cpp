@@ -121,10 +121,3 @@ TEST(string_tests, test_trim_view_string)
     ASSERT_EQ(trimmed_str, "hot chocolate!");
     ASSERT_NE(trimmed_str, str);
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}

@@ -167,10 +167,3 @@ TEST(sbrm_tests, test_sb_all_files_remover_ec_rvalue)
     ASSERT_FALSE(std::filesystem::exists(output_fpath));
     ASSERT_EQ(ec.value(), 0);
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}

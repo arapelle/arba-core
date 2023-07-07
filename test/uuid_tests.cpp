@@ -27,10 +27,3 @@ TEST(uuid_tests, test_uuid_cmp_eq)
     ASSERT_NE(uuid, uuid_b);
     ASSERT_EQ(uuid_a, uuid_b);
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}

@@ -72,10 +72,3 @@ TEST(open_file_tests, test_open_input_file_exception_not_regular_file)
         FAIL();
     }
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}

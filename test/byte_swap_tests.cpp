@@ -211,10 +211,3 @@ TEST(byte_swap_tests, test_byte_swap_enum_double)
     swapped_value = core::byte_swap(swapped_value);
     ASSERT_EQ(swapped_value, expected_value);
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}

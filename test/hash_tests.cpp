@@ -109,10 +109,3 @@ TEST(hash_tests, test_neutral_murmur_hash_array_16_neq_seed_from_range)
     std::array<std::uint8_t, 16> hash2 = core::neutral_murmur_hash_array_16(v_bytes);
     ASSERT_EQ(hash, hash2);
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}

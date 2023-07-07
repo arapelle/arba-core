@@ -225,10 +225,3 @@ TEST(string_tokenizer_tests, test_tokenizer_functor)
     std::vector<std::string> expected_v_tokens{"Some", "beautiful", "text", "cool"};
     ASSERT_EQ(v_tokens, expected_v_tokens);
 }
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
-}
