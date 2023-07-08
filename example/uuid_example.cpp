@@ -1,3 +1,4 @@
+#include <arba/core/version.hpp>
 #include <core/uuid.hpp>
 #include <iostream>
 
