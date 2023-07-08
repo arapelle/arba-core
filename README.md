@@ -2,8 +2,6 @@
 
 C++ core tools (UUID class, hash functions, htow/wtoh...)
 
-See [task board](https://app.gitkraken.com/glo/board/X0_o9z2bBQARuity) for future updates and features.
-
 # Install #
 ## Requirements ##
 Binaries:
@@ -23,7 +21,7 @@ git clone https://github.com/arapelle/core --recurse-submodules
 There is a cmake script at the root of the project which builds the library in *Release* mode and install it (default options are used).
 ```
 cd /path/to/core
-cmake -P cmake_quick_install.cmake
+cmake -P cmake/scripts/cmake_quick_install.cmake
 ```
 Use the following to quickly install a different mode.
 ```
