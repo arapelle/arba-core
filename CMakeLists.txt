@@ -35,27 +35,27 @@ generate_version_macro_header(generated_version_header
 
 ## Headers:
 set(headers
-include/core/byte_swap.hpp
-include/core/hash.hpp
-include/core/htow.hpp
-include/core/intrusive_ptr.hpp
-include/core/string_tokenizer.hpp
-include/core/string.hpp
-include/core/uuid.hpp
-include/core/type_helpers.hpp
-include/core/io/copy_stream.hpp
-include/core/io/check_file.hpp
-include/core/io/open_file.hpp
-include/core/sbrm.hpp
+    include/arba/core/intrusive_ptr.hpp
+    include/arba/core/string.hpp
+    include/arba/core/sbrm.hpp
+    include/arba/core/htow.hpp
+    include/arba/core/byte_swap.hpp
+    include/arba/core/uuid.hpp
+    include/arba/core/io/check_file.hpp
+    include/arba/core/io/open_file.hpp
+    include/arba/core/io/copy_stream.hpp
+    include/arba/core/type_helpers.hpp
+    include/arba/core/string_tokenizer.hpp
+    include/arba/core/hash.hpp
 )
 
 ## Sources:
 set(sources
-src/hash.cpp
-src/uuid.cpp
-src/io/copy_stream.cpp
-src/io/check_file.cpp
-src/io/open_file.cpp
+    src/hash.cpp
+    src/uuid.cpp
+    src/io/copy_stream.cpp
+    src/io/check_file.cpp
+    src/io/open_file.cpp
 )
 
 ## Add C++ library

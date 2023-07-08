@@ -1,5 +1,5 @@
 #include <arba/core/version.hpp>
-#include <core/uuid.hpp>
+#include <arba/core/uuid.hpp>
 #include <iostream>
 
 int main()

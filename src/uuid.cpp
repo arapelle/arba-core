@@ -1,5 +1,5 @@
-#include <core/uuid.hpp>
-#include <core/hash.hpp>
+#include <arba/core/uuid.hpp>
+#include <arba/core/hash.hpp>
 #include <algorithm>
 #include <iomanip>
 #include <sstream>

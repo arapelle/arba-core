@@ -1,4 +1,4 @@
-#include <core/io/check_file.hpp>
+#include <arba/core/io/check_file.hpp>
 #include <gtest/gtest.h>
 #include <fstream>
 #include <sstream>

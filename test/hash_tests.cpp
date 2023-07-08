@@ -1,4 +1,4 @@
-#include <core/hash.hpp>
+#include <arba/core/hash.hpp>
 #include <gtest/gtest.h>
 #include <cstdlib>
 

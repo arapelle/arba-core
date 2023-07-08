@@ -1,4 +1,4 @@
-#include <core/io/copy_stream.hpp>
+#include <arba/core/io/copy_stream.hpp>
 #include <gtest/gtest.h>
 #include <fstream>
 #include <sstream>

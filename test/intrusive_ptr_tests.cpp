@@ -1,4 +1,4 @@
-#include <core/intrusive_ptr.hpp>
+#include <arba/core/intrusive_ptr.hpp>
 #include <unordered_set>
 #include <set>
 #include <gtest/gtest.h>

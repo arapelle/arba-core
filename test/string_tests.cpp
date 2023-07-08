@@ -1,4 +1,4 @@
-#include <core/string.hpp>
+#include <arba/core/string.hpp>
 #include <gtest/gtest.h>
 #include <cstdlib>
 

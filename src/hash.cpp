@@ -1,4 +1,4 @@
-#include <core/hash.hpp>
+#include <arba/core/hash.hpp>
 #include <bit>
 
 namespace core
