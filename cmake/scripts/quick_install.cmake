@@ -1,6 +1,6 @@
-# cmake -P cmake_quick_install.cmake
+# cmake -P quick_install.cmake
 
-set(project "core")
+set(project "arba-core")
 
 function(get_script_args script_args)
     set(sc_args)
@@ -43,7 +43,7 @@ endif()
 
 message(STATUS "*  CONFIGURATION")
 if(ARG_TESTS)
-    list(APPEND conf_args -D${project}_BUILD_TESTS=ON)
+    list(APPEND conf_args -DBUILD_${project}_TESTS=ON)
 endif()
 if(ARG_BUILD)
     list(APPEND conf_args -DCMAKE_BUILD_TYPE=${ARG_BUILD})
@@ -53,6 +53,7 @@ endif()
 if(ARG_DIR)
     list(APPEND conf_args -DCMAKE_INSTALL_PREFIX=${ARG_DIR})
 endif()
+
 execute_process(COMMAND ${CMAKE_COMMAND} ${conf_args} -S ${src_dir} -B ${build_dir}  RESULT_VARIABLE cmd_res)
 if(NOT cmd_res EQUAL 0)
     file(TOUCH ${error_file})
