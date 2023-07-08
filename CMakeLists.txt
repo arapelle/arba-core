@@ -32,7 +32,6 @@ generate_version_macro_header(generated_version_header
                               ${project_namespace}_${project_base_name}
                               ${project_namespace}/${project_base_name}/version.hpp)
 
-
 ## Headers:
 set(headers
     include/arba/core/intrusive_ptr.hpp
