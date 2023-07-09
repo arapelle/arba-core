@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <sstream>
 
+inline namespace arba
+{
 namespace core
 {
 namespace detail
@@ -122,12 +124,15 @@ std::ostream& operator<<(std::ostream& stream, const uuid& uuid)
 }
 
 }
+}
 
 namespace std
 {
-std::size_t hash<core::uuid>::operator()(const core::uuid& uuid) const
+
+std::size_t hash< ::arba::core::uuid>::operator()(const ::arba::core::uuid& uuid) const
 {
     uint64_t hash = core::murmur_hash_64(&uuid.data().front(), uuid.data().size());
     return static_cast<std::size_t>(hash);
 }
+
 }

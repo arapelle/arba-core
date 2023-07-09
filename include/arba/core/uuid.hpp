@@ -5,8 +5,11 @@
 #include <string>
 #include <cstdint>
 
+inline namespace arba
+{
 namespace core
 {
+
 /**
  * @brief The uuid class
  *
@@ -28,13 +31,17 @@ public:
 private:
     std::array<uint8_t, 16> data_;
 };
+
+}
 }
 
 namespace std
 {
-   template <>
-   struct hash<core::uuid>
-   {
-      std::size_t operator()(const core::uuid& uuid) const;
-   };
+
+template <>
+struct hash< ::arba::core::uuid>
+{
+    std::size_t operator()(const ::arba::core::uuid& uuid) const;
+};
+
 }

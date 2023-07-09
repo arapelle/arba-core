@@ -8,6 +8,8 @@
 #include <cstdlib>
 #endif
 
+inline namespace arba
+{
 namespace core
 {
 inline uint16_t byte_swap(uint16_t value)
@@ -115,4 +117,5 @@ concept byte_swappable = requires(T value)
     { byte_swap(value) } -> std::same_as<T>;
 };
 
+}
 }

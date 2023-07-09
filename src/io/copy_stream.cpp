@@ -3,8 +3,11 @@
 #include <fstream>
 #include <array>
 
+inline namespace arba
+{
 namespace core
 {
+
 void copy_stream(std::istream& input_stream, std::size_t number_of_bytes, std::ostream& output_stream)
 {
     constexpr std::size_t buffer_size = 1024;
@@ -36,5 +39,7 @@ void copy_file(const std::filesystem::path& input_fpath, std::ostream& output_st
     std::size_t number_of_bytes = input_fstream.tellg();
     input_fstream.seekg(0, std::ifstream::beg);
     copy_stream(input_fstream, number_of_bytes, output_stream);
+}
+
 }
 }

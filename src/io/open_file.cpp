@@ -2,6 +2,8 @@
 #include <arba/core/io/check_file.hpp>
 #include <fstream>
 
+inline namespace arba
+{
 namespace core
 {
 std::ifstream& open_input_file(std::ifstream& input_fstream,
@@ -20,5 +22,7 @@ std::ifstream& open_input_file(std::ifstream& input_fstream,
     std::ifstream ifs;
     open_input_file(ifs, input_fpath, mode);
     return std::ifstream(std::move(ifs));
+}
+
 }
 }

@@ -5,7 +5,7 @@
 TEST(byte_swap_tests, test_byte_swap_u16)
 {
     uint16_t value = 0x1122;
-    uint16_t swapped_value = core::byte_swap(value);
+    uint16_t swapped_value = arba::core::byte_swap(value);
     uint16_t expected_value = 0x2211;
     ASSERT_EQ(swapped_value, expected_value);
 }
