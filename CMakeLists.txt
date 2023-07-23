@@ -43,6 +43,7 @@ set(headers
     include/arba/core/io/check_file.hpp
     include/arba/core/io/open_file.hpp
     include/arba/core/io/copy_stream.hpp
+    include/arba/core/random.hpp
     include/arba/core/type_helpers.hpp
     include/arba/core/string_tokenizer.hpp
     include/arba/core/hash.hpp
@@ -51,10 +52,11 @@ set(headers
 ## Sources:
 set(sources
     src/hash.cpp
-    src/uuid.cpp
     src/io/copy_stream.cpp
-    src/io/check_file.cpp
     src/io/open_file.cpp
+    src/io/check_file.cpp
+    src/random.cpp
+    src/uuid.cpp
 )
 
 ## Add C++ library

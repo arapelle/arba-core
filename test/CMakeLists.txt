@@ -17,4 +17,5 @@ add_cpp_library_basic_tests(GTest::gtest_main
         check_file_tests.cpp
         open_file_tests.cpp
         sbrm_tests.cpp
+        random_tests.cpp
 )
