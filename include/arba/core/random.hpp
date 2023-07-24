@@ -11,7 +11,7 @@ namespace private_
 
 using rand_int_engine_type_ = std::mt19937_64;
 
-inline auto& rand_int_engine_()
+inline rand_int_engine_type_& rand_int_engine_()
 {
     static thread_local rand_int_engine_type_ rand_engine{std::random_device{}()};
     return rand_engine;
@@ -33,9 +33,15 @@ template <typename IntType>
     return std::uniform_int_distribution<IntType>(0, max)(private_::rand_int_engine_());
 }
 
-void reseed();
+inline void reseed()
+{
+    private_::rand_int_engine_().seed(std::random_device{}());
+}
 
-void reseed(private_::rand_int_engine_type_::result_type value);
+inline void reseed(private_::rand_int_engine_type_::result_type value)
+{
+    private_::rand_int_engine_().seed(value);
+}
 
 
 template <class RNG, class IntType, IntType... IntParams>

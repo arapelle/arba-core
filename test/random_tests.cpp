@@ -10,9 +10,12 @@ using namespace ::testing;
 TEST(random_tests, test_reseed)
 {
     core::reseed(42);
-    ASSERT_EQ(core::rand_int(0, 1000000), 755156);
+    uint64_t value = core::rand_int<uint64_t>(0, 1000000);
     core::reseed(42);
-    ASSERT_EQ(core::rand_int(0, 1000000), 755156);
+    uint64_t value_2 = core::rand_int<uint64_t>(0, 1000000);
+    ASSERT_EQ(value, value_2);
+    ASSERT_EQ(value, 755156);
+    ASSERT_EQ(value_2, 755156);
 }
 
 TEST(random_tests, test_rand_int_min_max)

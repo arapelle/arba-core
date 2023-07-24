@@ -55,7 +55,6 @@ set(sources
     src/io/copy_stream.cpp
     src/io/open_file.cpp
     src/io/check_file.cpp
-    src/random.cpp
     src/uuid.cpp
 )
 
