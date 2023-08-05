@@ -63,7 +63,12 @@ uuid::uuid(const std::string_view& str)
     for (size_t i = hasBraces; i < size - hasBraces; ++i)
     {
         if (str[i] == '-')
-            continue;
+        {
+            if (firstDigit)
+                continue;
+            else
+                return;
+        }
 
         if (index >= 16 || !detail::is_hex(str[i]))
             return;
