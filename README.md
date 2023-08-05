@@ -4,11 +4,14 @@ C++ core tools (UUID class, hash functions, htow/wtoh...)
 
 # Install #
 ## Requirements ##
+
 Binaries:
+
 - A C++20 compiler (ex: g++-13)
 - CMake 3.26 or later
 
 Testing Libraries (optional):
+
 - [Google Test](https://github.com/google/googletest) 1.13 or later (optional)
 
 ## Clone
@@ -50,8 +53,8 @@ int main()
 
 ```
 
-## Example - Using *core* in a CMake project
-See *basic_cmake_project* in example, and more specifically the *CMakeLists.txt* to see how to use *core* in your CMake projects.
+## Example - Using *arba-core* in a CMake project
+See *basic_cmake_project* in example, and more specifically the *CMakeLists.txt* to see how to use *arba-core* in your CMake projects.
 
 # License
 

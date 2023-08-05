@@ -20,7 +20,7 @@ set(PROJECT_VERSION 0.14.0)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
-        HOMEPAGE_URL "https://github.com/arapelle/core"
+        HOMEPAGE_URL "https://github.com/arapelle/arba-core"
         LANGUAGES CXX)
 message(STATUS "PROJECT : ${PROJECT_NAME} ${PROJECT_VERSION} ${CMAKE_BUILD_TYPE}")
 include(CTest)
