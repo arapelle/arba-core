@@ -1,4 +1,4 @@
-#include <core/htow.hpp>
+#include <arba/core/htow.hpp>
 #include <gtest/gtest.h>
 #include <cstdlib>
 
@@ -264,11 +264,4 @@ TEST(htow_tests, test_htow_double)
         double expected_value = -14489.325;
         ASSERT_EQ(swapped_value, expected_value);
     }
-}
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
 }

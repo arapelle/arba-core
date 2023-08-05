@@ -1,8 +1,11 @@
-#include <core/hash.hpp>
+#include <arba/core/hash.hpp>
 #include <bit>
 
+inline namespace arba
+{
 namespace core
 {
+
 uint64_t murmur_hash_64(const void* data, std::size_t len, uint64_t seed)
 {
     const uint64_t m = 0xc6a4a7935bd1e995ULL;
@@ -232,5 +235,7 @@ std::array<uint8_t, 16> neutral_murmur_hash_array_16(const void* data, std::size
     }
 
     return res;
+}
+
 }
 }

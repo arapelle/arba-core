@@ -4,6 +4,8 @@
 #include <functional>
 #include <type_traits>
 
+inline namespace arba
+{
 namespace core
 {
 
@@ -186,12 +188,16 @@ intrusive_ptr<val_type> make_intrusive_ptr(args_types&&... args)
 {
     return intrusive_ptr<val_type>(new val_type(std::forward<args_types>(args)...));
 }
+
+}
 }
 
 namespace std
 {
+
 template <class value_type>
-class hash< ::core::intrusive_ptr<value_type>> : public hash<value_type*>
+class hash< ::arba::core::intrusive_ptr<value_type>> : public hash<value_type*>
 {
 };
+
 }

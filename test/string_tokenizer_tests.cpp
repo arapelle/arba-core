@@ -1,4 +1,4 @@
-#include <core/string_tokenizer.hpp>
+#include <arba/core/string_tokenizer.hpp>
 #include <gtest/gtest.h>
 #include <iterator>
 #include <ranges>
@@ -224,11 +224,4 @@ TEST(string_tokenizer_tests, test_tokenizer_functor)
     std::ranges::copy(str_tokens, std::back_inserter(v_tokens));
     std::vector<std::string> expected_v_tokens{"Some", "beautiful", "text", "cool"};
     ASSERT_EQ(v_tokens, expected_v_tokens);
-}
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
 }

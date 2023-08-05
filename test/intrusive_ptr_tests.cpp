@@ -1,4 +1,4 @@
-#include <core/intrusive_ptr.hpp>
+#include <arba/core/intrusive_ptr.hpp>
 #include <unordered_set>
 #include <set>
 #include <gtest/gtest.h>
@@ -443,11 +443,4 @@ TEST(intrusive_ptr_ircnt_data_tests, test_make_iptr_2)
         ASSERT_EQ(str, "");
     }
     ASSERT_FALSE(valid);
-}
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
 }

@@ -1,9 +1,11 @@
-#include <core/uuid.hpp>
-#include <core/hash.hpp>
+#include <arba/core/uuid.hpp>
+#include <arba/core/hash.hpp>
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
 
+inline namespace arba
+{
 namespace core
 {
 namespace detail
@@ -61,7 +63,12 @@ uuid::uuid(const std::string_view& str)
     for (size_t i = hasBraces; i < size - hasBraces; ++i)
     {
         if (str[i] == '-')
-            continue;
+        {
+            if (firstDigit)
+                continue;
+            else
+                return;
+        }
 
         if (index >= 16 || !detail::is_hex(str[i]))
             return;
@@ -122,12 +129,15 @@ std::ostream& operator<<(std::ostream& stream, const uuid& uuid)
 }
 
 }
+}
 
 namespace std
 {
-std::size_t hash<core::uuid>::operator()(const core::uuid& uuid) const
+
+std::size_t hash< ::arba::core::uuid>::operator()(const ::arba::core::uuid& uuid) const
 {
     uint64_t hash = core::murmur_hash_64(&uuid.data().front(), uuid.data().size());
     return static_cast<std::size_t>(hash);
 }
+
 }

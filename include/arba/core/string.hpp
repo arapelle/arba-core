@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <ranges>
 
+inline namespace arba
+{
 namespace core
 {
 
@@ -49,7 +51,7 @@ inline string_view_type& right_trim(string_view_type& str)
 }
 
 template <class string_type>
-inline string_type trim(string_type& str)
+inline string_type& trim(string_type& str)
 {
     return left_trim(right_trim(str));
 }
@@ -82,4 +84,5 @@ inline std::string_view left_trim_view(std::string_view str) { return left_trim(
 inline std::string_view right_trim_view(std::string_view str) { return right_trim(str); }
 inline std::string_view trim_view(std::string_view str) { return trim(str); }
 
+}
 }

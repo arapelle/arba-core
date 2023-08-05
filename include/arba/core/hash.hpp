@@ -4,6 +4,8 @@
 #include <array>
 #include <cstdint>
 
+inline namespace arba
+{
 namespace core
 {
 /**
@@ -57,5 +59,7 @@ requires std::is_convertible_v<std::ranges::range_value_t<crange>, uint8_t>
 inline std::array<uint8_t, 16> neutral_murmur_hash_array_16(const crange& bytes, uint64_t seed = 6364136223846793005ULL)
 {
     return neutral_murmur_hash_array_16(std::ranges::data(bytes), std::ranges::size(bytes), seed);
+}
+
 }
 }

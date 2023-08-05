@@ -3,6 +3,8 @@
 #include "byte_swap.hpp"
 #include <bit>
 
+inline namespace arba
+{
 namespace core
 {
 // Host TO World:
@@ -27,4 +29,5 @@ inline T wtoh(T value)
         return value;
 }
 
+}
 }

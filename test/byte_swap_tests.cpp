@@ -1,11 +1,11 @@
-#include <core/byte_swap.hpp>
+#include <arba/core/byte_swap.hpp>
 #include <gtest/gtest.h>
 #include <cstdlib>
 
 TEST(byte_swap_tests, test_byte_swap_u16)
 {
     uint16_t value = 0x1122;
-    uint16_t swapped_value = core::byte_swap(value);
+    uint16_t swapped_value = arba::core::byte_swap(value);
     uint16_t expected_value = 0x2211;
     ASSERT_EQ(swapped_value, expected_value);
 }
@@ -210,11 +210,4 @@ TEST(byte_swap_tests, test_byte_swap_enum_double)
     ASSERT_DOUBLE_EQ(swapped_value, -1.125795992503723e-159);
     swapped_value = core::byte_swap(swapped_value);
     ASSERT_EQ(swapped_value, expected_value);
-}
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
 }

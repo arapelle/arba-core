@@ -1,5 +1,7 @@
 #pragma once
 
+inline namespace arba
+{
 namespace core
 {
 
@@ -41,4 +43,5 @@ using requested_type_or_t = typename requested_type_or<request_type_tag, observe
 namespace core { \
     template <> struct requested_type<request_type_tag, observed_type> \
         : public define_requested_type<request_type_tag, observed_type, response_type> {}; \
+}
 }

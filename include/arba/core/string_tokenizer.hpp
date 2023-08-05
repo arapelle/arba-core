@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <ranges>
 
+inline namespace arba
+{
 namespace core
 {
 
@@ -335,4 +337,5 @@ public:
     {}
 };
 
+}
 }

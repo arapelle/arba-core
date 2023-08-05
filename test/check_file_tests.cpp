@@ -1,7 +1,8 @@
-#include <core/io/check_file.hpp>
+#include <arba/core/io/check_file.hpp>
 #include <gtest/gtest.h>
 #include <fstream>
 #include <sstream>
+#include <format>
 #include <cstdlib>
 
 std::filesystem::path create_resource()
@@ -19,7 +20,7 @@ std::filesystem::path create_resource()
     return story_fpath;
 }
 
-TEST(core_tests, test_check_input_file)
+TEST(check_file_tests, test_check_input_file)
 {
     try
     {
@@ -32,7 +33,7 @@ TEST(core_tests, test_check_input_file)
     }
 }
 
-TEST(core_tests, test_check_input_file_exception_file_not_found)
+TEST(check_file_tests, test_check_input_file_exception_file_not_found)
 {
     try
     {
@@ -50,7 +51,7 @@ TEST(core_tests, test_check_input_file_exception_file_not_found)
     }
 }
 
-TEST(core_tests, test_check_input_file_exception_not_regular_file)
+TEST(check_file_tests, test_check_input_file_exception_not_regular_file)
 {
     try
     {
@@ -60,18 +61,14 @@ TEST(core_tests, test_check_input_file_exception_not_regular_file)
     catch (const std::filesystem::filesystem_error& err)
     {
         EXPECT_EQ(err.code().message(), "No such file or directory");
-        EXPECT_STREQ(err.what(), "filesystem error: Input path is not a regular file: No such file or directory [/tmp]");
+        std::string_view err_message(err.what());
+        std::string expected_err_string = std::format("filesystem error: Input path is not a regular file: No such file or directory [{}]",
+                                                      std::filesystem::temp_directory_path().string());
+        EXPECT_EQ(err_message, expected_err_string);
         SUCCEED();
     }
     catch (const std::iostream::failure& err)
     {
         FAIL();
     }
-}
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    return RUN_ALL_TESTS();
 }
