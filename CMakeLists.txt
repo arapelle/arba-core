@@ -16,7 +16,7 @@ set_build_type_ifndef()
 set(PROJECT_NAME "arba-core")
 set(project_namespace "arba")
 set(project_base_name "core")
-set(PROJECT_VERSION 0.14.0)
+set(PROJECT_VERSION 0.15.0)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
@@ -34,27 +34,29 @@ generate_version_macro_header(generated_version_header
 
 ## Headers:
 set(headers
-    include/arba/core/intrusive_ptr.hpp
-    include/arba/core/string.hpp
-    include/arba/core/sbrm.hpp
-    include/arba/core/htow.hpp
     include/arba/core/byte_swap.hpp
-    include/arba/core/uuid.hpp
-    include/arba/core/io/check_file.hpp
-    include/arba/core/io/open_file.hpp
-    include/arba/core/io/copy_stream.hpp
-    include/arba/core/random.hpp
-    include/arba/core/type_helpers.hpp
-    include/arba/core/string_tokenizer.hpp
     include/arba/core/hash.hpp
+    include/arba/core/htow.hpp
+    include/arba/core/intrusive_ptr.hpp
+    include/arba/core/io/check_file.hpp
+    include/arba/core/io/copy_stream.hpp
+    include/arba/core/io/open_file.hpp
+    include/arba/core/plugin.hpp
+    include/arba/core/random.hpp
+    include/arba/core/sbrm.hpp
+    include/arba/core/string.hpp
+    include/arba/core/string_tokenizer.hpp
+    include/arba/core/type_helpers.hpp
+    include/arba/core/uuid.hpp
 )
 
 ## Sources:
 set(sources
     src/hash.cpp
+    src/io/check_file.cpp
     src/io/copy_stream.cpp
     src/io/open_file.cpp
-    src/io/check_file.cpp
+    src/plugin.cpp
     src/uuid.cpp
 )
 
