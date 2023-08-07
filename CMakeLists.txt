@@ -71,6 +71,16 @@ add_cpp_library(
     CXX_STANDARD 20
 )
 
+## Link C++ targets:
+if(NOT WIN32)
+    find_library(dl-static_path libdl.a REQUIRED)
+    cpp_library_link_libraries(
+        SHARED ${PROJECT_NAME}
+        STATIC ${PROJECT_NAME}-static
+        PUBLIC ${dl-static_path}
+    )
+endif()
+
 ## Install C++ library:
 install_cpp_library(
     SHARED ${PROJECT_NAME}
