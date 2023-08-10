@@ -9,7 +9,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
         hash_tests.cpp
         byte_swap_tests.cpp
         htow_tests.cpp
-        intrusive_ptr_tests.cpp
+        intrusive_shared_ptr_tests.cpp
         string_tokenizer_tests.cpp
         string_tests.cpp
         request_type_tests.cpp
