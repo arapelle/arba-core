@@ -46,7 +46,8 @@ set(headers
     include/arba/core/sbrm.hpp
     include/arba/core/string.hpp
     include/arba/core/string_tokenizer.hpp
-    include/arba/core/type_helpers.hpp
+    include/arba/core/template/maythrow.hpp
+    include/arba/core/template/request_type.hpp
     include/arba/core/uuid.hpp
 )
 

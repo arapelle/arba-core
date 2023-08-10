@@ -1,4 +1,4 @@
-#include <arba/core/type_helpers.hpp>
+#include <arba/core/template/request_type.hpp>
 #include <gtest/gtest.h>
 #include <sstream>
 #include <cstdlib>

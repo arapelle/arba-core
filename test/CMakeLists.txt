@@ -12,7 +12,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
         intrusive_ptr_tests.cpp
         string_tokenizer_tests.cpp
         string_tests.cpp
-        type_helpers_tests.cpp
+        request_type_tests.cpp
         copy_stream_tests.cpp
         check_file_tests.cpp
         open_file_tests.cpp
