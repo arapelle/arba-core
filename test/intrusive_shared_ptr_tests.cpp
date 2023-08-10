@@ -1,4 +1,5 @@
-#include <arba/core/intrusive_shared_ptr.hpp>
+#include <arba/core/memory/intrusive_ref_counter.hpp>
+#include <arba/core/memory/intrusive_shared_ptr.hpp>
 #include <unordered_set>
 #include <set>
 #include <gtest/gtest.h>

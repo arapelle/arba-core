@@ -37,10 +37,10 @@ set(headers
     include/arba/core/byte_swap.hpp
     include/arba/core/hash.hpp
     include/arba/core/htow.hpp
-    include/arba/core/intrusive_shared_ptr.hpp
     include/arba/core/io/check_file.hpp
     include/arba/core/io/copy_stream.hpp
     include/arba/core/io/open_file.hpp
+    include/arba/core/memory/intrusive_shared_ptr.hpp
     include/arba/core/plugin.hpp
     include/arba/core/random.hpp
     include/arba/core/sbrm.hpp
