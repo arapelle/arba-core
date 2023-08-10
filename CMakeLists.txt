@@ -44,6 +44,7 @@ set(headers
     include/arba/core/plugin.hpp
     include/arba/core/random.hpp
     include/arba/core/sbrm.hpp
+    include/arba/core/span.hpp
     include/arba/core/string.hpp
     include/arba/core/string_tokenizer.hpp
     include/arba/core/template/maythrow.hpp
@@ -58,6 +59,7 @@ set(sources
     src/io/copy_stream.cpp
     src/io/open_file.cpp
     src/plugin.cpp
+    src/span.cpp
     src/uuid.cpp
 )
 

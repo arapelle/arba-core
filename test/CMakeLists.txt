@@ -18,6 +18,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
         open_file_tests.cpp
         sbrm_tests.cpp
         random_tests.cpp
+        span_tests.cpp
 )
 
 add_subdirectory(plugin_tests)
