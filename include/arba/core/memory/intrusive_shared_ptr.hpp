@@ -13,7 +13,14 @@ void intrusive_shared_ptr_add_ref(value_type* ptr) noexcept;
 template <class value_type>
 void intrusive_shared_ptr_release(value_type* ptr) noexcept;
 
-template <class val_type>
+template <class value_type>
+concept intrusive_sharable = requires(value_type* ptr)
+{
+    intrusive_shared_ptr_add_ref(ptr);
+    intrusive_shared_ptr_release(ptr);
+};
+
+template <intrusive_sharable val_type>
 class intrusive_shared_ptr
 {
 public:
@@ -61,7 +68,7 @@ private:
     value_type* pointer_ = nullptr;
 };
 
-template <class Type>
+template <intrusive_sharable Type>
 inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(Type* node)
     : pointer_(node)
 {
@@ -69,7 +76,7 @@ inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(Type* node)
         intrusive_shared_ptr_add_ref(pointer_);
 }
 
-template <class Type>
+template <intrusive_sharable Type>
 inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_shared_ptr& node)
     : pointer_(node.pointer_)
 {
@@ -77,28 +84,28 @@ inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_shared_p
         intrusive_shared_ptr_add_ref(pointer_);
 }
 
-template <class Type>
+template <intrusive_sharable Type>
 inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(intrusive_shared_ptr&& node)
     : pointer_(node.get())
 {
     node.pointer_ = nullptr;
 }
 
-template <class Type>
+template <intrusive_sharable Type>
 inline intrusive_shared_ptr<Type>::~intrusive_shared_ptr()
 {
     if (pointer_)
         intrusive_shared_ptr_release(pointer_);
 }
 
-template <class Type>
+template <intrusive_sharable Type>
 inline intrusive_shared_ptr<Type>& intrusive_shared_ptr<Type>::operator=(intrusive_shared_ptr<Type> node)
 {
     this->swap(node);
     return *this;
 }
 
-template <class Type>
+template <intrusive_sharable Type>
 inline Type* intrusive_shared_ptr<Type>::release() noexcept
 {
     if (pointer_)
@@ -111,7 +118,7 @@ inline Type* intrusive_shared_ptr<Type>::release() noexcept
     return nullptr;
 }
 
-template <class Type>
+template <intrusive_sharable Type>
 inline void intrusive_shared_ptr<Type>::reset(Type* pointer) noexcept
 {
     if (pointer_)
@@ -121,7 +128,7 @@ inline void intrusive_shared_ptr<Type>::reset(Type* pointer) noexcept
 }
 
 
-template <class val_type, class... args_types>
+template <intrusive_sharable val_type, class... args_types>
 intrusive_shared_ptr<val_type> make_intrusive_shared_ptr(args_types&&... args)
 {
     return intrusive_shared_ptr<val_type>(new val_type(std::forward<args_types>(args)...));
@@ -130,12 +137,7 @@ intrusive_shared_ptr<val_type> make_intrusive_shared_ptr(args_types&&... args)
 }
 }
 
-namespace std
-{
-
 template <class value_type>
-class hash< ::arba::core::intrusive_shared_ptr<value_type>> : public hash<value_type*>
+class std::hash< ::arba::core::intrusive_shared_ptr<value_type>> : public hash<value_type*>
 {
 };
-
-}
