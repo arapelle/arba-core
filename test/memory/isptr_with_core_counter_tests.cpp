@@ -12,7 +12,7 @@ TEST(isptr_with_core_counter_tests, test_iptr_empty_constructor)
     ASSERT_EQ(iptr.get(), nullptr);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_constructor)
+TEST(isptr_with_core_counter_tests, test_iptr_constructor_ptr)
 {
     bool valid = false;
     {
@@ -46,6 +46,27 @@ TEST(isptr_with_core_counter_tests, test_iptr_copy_constructor)
     ASSERT_FALSE(valid);
 }
 
+TEST(isptr_with_core_counter_tests, test_iptr_copy_constructor_other)
+{
+    bool valid = false;
+    {
+        data_with_ircnt* data_ptr = new data_with_ircnt(valid);
+        core::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        {
+            core::intrusive_shared_ptr<base_with_ircnt> jptr(iptr);
+            ASSERT_EQ(iptr.get(), data_ptr);
+            ASSERT_EQ(iptr->use_count(), 2);
+            ASSERT_EQ(jptr.get(), data_ptr);
+            ASSERT_EQ(jptr->use_count(), 2);
+            ASSERT_TRUE(valid);
+        }
+        ASSERT_EQ(iptr.get(), data_ptr);
+        ASSERT_EQ(iptr->use_count(), 1);
+        ASSERT_TRUE(valid);
+    }
+    ASSERT_FALSE(valid);
+}
+
 TEST(isptr_with_core_counter_tests, test_iptr_move_constructor)
 {
     bool valid = false;
@@ -61,6 +82,21 @@ TEST(isptr_with_core_counter_tests, test_iptr_move_constructor)
     ASSERT_FALSE(valid);
 }
 
+TEST(isptr_with_core_counter_tests, test_iptr_move_constructor_other)
+{
+    bool valid = false;
+    data_with_ircnt* data_ptr = new data_with_ircnt(valid);
+    core::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+    {
+        core::intrusive_shared_ptr<base_with_ircnt> jptr(std::move(iptr));
+        ASSERT_EQ(iptr.get(), nullptr);
+        ASSERT_EQ(jptr.get(), data_ptr);
+        ASSERT_EQ(jptr->use_count(), 1);
+        ASSERT_TRUE(valid);
+    }
+    ASSERT_FALSE(valid);
+}
+
 TEST(isptr_with_core_counter_tests, test_iptr_copy_assignment)
 {
     bool valid = false;
@@ -68,8 +104,36 @@ TEST(isptr_with_core_counter_tests, test_iptr_copy_assignment)
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
         core::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
         {
-            core::intrusive_shared_ptr<data_with_ircnt> jptr;
+            bool valid_2 = false;
+            core::intrusive_shared_ptr<data_with_ircnt> jptr(new data_with_ircnt(valid_2));
+            ASSERT_TRUE(valid_2);
             jptr = iptr;
+            ASSERT_FALSE(valid_2);
+            ASSERT_EQ(iptr.get(), data_ptr);
+            ASSERT_EQ(iptr->use_count(), 2);
+            ASSERT_EQ(jptr.get(), data_ptr);
+            ASSERT_EQ(jptr->use_count(), 2);
+            ASSERT_TRUE(valid);
+        }
+        ASSERT_EQ(iptr.get(), data_ptr);
+        ASSERT_EQ(iptr->use_count(), 1);
+        ASSERT_TRUE(valid);
+    }
+    ASSERT_FALSE(valid);
+}
+
+TEST(isptr_with_core_counter_tests, test_iptr_copy_assignment_other)
+{
+    bool valid = false;
+    {
+        data_with_ircnt* data_ptr = new data_with_ircnt(valid);
+        core::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        {
+            bool valid_2 = false;
+            core::intrusive_shared_ptr<base_with_ircnt> jptr(new data_with_ircnt(valid_2));
+            ASSERT_TRUE(valid_2);
+            jptr = iptr;
+            ASSERT_FALSE(valid_2);
             ASSERT_EQ(iptr.get(), data_ptr);
             ASSERT_EQ(iptr->use_count(), 2);
             ASSERT_EQ(jptr.get(), data_ptr);
@@ -90,8 +154,33 @@ TEST(isptr_with_core_counter_tests, test_iptr_move_assignment)
         data_with_ircnt* data_ptr = new data_with_ircnt(valid);
         core::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
         {
-            core::intrusive_shared_ptr<data_with_ircnt> jptr;
+            bool valid_2 = false;
+            core::intrusive_shared_ptr<data_with_ircnt> jptr(new data_with_ircnt(valid_2));
+            ASSERT_TRUE(valid_2);
             jptr = std::move(iptr);
+            ASSERT_FALSE(valid_2);
+            ASSERT_EQ(iptr.get(), nullptr);
+            ASSERT_EQ(jptr.get(), data_ptr);
+            ASSERT_EQ(jptr->use_count(), 1);
+            ASSERT_TRUE(valid);
+        }
+        ASSERT_FALSE(valid);
+    }
+    ASSERT_FALSE(valid);
+}
+
+TEST(isptr_with_core_counter_tests, test_iptr_move_assignment_other)
+{
+    bool valid = false;
+    {
+        data_with_ircnt* data_ptr = new data_with_ircnt(valid);
+        core::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
+        {
+            bool valid_2 = false;
+            core::intrusive_shared_ptr<base_with_ircnt> jptr(new data_with_ircnt(valid_2));
+            ASSERT_TRUE(valid_2);
+            jptr = std::move(iptr);
+            ASSERT_FALSE(valid_2);
             ASSERT_EQ(iptr.get(), nullptr);
             ASSERT_EQ(jptr.get(), data_ptr);
             ASSERT_EQ(jptr->use_count(), 1);
@@ -179,36 +268,6 @@ TEST(isptr_with_core_counter_tests, test_iptr_operator_deref_const)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_cast_to_ptr)
-{
-    bool valid = false;
-    {
-        data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        core::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
-        data_with_ircnt* d_ptr = data_ptr;
-        ASSERT_EQ(d_ptr, data_ptr);
-        ASSERT_EQ(iptr.get(), data_ptr);
-        ASSERT_EQ(iptr->use_count(), 1);
-        ASSERT_TRUE(valid);
-    }
-    ASSERT_FALSE(valid);
-}
-
-TEST(isptr_with_core_counter_tests, test_iptr_cast_to_cptr)
-{
-    bool valid = false;
-    {
-        data_with_ircnt* data_ptr = new data_with_ircnt(valid);
-        const core::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
-        const data_with_ircnt* d_ptr = data_ptr;
-        ASSERT_EQ(d_ptr, data_ptr);
-        ASSERT_EQ(iptr.get(), data_ptr);
-        ASSERT_EQ(iptr->use_count(), 1);
-        ASSERT_TRUE(valid);
-    }
-    ASSERT_FALSE(valid);
-}
-
 TEST(isptr_with_core_counter_tests, test_iptr_operator_arrow)
 {
     bool valid = false;
@@ -232,6 +291,7 @@ TEST(isptr_with_core_counter_tests, test_iptr_operator_arrow_const)
         data_with_ircnt* data_ptr = new data_with_ircnt(valid, "arba::core");
         const core::intrusive_shared_ptr<data_with_ircnt> iptr(data_ptr);
         ASSERT_EQ(iptr->text, "arba::core");
+        iptr->text = "arba_core";
         ASSERT_EQ(&iptr->text, &data_ptr->text);
         ASSERT_EQ(iptr.get(), data_ptr);
         ASSERT_EQ(iptr->use_count(), 1);
@@ -258,7 +318,7 @@ TEST(isptr_with_core_counter_tests, test_iptr_operator_cast_to_bool)
     ASSERT_FALSE(valid);
 }
 
-TEST(isptr_with_core_counter_tests, test_iptr_operator_cast_swap)
+TEST(isptr_with_core_counter_tests, test_iptr_swap)
 {
     bool valid = false;
     data_with_ircnt* data_ptr = new data_with_ircnt(valid);
@@ -300,7 +360,8 @@ TEST(isptr_with_core_counter_tests, test_iptr_hash)
     {
         data_with_ircnt* ptr = new data_with_ircnt(valid);
         core::intrusive_shared_ptr<data_with_ircnt> iptr(ptr);
-        ASSERT_EQ(std::hash<core::intrusive_shared_ptr<data_with_ircnt>>{}(iptr), std::hash<core::intrusive_shared_ptr<data_with_ircnt>>{}(ptr));
+        ASSERT_EQ(std::hash<core::intrusive_shared_ptr<data_with_ircnt>>{}(iptr),
+                  std::hash<data_with_ircnt*>{}(ptr));
     }
     ASSERT_FALSE(valid);
 }

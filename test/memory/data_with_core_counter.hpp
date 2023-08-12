@@ -3,7 +3,12 @@
 #include <string>
 #include <arba/core/memory/intrusive_ref_counter.hpp>
 
-struct data_with_ircnt : public core::intrusive_ref_counter<data_with_ircnt>
+struct base_with_ircnt : public core::intrusive_ref_counter<base_with_ircnt>
+{
+    virtual ~base_with_ircnt() = default;
+};
+
+struct data_with_ircnt : public base_with_ircnt
 {
     std::string text;
     bool* valid = nullptr;
@@ -12,7 +17,7 @@ struct data_with_ircnt : public core::intrusive_ref_counter<data_with_ircnt>
     ~data_with_ircnt() { *valid = false; }
 };
 
-struct data_with_ircnt_mc : public core::intrusive_ref_counter<data_with_ircnt_mc>
+struct data_with_ircnt_mc : public base_with_ircnt
 {
     std::string text;
     bool* valid = nullptr;

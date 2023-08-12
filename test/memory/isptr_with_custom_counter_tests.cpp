@@ -1,6 +1,8 @@
 #include <arba/core/memory/intrusive_shared_ptr.hpp>
 #include <gtest/gtest.h>
 
+// data_with_custom_counter
+
 struct data_with_custom_counter
 {
     int counter = 0;
@@ -10,6 +12,8 @@ struct data_with_custom_counter
     explicit data_with_custom_counter(bool& valid) : valid(&valid) { valid = true; }
     ~data_with_custom_counter() { *valid = false; }
 };
+
+// counter manager functions for data_with_custom_counter
 
 void intrusive_shared_ptr_add_ref(data_with_custom_counter* ptr) noexcept
 {
@@ -22,13 +26,15 @@ void intrusive_shared_ptr_release(data_with_custom_counter* ptr) noexcept
         delete ptr;
 }
 
+// tests:
+
 TEST(isptr_with_custom_counter_tests, test_iptr_empty_constructor)
 {
     core::intrusive_shared_ptr<data_with_custom_counter> iptr;
     ASSERT_EQ(iptr.get(), nullptr);
 }
 
-TEST(isptr_with_custom_counter_tests, test_iptr_constructor)
+TEST(isptr_with_custom_counter_tests, test_iptr_constructor_ptr)
 {
     bool valid = false;
     {

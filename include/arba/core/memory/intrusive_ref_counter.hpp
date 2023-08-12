@@ -66,31 +66,31 @@ public:
     using intrusive_ref_counter_base::intrusive_ref_counter_base;
 };
 
-template <class value_type>
-    requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
-void intrusive_shared_ptr_add_ref(value_type* ptr) noexcept
+template <class element_type>
+    requires std::is_base_of_v<intrusive_ref_counter_base, element_type>
+void intrusive_shared_ptr_add_ref(element_type* ptr) noexcept
 {
     intrusive_shared_ptr_add_ref_(ptr);
 }
 
-template <class value_type>
-    requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
-void intrusive_shared_ptr_release(value_type* ptr) noexcept
+template <class element_type>
+    requires std::is_base_of_v<intrusive_ref_counter_base, element_type>
+void intrusive_shared_ptr_release(element_type* ptr) noexcept
 {
     if (intrusive_shared_ptr_dec_ref_(ptr))
         delete ptr;
 }
 
-template <class value_type>
-    requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
-void intrusive_weak_ptr_add_ref(value_type* ptr) noexcept
+template <class element_type>
+    requires std::is_base_of_v<intrusive_ref_counter_base, element_type>
+void intrusive_weak_ptr_add_ref(element_type* ptr) noexcept
 {
     intrusive_weak_ptr_add_ref_(ptr);
 }
 
-template <class value_type>
-    requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
-void intrusive_weak_ptr_release(value_type* ptr) noexcept
+template <class element_type>
+    requires std::is_base_of_v<intrusive_ref_counter_base, element_type>
+void intrusive_weak_ptr_release(element_type* ptr) noexcept
 {
     if (intrusive_weak_ptr_dec_ref_(ptr))
         delete ptr;
