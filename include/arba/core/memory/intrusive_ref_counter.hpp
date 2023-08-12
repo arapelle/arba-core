@@ -12,11 +12,11 @@ class intrusive_ref_counter_base
 {
 public:
     intrusive_ref_counter_base() noexcept
-        : shared_ref_counter_(0)
+        : ref_counter_(0)
     {}
 
     explicit intrusive_ref_counter_base(const intrusive_ref_counter_base&) noexcept
-        : shared_ref_counter_(0)
+        : ref_counter_(0)
     {}
 
     intrusive_ref_counter_base& operator=(const intrusive_ref_counter_base&) noexcept
@@ -24,26 +24,39 @@ public:
         return *this;
     }
 
-    inline unsigned int use_count() const noexcept { return shared_ref_counter_; }
+    inline unsigned int use_count() const noexcept { return ref_counter_.load() & 0x00000000ffffffff; }
+    inline unsigned int latent_count() const noexcept { return (ref_counter_.load() & 0xffffffff00000000) >> 32; }
 
     friend void intrusive_shared_ptr_add_ref_(intrusive_ref_counter_base* ptr) noexcept;
     friend bool intrusive_shared_ptr_dec_ref_(intrusive_ref_counter_base* ptr) noexcept;
+    friend void intrusive_weak_ptr_add_ref_(intrusive_ref_counter_base* ptr) noexcept;
+    friend bool intrusive_weak_ptr_dec_ref_(intrusive_ref_counter_base* ptr) noexcept;
 
 protected:
     ~intrusive_ref_counter_base() = default;
 
 private:
-    std::atomic_uint shared_ref_counter_ = 0;
+    std::atomic_uint64_t ref_counter_ = 0;
 };
 
 inline void intrusive_shared_ptr_add_ref_(intrusive_ref_counter_base* ptr) noexcept
 {
-    ++(ptr->shared_ref_counter_);
+    ptr->ref_counter_.fetch_add(1);
 }
 
 inline bool intrusive_shared_ptr_dec_ref_(intrusive_ref_counter_base* ptr) noexcept
 {
-    return --(ptr->shared_ref_counter_) == 0;
+    return ptr->ref_counter_.fetch_sub(1) == 1;
+}
+
+inline void intrusive_weak_ptr_add_ref_(intrusive_ref_counter_base* ptr) noexcept
+{
+    ptr->ref_counter_.fetch_add(1LL<<32);
+}
+
+inline bool intrusive_weak_ptr_dec_ref_(intrusive_ref_counter_base* ptr) noexcept
+{
+    return (ptr->ref_counter_.fetch_sub(1LL<<32)) == 1LL<<32;
 }
 
 template <class derived_type>
@@ -54,17 +67,32 @@ public:
 };
 
 template <class value_type>
-requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
+    requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
 void intrusive_shared_ptr_add_ref(value_type* ptr) noexcept
 {
     intrusive_shared_ptr_add_ref_(ptr);
 }
 
 template <class value_type>
-requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
+    requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
 void intrusive_shared_ptr_release(value_type* ptr) noexcept
 {
     if (intrusive_shared_ptr_dec_ref_(ptr))
+        delete ptr;
+}
+
+template <class value_type>
+    requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
+void intrusive_weak_ptr_add_ref(value_type* ptr) noexcept
+{
+    intrusive_weak_ptr_add_ref_(ptr);
+}
+
+template <class value_type>
+    requires std::is_base_of_v<intrusive_ref_counter_base, value_type>
+void intrusive_weak_ptr_release(value_type* ptr) noexcept
+{
+    if (intrusive_weak_ptr_dec_ref_(ptr))
         delete ptr;
 }
 
