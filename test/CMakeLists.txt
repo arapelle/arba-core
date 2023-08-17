@@ -11,7 +11,6 @@ add_cpp_library_basic_tests(GTest::gtest_main
         htow_tests.cpp
         string_tokenizer_tests.cpp
         string_tests.cpp
-        request_type_tests.cpp
         copy_stream_tests.cpp
         check_file_tests.cpp
         open_file_tests.cpp
@@ -20,5 +19,6 @@ add_cpp_library_basic_tests(GTest::gtest_main
         span_tests.cpp
 )
 
+add_subdirectory(template)
 add_subdirectory(memory)
 add_subdirectory(plugin_tests)
