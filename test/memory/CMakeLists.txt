@@ -4,6 +4,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
     STATIC ${PROJECT_NAME}-static
     SOURCES
         intrusive_ref_counter_tests.cpp
+        intrusive_ref_counters_tests.cpp
         isptr_with_custom_counter_tests.cpp
         isptr_with_core_counter_tests.cpp
         make_isptr_tests.cpp
