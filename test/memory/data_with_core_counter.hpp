@@ -3,7 +3,7 @@
 #include <string>
 #include <arba/core/memory/intrusive_ref_counter.hpp>
 
-struct base_with_ircnt : public core::intrusive_ref_counter<base_with_ircnt>
+struct base_with_ircnt : public core::intrusive_ref_counter<>
 {
     virtual ~base_with_ircnt() = default;
 };
