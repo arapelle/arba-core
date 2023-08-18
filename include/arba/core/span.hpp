@@ -1,6 +1,6 @@
 #pragma once
 
-#include <arba/core/template/maythrow.hpp>
+#include <arba/core/template/exception_policy.hpp>
 
 #include <new>
 #include <span>
