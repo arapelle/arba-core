@@ -53,6 +53,7 @@ set(headers
     include/arba/core/template/default_type.hpp
     include/arba/core/template/exception_policy.hpp
     include/arba/core/template/request_type.hpp
+    include/arba/core/template/thread_policy.hpp
     include/arba/core/type_traits.hpp
     include/arba/core/uuid.hpp
 )
