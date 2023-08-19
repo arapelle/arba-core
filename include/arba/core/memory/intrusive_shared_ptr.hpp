@@ -10,9 +10,6 @@ inline namespace arba
 namespace core
 {
 
-template <intrusive_latent elem_type>
-class intrusive_weak_ptr;
-
 template <intrusive_sharable elem_type>
 class intrusive_shared_ptr
 {
@@ -35,10 +32,6 @@ public:
         requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<element_type>>
     intrusive_shared_ptr(intrusive_shared_ptr<Up>&& isptr);
 
-    template <typename Up>
-        requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<element_type>>
-    explicit intrusive_shared_ptr(const intrusive_weak_ptr<Up>& iwptr);
-
     ~intrusive_shared_ptr();
 
     intrusive_shared_ptr& operator=(intrusive_shared_ptr isptr);
@@ -58,10 +51,15 @@ public:
     inline auto operator<=>(const intrusive_shared_ptr&) const = default;
 
 private:
+    struct lock_tag {};
+    intrusive_shared_ptr(element_type* ptr, lock_tag);
+
     element_type* pointer_ = nullptr;
 
     template <intrusive_sharable Up>
     friend class intrusive_shared_ptr;
+    template <intrusive_latent Up>
+    friend class intrusive_weak_ptr;
 };
 
 template <intrusive_sharable Type>
@@ -70,6 +68,12 @@ inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(Type* ptr)
 {
     if (pointer_)
         intrusive_shared_ptr_add_ref(pointer_);
+}
+
+template <intrusive_sharable Type>
+inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(element_type* ptr, lock_tag)
+    : pointer_(ptr)
+{
 }
 
 template <intrusive_sharable Type>
@@ -129,7 +133,6 @@ inline intrusive_shared_ptr<Type>& intrusive_shared_ptr<Type>::operator=(intrusi
     std::swap(pointer_, aux.pointer_);
     return *this;
 }
-
 
 template <intrusive_sharable Type>
 inline Type* intrusive_shared_ptr<Type>::release() noexcept

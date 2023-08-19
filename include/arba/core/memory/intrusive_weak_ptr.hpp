@@ -41,17 +41,33 @@ public:
 
     void reset() noexcept;
 
-    inline std::size_t use_count() const noexcept { return intrusive_weak_ptr_use_count(pointer_); }
+    inline std::size_t use_count() const noexcept
+    {
+        if (pointer_) [[likely]]
+            return intrusive_weak_ptr_use_count(pointer_);
+        return 0;
+    }
     inline bool expired() const noexcept { return use_count() == 0; }
+    inline intrusive_shared_ptr<element_type> lock() const noexcept
+    {
+        if (pointer_) [[likely]]
+        {
+            if (intrusive_weak_ptr_lock(pointer_))
+                return intrusive_shared_ptr<element_type>(pointer_, intrusive_shared_ptr<element_type>::lock_tag());
+            reset_();
+        }
+        return intrusive_shared_ptr<element_type>();
+    }
 
     inline void swap(intrusive_weak_ptr& other) { std::swap(pointer_, other.pointer_); }
     inline auto operator<=>(const intrusive_weak_ptr&) const = default;
 
 private:
-    element_type* pointer_ = nullptr;
+    inline void reset_() noexcept;
 
-    template <intrusive_sharable Up>
-    friend class intrusive_shared_ptr;
+private:
+    mutable element_type* pointer_ = nullptr;
+
     template <intrusive_latent Up>
     friend class intrusive_weak_ptr;
 };
@@ -135,18 +151,14 @@ template <intrusive_latent Type>
 inline void intrusive_weak_ptr<Type>::reset() noexcept
 {
     if (pointer_)
-        intrusive_weak_ptr_release(pointer_);
+        reset_();
 }
 
-
-template <intrusive_sharable Type>
-template <typename Up>
-    requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<Type>>
-inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_weak_ptr<Up>& iwptr)
-    : pointer_(static_cast<std::add_pointer_t<Type>>(iwptr.pointer_))
+template <intrusive_latent Type>
+inline void intrusive_weak_ptr<Type>::reset_() noexcept
 {
-    if (pointer_)
-        intrusive_shared_ptr_add_ref(pointer_);
+    intrusive_weak_ptr_release(pointer_);
+    pointer_ = nullptr;
 }
 
 }
