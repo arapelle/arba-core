@@ -137,6 +137,12 @@ public:
                && ptr->latent_counter_ == 0;
     }
 
+    inline static bool lock_use_counter(intrusive_ref_counters* ptr) noexcept
+    {
+        intrusive_ref_counter<counter_bitsize, thread_unsafe_t>::increment_use_counter(ptr);
+        return true;
+    }
+
     inline static void increment_latent_counter(intrusive_ref_counters* ptr) noexcept
     {
         ++(ptr->latent_counter_);
@@ -190,6 +196,18 @@ public:
         return ptr->ref_counter_.fetch_sub(1) == 1;
     }
 
+    inline static bool lock_use_counter(intrusive_ref_counters* ptr) noexcept
+    {
+        ref_counter_type counter = ptr->ref_counter_;
+        do
+        {
+            if ((counter & use_count_mask) == 0)
+                return false;
+        }
+        while (!ptr->ref_counter_.compare_exchange_strong(counter, counter + 1));
+        return true;
+    }
+
     inline static void increment_latent_counter(intrusive_ref_counters* ptr) noexcept
     {
         ptr->ref_counter_.fetch_add(1LL<<counter_bitsize);
@@ -237,6 +255,13 @@ void intrusive_weak_ptr_release(element_type* ptr) noexcept
 {
     if (element_type::decrement_latent_counter(ptr))
         delete ptr;
+}
+
+template <class element_type>
+    requires std::is_base_of_v<intrusive_type_base, element_type>
+bool intrusive_weak_ptr_lock(element_type* ptr) noexcept
+{
+    return element_type::lock_use_counter(ptr);
 }
 
 template <class element_type>

@@ -40,7 +40,7 @@ private:
 template <class ircnts_type>
 struct ircnts_tests
 {
-    static void test_ircnts()
+    static void test_ircnts_delete_when_use_count_is_zero()
     {
         bool valid = false;
         ircnts_type* ircnts_ptr = new ircnts_type(valid);
@@ -61,7 +61,7 @@ struct ircnts_tests
         ASSERT_FALSE(valid);
     }
 
-    static void test_ircnts_2()
+    static void test_ircnts_delete_when_latent_count_is_zero()
     {
         bool valid = false;
         ircnts_type* ircnts_ptr = new ircnts_type(valid);
@@ -72,6 +72,36 @@ struct ircnts_tests
         ASSERT_EQ(ircnts_ptr->use_count(), 0);
         ASSERT_EQ(ircnts_ptr->latent_count(), 1);
         core::intrusive_weak_ptr_release(ircnts_ptr);
+        ASSERT_FALSE(valid);
+    }
+
+    static void test_ircnts_lock_success()
+    {
+        bool valid = false;
+        ircnts_type* ircnts_ptr = new ircnts_type(valid);
+        core::intrusive_shared_ptr_add_ref(ircnts_ptr);
+        bool lock = core::intrusive_weak_ptr_lock(ircnts_ptr);
+        ASSERT_TRUE(lock);
+        core::intrusive_weak_ptr_add_ref(ircnts_ptr);
+        core::intrusive_shared_ptr_release(ircnts_ptr);
+        core::intrusive_shared_ptr_release(ircnts_ptr);
+        ASSERT_TRUE(valid);
+        ASSERT_EQ(ircnts_ptr->use_count(), 0);
+        ASSERT_EQ(ircnts_ptr->latent_count(), 1);
+        core::intrusive_weak_ptr_release(ircnts_ptr);
+        ASSERT_FALSE(valid);
+    }
+
+    static void test_ircnts_lock_fail()
+    {
+        bool valid = false;
+        ircnts_type* ircnts_ptr = new ircnts_type(valid);
+        bool lock = core::intrusive_weak_ptr_lock(ircnts_ptr);
+        ASSERT_FALSE(lock);
+        ASSERT_TRUE(valid);
+        ASSERT_EQ(ircnts_ptr->use_count(), 0);
+        core::intrusive_shared_ptr_add_ref(ircnts_ptr);
+        core::intrusive_shared_ptr_release(ircnts_ptr);
         ASSERT_FALSE(valid);
     }
 
@@ -130,12 +160,17 @@ using ircnt_64_st = intrusive_ref_counters<64, core::thread_unsafe_t>;
 
 TEST(intrusive_ref_counters_tests, test_ircnts_64_st)
 {
-    ircnts_tests<ircnt_64_st>::test_ircnts();
+    ircnts_tests<ircnt_64_st>::test_ircnts_delete_when_use_count_is_zero();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_64_st_2)
 {
-    ircnts_tests<ircnt_64_st>::test_ircnts_2();
+    ircnts_tests<ircnt_64_st>::test_ircnts_delete_when_latent_count_is_zero();
+}
+
+TEST(intrusive_ref_counters_tests, test_ircnts_64_st_3)
+{
+    ircnts_tests<ircnt_64_st>::test_ircnts_lock_success();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_64_st_copy)
@@ -153,12 +188,17 @@ using ircnt_32_st = intrusive_ref_counters<32, core::thread_unsafe_t>;
 
 TEST(intrusive_ref_counters_tests, test_ircnts_32_st)
 {
-    ircnts_tests<ircnt_32_st>::test_ircnts();
+    ircnts_tests<ircnt_32_st>::test_ircnts_delete_when_use_count_is_zero();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_32_st_2)
 {
-    ircnts_tests<ircnt_32_st>::test_ircnts_2();
+    ircnts_tests<ircnt_32_st>::test_ircnts_delete_when_latent_count_is_zero();
+}
+
+TEST(intrusive_ref_counters_tests, test_ircnts_32_st_3)
+{
+    ircnts_tests<ircnt_32_st>::test_ircnts_lock_success();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_32_st_copy)
@@ -176,12 +216,22 @@ using ircnt_32_mt = intrusive_ref_counters<32, core::thread_safe_t>;
 
 TEST(intrusive_ref_counters_tests, test_ircnts_32_mt)
 {
-    ircnts_tests<ircnt_32_mt>::test_ircnts();
+    ircnts_tests<ircnt_32_mt>::test_ircnts_delete_when_use_count_is_zero();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_32_mt_2)
 {
-    ircnts_tests<ircnt_32_mt>::test_ircnts_2();
+    ircnts_tests<ircnt_32_mt>::test_ircnts_delete_when_latent_count_is_zero();
+}
+
+TEST(intrusive_ref_counters_tests, test_ircnts_32_mt_3)
+{
+    ircnts_tests<ircnt_32_mt>::test_ircnts_lock_success();
+}
+
+TEST(intrusive_ref_counters_tests, test_ircnts_32_mt_3b)
+{
+    ircnts_tests<ircnt_32_mt>::test_ircnts_lock_fail();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_32_mt_copy)
@@ -199,12 +249,17 @@ using ircnt_16_st = intrusive_ref_counters<16, core::thread_unsafe_t>;
 
 TEST(intrusive_ref_counters_tests, test_ircnts_16_st)
 {
-    ircnts_tests<ircnt_16_st>::test_ircnts();
+    ircnts_tests<ircnt_16_st>::test_ircnts_delete_when_use_count_is_zero();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_16_st_2)
 {
-    ircnts_tests<ircnt_16_st>::test_ircnts_2();
+    ircnts_tests<ircnt_16_st>::test_ircnts_delete_when_latent_count_is_zero();
+}
+
+TEST(intrusive_ref_counters_tests, test_ircnts_16_st_3)
+{
+    ircnts_tests<ircnt_16_st>::test_ircnts_lock_success();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_16_st_copy)
@@ -222,12 +277,22 @@ using ircnt_16_mt = intrusive_ref_counters<16, core::thread_safe_t>;
 
 TEST(intrusive_ref_counters_tests, test_ircnts_16_mt)
 {
-    ircnts_tests<ircnt_16_mt>::test_ircnts();
+    ircnts_tests<ircnt_16_mt>::test_ircnts_delete_when_use_count_is_zero();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_16_mt_2)
 {
-    ircnts_tests<ircnt_16_mt>::test_ircnts_2();
+    ircnts_tests<ircnt_16_mt>::test_ircnts_delete_when_latent_count_is_zero();
+}
+
+TEST(intrusive_ref_counters_tests, test_ircnts_16_mt_3)
+{
+    ircnts_tests<ircnt_16_mt>::test_ircnts_lock_success();
+}
+
+TEST(intrusive_ref_counters_tests, test_ircnts_16_mt_3b)
+{
+    ircnts_tests<ircnt_16_mt>::test_ircnts_lock_fail();
 }
 
 TEST(intrusive_ref_counters_tests, test_ircnts_16_mt_copy)
