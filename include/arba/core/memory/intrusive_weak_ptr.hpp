@@ -53,17 +53,16 @@ public:
         if (pointer_) [[likely]]
         {
             if (intrusive_weak_ptr_lock(pointer_))
-                return intrusive_shared_ptr<element_type>(pointer_, intrusive_shared_ptr<element_type>::lock_tag());
-            reset_();
+                return intrusive_shared_ptr<element_type>(pointer_,
+                                                          typename intrusive_shared_ptr<element_type>::lock_tag{});
+            intrusive_weak_ptr_release(pointer_);
+            pointer_ = nullptr;
         }
         return intrusive_shared_ptr<element_type>();
     }
 
     inline void swap(intrusive_weak_ptr& other) { std::swap(pointer_, other.pointer_); }
     inline auto operator<=>(const intrusive_weak_ptr&) const = default;
-
-private:
-    inline void reset_() noexcept;
 
 private:
     mutable element_type* pointer_ = nullptr;
@@ -151,14 +150,10 @@ template <intrusive_latent Type>
 inline void intrusive_weak_ptr<Type>::reset() noexcept
 {
     if (pointer_)
-        reset_();
-}
-
-template <intrusive_latent Type>
-inline void intrusive_weak_ptr<Type>::reset_() noexcept
-{
-    intrusive_weak_ptr_release(pointer_);
-    pointer_ = nullptr;
+    {
+        intrusive_weak_ptr_release(pointer_);
+        pointer_ = nullptr;
+    }
 }
 
 }

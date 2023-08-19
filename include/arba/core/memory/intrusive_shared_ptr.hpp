@@ -50,8 +50,8 @@ public:
     inline void swap(intrusive_shared_ptr& other) { std::swap(pointer_, other.pointer_); }
     inline auto operator<=>(const intrusive_shared_ptr&) const = default;
 
-private:
     struct lock_tag {};
+private:
     intrusive_shared_ptr(element_type* ptr, lock_tag);
 
     element_type* pointer_ = nullptr;
