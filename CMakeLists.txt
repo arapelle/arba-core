@@ -34,6 +34,7 @@ generate_version_macro_header(generated_version_header
 
 ## Headers:
 set(headers
+    include/arba/core/algorithm.hpp
     include/arba/core/byte_swap.hpp
     include/arba/core/hash.hpp
     include/arba/core/htow.hpp

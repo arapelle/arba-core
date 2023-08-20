@@ -5,6 +5,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
     STATIC ${PROJECT_NAME}-static
     SOURCES
         project_version_tests.cpp
+        algorithm_tests.cpp
         uuid_tests.cpp
         hash_tests.cpp
         byte_swap_tests.cpp
