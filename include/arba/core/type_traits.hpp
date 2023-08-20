@@ -3,6 +3,7 @@
 #include <type_traits>
 #include <cstdint>
 #include <atomic>
+#include <memory>
 #include <arba/core/template/thread_policy.hpp>
 
 inline namespace arba
@@ -35,6 +36,23 @@ struct make_integer<bitsize, sign_type, thread_safe_t>
 {
     using type = std::atomic<make_integer_t<bitsize, sign_type>>;
 };
+
+
+template <class T>
+inline constexpr bool is_move_assignable_to_itself_v = std::is_trivially_copyable_v<T>;
+
+template <class T>
+    requires std::is_scalar_v<T>
+inline constexpr bool is_move_assignable_to_itself_v<std::atomic<T>> = true;
+
+template <class T>
+inline constexpr bool is_move_assignable_to_itself_v<std::unique_ptr<T>> = true;
+
+template <class T>
+inline constexpr bool is_move_assignable_to_itself_v<std::shared_ptr<T>> = true;
+
+template <class T>
+inline constexpr bool is_move_assignable_to_itself_v<std::atomic<std::shared_ptr<T>>> = true;
 
 }
 }

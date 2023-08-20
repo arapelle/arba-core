@@ -17,6 +17,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
         sbrm_tests.cpp
         random_tests.cpp
         span_tests.cpp
+        type_traits_tests.cpp
 )
 
 add_subdirectory(template)
