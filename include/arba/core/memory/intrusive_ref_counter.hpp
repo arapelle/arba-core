@@ -96,5 +96,12 @@ void intrusive_weak_ptr_release(element_type* ptr) noexcept
         delete ptr;
 }
 
+template <class element_type>
+    requires std::is_base_of_v<intrusive_ref_counter_base, element_type>
+std::size_t intrusive_weak_ptr_use_count(element_type* ptr) noexcept
+{
+    return ptr->use_count();
+}
+
 }
 }

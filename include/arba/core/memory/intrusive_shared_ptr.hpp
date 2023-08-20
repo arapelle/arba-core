@@ -3,23 +3,15 @@
 #include <functional>
 #include <cassert>
 
+#include "concepts.hpp"
+
 inline namespace arba
 {
 namespace core
 {
 
-template <class element_type>
-void intrusive_shared_ptr_add_ref(element_type* ptr) noexcept;
-
-template <class element_type>
-void intrusive_shared_ptr_release(element_type* ptr) noexcept;
-
-template <class element_type>
-concept intrusive_sharable = requires(element_type* ptr)
-{
-    intrusive_shared_ptr_add_ref(ptr);
-    intrusive_shared_ptr_release(ptr);
-};
+template <intrusive_latent elem_type>
+class intrusive_weak_ptr;
 
 template <intrusive_sharable elem_type>
 class intrusive_shared_ptr
@@ -43,8 +35,9 @@ public:
         requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<element_type>>
     intrusive_shared_ptr(intrusive_shared_ptr<Up>&& isptr);
 
-//    template <typename Up>
-//    explicit intrusive_shared_ptr(const intrusive_weak_ptr<Up>& iwptr);
+    template <typename Up>
+        requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<element_type>>
+    explicit intrusive_shared_ptr(const intrusive_weak_ptr<Up>& iwptr);
 
     ~intrusive_shared_ptr();
 
