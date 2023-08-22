@@ -12,19 +12,19 @@ namespace core
 
 // unstable_erase()
 
-struct last_value_safe_t { explicit last_value_safe_t() = default; };
-constexpr last_value_safe_t last_value_safe;
+struct any_value_t { explicit any_value_t() = default; };
+constexpr any_value_t any_value;
 
-struct last_value_unsafe_t { explicit last_value_unsafe_t() = default; };
-constexpr last_value_unsafe_t last_value_unsafe;
+struct not_last_value_t { explicit not_last_value_t() = default; };
+constexpr not_last_value_t not_last_value;
 
 template <class tag_type>
-concept last_value_policy = std::is_same_v<tag_type, last_value_safe_t>
-                            || std::is_same_v<tag_type, last_value_unsafe_t>;
+concept erase_value_policy = std::is_same_v<tag_type, any_value_t>
+                            || std::is_same_v<tag_type, not_last_value_t>;
 
 template <std::ranges::random_access_range range_type>
 inline void unstable_erase(range_type& range, std::ranges::iterator_t<range_type> iter,
-                    last_value_unsafe_t = last_value_unsafe)
+                           any_value_t = any_value)
 {
     auto last_iter = --std::ranges::end(range);
     if constexpr (is_move_assignable_to_itself_v<std::ranges::range_value_t<range_type>>)
@@ -40,7 +40,7 @@ inline void unstable_erase(range_type& range, std::ranges::iterator_t<range_type
 }
 
 template <std::ranges::random_access_range range_type>
-inline void unstable_erase(range_type& range, typename range_type::iterator iter, last_value_safe_t)
+inline void unstable_erase(range_type& range, typename range_type::iterator iter, not_last_value_t)
 {
     *iter = std::move(*--std::ranges::end(range));
     range.pop_back();
@@ -48,14 +48,14 @@ inline void unstable_erase(range_type& range, typename range_type::iterator iter
 
 // quick_erase()
 
-template <std::ranges::random_access_range range_type, last_value_policy last_value_policy>
-inline void quick_erase(range_type& range, std::ranges::iterator_t<range_type> iter, last_value_policy lv_policy)
+template <std::ranges::random_access_range range_type, erase_value_policy erase_value_policy>
+inline void quick_erase(range_type& range, std::ranges::iterator_t<range_type> iter, erase_value_policy policy)
 {
-    unstable_erase(range, iter, lv_policy);
+    unstable_erase(range, iter, policy);
 }
 
-template <std::ranges::range range_type, last_value_policy last_value_policy>
-inline void quick_erase(range_type& range, std::ranges::iterator_t<range_type> iter, last_value_policy)
+template <std::ranges::range range_type, erase_value_policy erase_value_policy>
+inline void quick_erase(range_type& range, std::ranges::iterator_t<range_type> iter, erase_value_policy)
 {
     range.erase(iter);
 }
@@ -63,7 +63,7 @@ inline void quick_erase(range_type& range, std::ranges::iterator_t<range_type> i
 template <std::ranges::range range_type>
 inline void quick_erase(range_type& range, typename range_type::iterator iter)
 {
-    quick_erase(range, iter, last_value_unsafe);
+    quick_erase(range, iter, any_value);
 }
 
 }
