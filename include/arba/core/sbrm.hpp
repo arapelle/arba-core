@@ -9,7 +9,7 @@ inline namespace arba
 namespace core
 {
 
-// Scoped-Bound Resource Manager
+// Scope-Bound Resource Manager
 // https://en.cppreference.com/w/cpp/language/raii
 template <class functor_type>
 class sbrm
@@ -39,6 +39,7 @@ public:
 private:
     std::optional<deleter_type> deleter_;
 };
+
 
 inline auto make_sb_file_remover(const std::filesystem::path& path)
 {
