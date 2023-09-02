@@ -8,7 +8,7 @@ int Generator::generate() const
 }
 
 
-extern "C" std::unique_ptr<GeneratorInterface> make_instance()
+extern "C" std::unique_ptr<GeneratorInterface> make_unique_instance()
 {
     return std::make_unique<Generator>();
 }

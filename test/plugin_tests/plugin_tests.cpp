@@ -2,13 +2,14 @@
 #include <arba/core/plugin.hpp>
 #include <rng_interface.hpp>
 #include <format>
+#include <regex>
 
-TEST(PluginTest, Constructor_ExistingLibraryNoExtension_ExpectNoException)
+TEST(PluginTest, ConstructorEmpty_NominalCase_ExpectNoException)
 {
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
-        SUCCEED();
+        core::plugin plugin;
+        ASSERT_FALSE(plugin.is_loaded());
     }
     catch(...)
     {
@@ -16,7 +17,7 @@ TEST(PluginTest, Constructor_ExistingLibraryNoExtension_ExpectNoException)
     }
 }
 
-TEST(PluginTest, Constructor_ExistingLibraryWithExtension_ExpectNoException)
+TEST(PluginTest, LoadFromFile_ExistingLibraryWithExtension_ExpectNoException)
 {
     try
     {
@@ -26,8 +27,62 @@ TEST(PluginTest, Constructor_ExistingLibraryWithExtension_ExpectNoException)
 #else
             "so";
 #endif
-        core::plugin plugin(std::filesystem::current_path() / "rng" / std::format("librng.{}", ext));
-        SUCCEED();
+        core::plugin plugin;
+        plugin.load_from_file(std::filesystem::current_path() / "rng" / std::format("librng.{}", ext));
+        ASSERT_TRUE(plugin.is_loaded());
+    }
+    catch(...)
+    {
+        FAIL();
+    }
+}
+
+TEST(PluginTest, LoadFromFile_ExistingLibraryNoExtension_ExpectNoException)
+{
+    try
+    {
+        core::plugin plugin;
+        plugin.load_from_file(std::filesystem::current_path() / "rng" / "librng");
+        ASSERT_TRUE(plugin.is_loaded());
+    }
+    catch(...)
+    {
+        FAIL();
+    }
+}
+
+TEST(PluginTest, LoadFromFile_UnfoundLibrary_ExpectException)
+{
+    std::filesystem::path lib_path = std::filesystem::current_path() / "rng/libunfound";
+    try
+    {
+        core::plugin plugin;
+        plugin.load_from_file(lib_path);
+        FAIL();
+    }
+    catch(const core::plugin_error& exception)
+    {
+        constexpr std::string_view expected_msg_fmt =
+#ifdef WIN32
+            "Exception occurred while loading {}";
+#else
+            "Exception occurred while loading plugin: {}";
+#endif
+        std::string expected_msg(std::format(expected_msg_fmt, lib_path.generic_string()));
+        ASSERT_EQ(std::string(exception.what()).find(expected_msg), 0);
+    }
+    catch(...)
+    {
+        FAIL();
+    }
+}
+
+TEST(PluginTest, Constructor_ExistingLibraryNoExtension_ExpectNoException)
+{
+    try
+    {
+        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        ASSERT_TRUE(plugin.is_loaded());
     }
     catch(...)
     {
@@ -40,10 +95,10 @@ TEST(PluginTest, Constructor_UnfoundLibrary_ExpectException)
     std::filesystem::path lib_path = std::filesystem::current_path() / "rng/libunfound";
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng/libunfound");
+        core::plugin plugin(lib_path);
         FAIL();
     }
-    catch(std::runtime_error exception)
+    catch(const core::plugin_error& exception)
     {
         constexpr std::string_view expected_msg_fmt =
 #ifdef WIN32
@@ -53,6 +108,21 @@ TEST(PluginTest, Constructor_UnfoundLibrary_ExpectException)
 #endif
         std::string expected_msg(std::format(expected_msg_fmt, lib_path.generic_string()));
         ASSERT_EQ(std::string(exception.what()).find(expected_msg), 0);
+    }
+    catch(...)
+    {
+        FAIL();
+    }
+}
+
+TEST(PluginTest, Unload_NomicalCase_ExpectNoException)
+{
+    try
+    {
+        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        ASSERT_TRUE(plugin.is_loaded());
+        plugin.unload();
+        ASSERT_FALSE(plugin.is_loaded());
     }
     catch(...)
     {
@@ -79,23 +149,25 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectNoException)
 
 TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
 {
+    std::filesystem::path lib_path = std::filesystem::current_path() / "rng/librng";
     std::string_view function_name("not_found_function");
 
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        core::plugin plugin(lib_path);
         plugin.find_function_ptr<void(*)(int&)>(function_name);
     }
-    catch(std::runtime_error exception)
+    catch(const core::plugin_error& exception)
     {
         constexpr std::string_view expected_msg_fmt =
 #ifdef WIN32
-            "Exception occurred while looking for address of {}";
+            "Exception occurred while looking for address of {1}:.*";
 #else
-            "Exception occurred while looking for address of symbol: {}";
+            "Exception occurred while looking for address of symbol: {}.so: .*: {}";
 #endif
-        std::string expected_msg(std::format("", function_name));
-        ASSERT_EQ(std::string(exception.what()).find(expected_msg), 0);
+        std::string exception_what(exception.what());
+        std::string expected_msg(std::format(expected_msg_fmt, lib_path.generic_string(), function_name));
+        ASSERT_TRUE(std::regex_match(exception_what, std::regex(expected_msg)));
     }
     catch(...)
     {
@@ -105,12 +177,12 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
 
 TEST(PluginTest, MakeInstance_FunctionExists_ReturnUniquePtr)
 {
-    std::string_view function_name("make_instance");
+    std::string_view function_name("make_unique_instance");
 
     try
     {
         core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
-        std::unique_ptr<GeneratorInterface> generator = plugin.make_instance<GeneratorInterface>(function_name);
+        std::unique_ptr<GeneratorInterface> generator = plugin.make_unique_instance<GeneratorInterface>(function_name);
         std::cout << generator->generate() << std::endl;
         SUCCEED();
     }

@@ -3,11 +3,28 @@
 #include <type_traits>
 #include <memory>
 #include <filesystem>
+#ifdef WIN32
+#include <system_error>
+#else
+#include <stdexcept>
+#endif
 
 inline namespace arba
 {
 namespace core
 {
+
+class plugin_error : public
+#ifdef WIN32
+    std::system_error
+{
+    using std::system_error::system_error;
+#else
+    std::runtime_error
+{
+    using std::runtime_error::runtime_error;
+#endif
+};
 
 /**
  * @brief The plugin class
@@ -15,10 +32,12 @@ namespace core
 class plugin
 {
 public:
+    inline plugin() {}
+
     /**
      * @brief Plugin constructor which takes the path to the plugin to load.
      * @param plugin_path The path to the plugin to load (extension of the file is optional).
-     * @throw std::system_error If the file does not exist or if there is a problem during loading.
+     * @throw std::runtime_error If the file does not exist or if there is a problem during loading.
      */
     explicit plugin(const std::filesystem::path& plugin_path);
 
@@ -33,11 +52,31 @@ public:
     ~plugin();
 
     /**
+     * @brief load_from_file Load the plugin present at a given path.
+     * @param plugin_path The path to the plugin to load (extension of the file is optional).
+     * @throw std::runtime_error If the file does not exist or if there is a problem during loading.
+     * @warning If a plugin is already loaded by this instance, the behavior is undefined.
+     */
+    void load_from_file(const std::filesystem::path& plugin_path);
+
+    /**
+     * @brief unload Unload the plugin.
+     * @warning If no plugin is loaded by this instance, the behavior is undefined.
+     */
+    void unload();
+
+    /**
+     * @brief is_loaded Indicate is this plugin is loaded or not.
+     * @return true If a loaded plugin is held by this instance.
+     */
+    [[nodiscard]] inline bool is_loaded() const noexcept { return handle_; }
+
+    /**
      * @brief find_function_ptr Find the address of the function with a given name.
      * @tparam PointerType Signature of the search function. (i.e. void(*)(int))
      * @param function_name The name of the searched function.
      * @return A function pointer to the found function symbol in the plugin.
-     * @throw std::system_error If the symbol is not found.
+     * @throw std::runtime_error If the symbol is not found or if a plugin is not loaded by this instance.
      * @warning There is no guarantee that the function has the wanted signature.
      */
     template <typename PointerType>
@@ -81,7 +120,7 @@ public:
     }
 
     /**
-     * @brief make_instance Find a function making a new instance stored in a std::unique_ptr and call it to return the std::unique_ptr.
+     * @brief make_unique_instance Find a function making a new instance stored in a std::unique_ptr and call it to return the std::unique_ptr.
      * @tparam ClassType The type of the made instance.
      * @tparam DeleterType The type of the deleter functor used by std::unique_ptr. (default is std::unique_ptr<ClassType>::deleter_type>)
      * @param maker_function_name The name of the maker function to find in the plugin. (default is "make_instance")
@@ -91,7 +130,7 @@ public:
      */
     template <typename ClassType, typename DeleterType = typename std::unique_ptr<ClassType>::deleter_type>
         requires std::has_virtual_destructor_v<ClassType>
-    std::unique_ptr<ClassType> make_instance(const std::string_view maker_function_name = "make_instance")
+    std::unique_ptr<ClassType> make_unique_instance(const std::string_view maker_function_name = "make_unique_instance")
     {
         using InstanceMaker = std::unique_ptr<ClassType, DeleterType>(*)();
         InstanceMaker maker = this->find_function_ptr<InstanceMaker>(maker_function_name);
