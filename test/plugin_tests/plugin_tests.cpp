@@ -161,7 +161,7 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
     {
         constexpr std::string_view expected_msg_fmt =
 #ifdef WIN32
-            "Exception occurred while looking for address of {}";
+            "Exception occurred while looking for address of {1}:.*";
 #else
             "Exception occurred while looking for address of symbol: {}.so: .*: {}";
 #endif
