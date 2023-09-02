@@ -105,12 +105,12 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
 
 TEST(PluginTest, MakeInstance_FunctionExists_ReturnUniquePtr)
 {
-    std::string_view function_name("make_instance");
+    std::string_view function_name("make_unique_instance");
 
     try
     {
         core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
-        std::unique_ptr<GeneratorInterface> generator = plugin.make_instance<GeneratorInterface>(function_name);
+        std::unique_ptr<GeneratorInterface> generator = plugin.make_unique_instance<GeneratorInterface>(function_name);
         std::cout << generator->generate() << std::endl;
         SUCCEED();
     }

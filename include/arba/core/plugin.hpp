@@ -81,7 +81,7 @@ public:
     }
 
     /**
-     * @brief make_instance Find a function making a new instance stored in a std::unique_ptr and call it to return the std::unique_ptr.
+     * @brief make_unique_instance Find a function making a new instance stored in a std::unique_ptr and call it to return the std::unique_ptr.
      * @tparam ClassType The type of the made instance.
      * @tparam DeleterType The type of the deleter functor used by std::unique_ptr. (default is std::unique_ptr<ClassType>::deleter_type>)
      * @param maker_function_name The name of the maker function to find in the plugin. (default is "make_instance")
@@ -91,7 +91,7 @@ public:
      */
     template <typename ClassType, typename DeleterType = typename std::unique_ptr<ClassType>::deleter_type>
         requires std::has_virtual_destructor_v<ClassType>
-    std::unique_ptr<ClassType> make_instance(const std::string_view maker_function_name = "make_instance")
+    std::unique_ptr<ClassType> make_unique_instance(const std::string_view maker_function_name = "make_unique_instance")
     {
         using InstanceMaker = std::unique_ptr<ClassType, DeleterType>(*)();
         InstanceMaker maker = this->find_function_ptr<InstanceMaker>(maker_function_name);
