@@ -18,7 +18,7 @@ public:
     /**
      * @brief Plugin constructor which takes the path to the plugin to load.
      * @param plugin_path The path to the plugin to load (extension of the file is optional).
-     * @throw std::system_error If the file does not exist or if there is a problem during loading.
+     * @throw std::runtime_error If the file does not exist or if there is a problem during loading.
      */
     explicit plugin(const std::filesystem::path& plugin_path);
 
@@ -37,7 +37,7 @@ public:
      * @tparam PointerType Signature of the search function. (i.e. void(*)(int))
      * @param function_name The name of the searched function.
      * @return A function pointer to the found function symbol in the plugin.
-     * @throw std::system_error If the symbol is not found.
+     * @throw std::runtime_error If the symbol is not found or if a plugin is not loaded by this instance.
      * @warning There is no guarantee that the function has the wanted signature.
      */
     template <typename PointerType>
