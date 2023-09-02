@@ -52,7 +52,7 @@ void plugin::load_from_file(const std::filesystem::path& plugin_path)
     if (!instance) [[unlikely]]
     {
         std::error_code error_code(GetLastError(), std::system_category());
-        throw std::system_error(error_code,
+        throw plugin_error(error_code,
                                 std::format("Exception occurred while loading {}", plugin_path.generic_string()));
     }
     handle_ = static_cast<void*>(instance);
@@ -70,7 +70,7 @@ void plugin::load_from_file(const std::filesystem::path& plugin_path)
     if (!handle) [[unlikely]]
     {
         std::string error_message(dlerror());
-        throw std::runtime_error(std::format("Exception occurred while loading plugin: {}",
+        throw plugin_error(std::format("Exception occurred while loading plugin: {}",
                                              error_message));
     }
     handle_ = handle;
@@ -85,7 +85,7 @@ void plugin::unload()
     if (result == 0) [[unlikely]]
     {
         std::error_code error_code(GetLastError(), std::system_category());
-        throw std::system_error(error_code,
+        throw plugin_error(error_code,
                                 std::format("A problem occured while unloading plugin: {}", error_code.message()));
     }
 #else
@@ -93,7 +93,7 @@ void plugin::unload()
     if (result != 0) [[unlikely]]
     {
         std::string error_message(dlerror());
-        throw std::runtime_error(std::format("A problem occured while unloading plugin: {}", error_message));
+        throw plugin_error(std::format("A problem occured while unloading plugin: {}", error_message));
     }
 #endif
     handle_ = nullptr;
@@ -109,7 +109,7 @@ void* plugin::find_symbol_pointer_(const std::string& symbol_name)
     if (!pointer) [[unlikely]]
     {
         std::error_code error_code(GetLastError(), std::system_category());
-        throw std::system_error(error_code,
+        throw plugin_error(error_code,
                                 std::format("Exception occurred while looking for address of {}", symbol_name));
     }
     return reinterpret_cast<void*>(pointer);
@@ -118,7 +118,7 @@ void* plugin::find_symbol_pointer_(const std::string& symbol_name)
     if (!pointer) [[unlikely]]
     {
         std::string error_message(dlerror());
-        throw std::runtime_error(std::format("Exception occurred while looking for address of symbol: {}",
+        throw plugin_error(std::format("Exception occurred while looking for address of symbol: {}",
                                              error_message));
     }
     return pointer;

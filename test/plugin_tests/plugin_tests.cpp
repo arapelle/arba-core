@@ -60,7 +60,7 @@ TEST(PluginTest, LoadFromFile_UnfoundLibrary_ExpectException)
         plugin.load_from_file(lib_path);
         FAIL();
     }
-    catch(std::runtime_error exception)
+    catch(const core::plugin_error& exception)
     {
         constexpr std::string_view expected_msg_fmt =
 #ifdef WIN32
@@ -98,7 +98,7 @@ TEST(PluginTest, Constructor_UnfoundLibrary_ExpectException)
         core::plugin plugin(lib_path);
         FAIL();
     }
-    catch(std::runtime_error exception)
+    catch(const core::plugin_error& exception)
     {
         constexpr std::string_view expected_msg_fmt =
 #ifdef WIN32
@@ -157,7 +157,7 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
         core::plugin plugin(lib_path);
         plugin.find_function_ptr<void(*)(int&)>(function_name);
     }
-    catch(std::runtime_error exception)
+    catch(const core::plugin_error& exception)
     {
         constexpr std::string_view expected_msg_fmt =
 #ifdef WIN32
