@@ -22,6 +22,28 @@ namespace core
 
 plugin::plugin(const std::filesystem::path& plugin_path)
 {
+    load_from_file(plugin_path);
+}
+
+plugin::~plugin()
+{
+    if (is_loaded())
+    {
+        try
+        {
+            unload();
+        }
+        catch (const std::runtime_error& err)
+        {
+            std::cerr << err.what() << std::endl;
+            std::terminate();
+        }
+    }
+}
+
+void plugin::load_from_file(const std::filesystem::path& plugin_path)
+{
+    assert(!is_loaded());
 #ifdef WIN32
     static_assert(std::is_pointer_v<HINSTANCE>);
     static_assert(std::is_nothrow_convertible_v<HINSTANCE, void*>);
@@ -55,52 +77,51 @@ plugin::plugin(const std::filesystem::path& plugin_path)
 #endif
 }
 
-plugin::~plugin()
+void plugin::unload()
 {
+    assert(is_loaded());
 #ifdef WIN32
-    if (handle_)
+    int result = FreeLibrary(static_cast<HINSTANCE>(handle_));
+    if (result == 0) [[unlikely]]
     {
-        int result = FreeLibrary(static_cast<HINSTANCE>(handle_));
-        if (result == 0) [[unlikely]]
-        {
-            std::error_code error_code(GetLastError(), std::system_category());
-            std::cerr << std::format("A problem occured while unloading plugin: {}", error_code.message()) << std::endl;
-            std::exit(error_code.value());
-        }
+        std::error_code error_code(GetLastError(), std::system_category());
+        throw std::system_error(error_code,
+                                std::format("A problem occured while unloading plugin: {}", error_code.message()));
     }
 #else
     int result = dlclose(handle_);
-    if (result != 0)
+    if (result != 0) [[unlikely]]
     {
         std::string error_message(dlerror());
-        std::cerr << std::format("A problem occured while unloading plugin: {}", error_message) << std::endl;
-        std::exit(result);
+        throw std::runtime_error(std::format("A problem occured while unloading plugin: {}", error_message));
     }
 #endif
+    handle_ = nullptr;
 }
 
 void* plugin::find_symbol_pointer_(const std::string& symbol_name)
 {
+    assert(is_loaded());
 #ifdef WIN32
-        static_assert(std::is_pointer_v<FARPROC>);
+    static_assert(std::is_pointer_v<FARPROC>);
 
-        FARPROC pointer = GetProcAddress(static_cast<HINSTANCE>(handle_), symbol_name.c_str());
-        if (!pointer) [[unlikely]]
-        {
-            std::error_code error_code(GetLastError(), std::system_category());
-            throw std::system_error(error_code,
-                                    std::format("Exception occurred while looking for address of {}", symbol_name));
-        }
-        return reinterpret_cast<void*>(pointer);
+    FARPROC pointer = GetProcAddress(static_cast<HINSTANCE>(handle_), symbol_name.c_str());
+    if (!pointer) [[unlikely]]
+    {
+        std::error_code error_code(GetLastError(), std::system_category());
+        throw std::system_error(error_code,
+                                std::format("Exception occurred while looking for address of {}", symbol_name));
+    }
+    return reinterpret_cast<void*>(pointer);
 #else
-        void* pointer = dlsym(handle_, symbol_name.c_str());
-        if (!pointer) [[unlikely]]
-        {
-            std::string error_message(dlerror());
-            throw std::runtime_error(std::format("Exception occurred while looking for address of symbol: {}",
-                                                 error_message));
-        }
-        return pointer;
+    void* pointer = dlsym(handle_, symbol_name.c_str());
+    if (!pointer) [[unlikely]]
+    {
+        std::string error_message(dlerror());
+        throw std::runtime_error(std::format("Exception occurred while looking for address of symbol: {}",
+                                             error_message));
+    }
+    return pointer;
 #endif
 }
 

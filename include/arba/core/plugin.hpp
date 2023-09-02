@@ -15,6 +15,8 @@ namespace core
 class plugin
 {
 public:
+    inline plugin() {}
+
     /**
      * @brief Plugin constructor which takes the path to the plugin to load.
      * @param plugin_path The path to the plugin to load (extension of the file is optional).
@@ -31,6 +33,26 @@ public:
      * on the error stream and the program exit with the error code.
      */
     ~plugin();
+
+    /**
+     * @brief load_from_file Load the plugin present at a given path.
+     * @param plugin_path The path to the plugin to load (extension of the file is optional).
+     * @throw std::runtime_error If the file does not exist or if there is a problem during loading.
+     * @warning If a plugin is already loaded by this instance, the behavior is undefined.
+     */
+    void load_from_file(const std::filesystem::path& plugin_path);
+
+    /**
+     * @brief unload Unload the plugin.
+     * @warning If no plugin is loaded by this instance, the behavior is undefined.
+     */
+    void unload();
+
+    /**
+     * @brief is_loaded Indicate is this plugin is loaded or not.
+     * @return true If a loaded plugin is held by this instance.
+     */
+    [[nodiscard]] inline bool is_loaded() const noexcept { return handle_; }
 
     /**
      * @brief find_function_ptr Find the address of the function with a given name.
