@@ -7,7 +7,7 @@ inline namespace arba
 namespace core
 {
 
-template <intrusive_latent elem_type>
+template <typename elem_type>
 class intrusive_weak_ptr
 {
 public:
@@ -67,11 +67,11 @@ public:
 private:
     mutable element_type* pointer_ = nullptr;
 
-    template <intrusive_latent Up>
+    template <typename Up>
     friend class intrusive_weak_ptr;
 };
 
-template <intrusive_latent Type>
+template <typename Type>
 inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(const intrusive_weak_ptr& iwptr)
     : pointer_(iwptr.pointer_)
 {
@@ -79,7 +79,7 @@ inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(const intrusive_weak_ptr& iw
         intrusive_weak_ptr_add_ref(pointer_);
 }
 
-template <intrusive_latent Type>
+template <typename Type>
 template <typename Up>
     requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<Type>>
 inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(const intrusive_weak_ptr<Up>& iwptr)
@@ -89,14 +89,14 @@ inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(const intrusive_weak_ptr<Up>
         intrusive_weak_ptr_add_ref(pointer_);
 }
 
-template <intrusive_latent Type>
+template <typename Type>
 inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(intrusive_weak_ptr&& iwptr)
     : pointer_(iwptr.pointer_)
 {
     iwptr.pointer_ = nullptr;
 }
 
-template <intrusive_latent Type>
+template <typename Type>
 template <typename Up>
     requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<Type>>
 inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(intrusive_weak_ptr<Up>&& iwptr)
@@ -105,7 +105,7 @@ inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(intrusive_weak_ptr<Up>&& iwp
     iwptr.pointer_ = nullptr;
 }
 
-template <intrusive_latent Type>
+template <typename Type>
 template <typename Up>
     requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<Type>>
 inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(const intrusive_shared_ptr<Up>& isptr)
@@ -115,20 +115,20 @@ inline intrusive_weak_ptr<Type>::intrusive_weak_ptr(const intrusive_shared_ptr<U
         intrusive_weak_ptr_add_ref(pointer_);
 }
 
-template <intrusive_latent Type>
+template <typename Type>
 inline intrusive_weak_ptr<Type>::~intrusive_weak_ptr()
 {
     reset();
 }
 
-template <intrusive_latent Type>
+template <typename Type>
 inline intrusive_weak_ptr<Type>& intrusive_weak_ptr<Type>::operator=(intrusive_weak_ptr<Type> iwptr)
 {
     std::swap(pointer_, iwptr.pointer_);
     return *this;
 }
 
-template <intrusive_latent Type>
+template <typename Type>
 template <typename Up>
     requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<Type>>
 inline intrusive_weak_ptr<Type>& intrusive_weak_ptr<Type>::operator=(intrusive_weak_ptr<Up> iwptr)
@@ -138,7 +138,7 @@ inline intrusive_weak_ptr<Type>& intrusive_weak_ptr<Type>::operator=(intrusive_w
     return *this;
 }
 
-template <intrusive_latent Type>
+template <typename Type>
 template <typename Up>
     requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<Type>>
 inline intrusive_weak_ptr<Type>& intrusive_weak_ptr<Type>::operator=(const intrusive_shared_ptr<Up>& isptr)
@@ -146,7 +146,7 @@ inline intrusive_weak_ptr<Type>& intrusive_weak_ptr<Type>::operator=(const intru
     return *this = intrusive_weak_ptr<Type>(isptr);
 }
 
-template <intrusive_latent Type>
+template <typename Type>
 inline void intrusive_weak_ptr<Type>::reset() noexcept
 {
     if (pointer_)

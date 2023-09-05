@@ -3,14 +3,12 @@
 #include <functional>
 #include <cassert>
 
-#include "intrusive_concepts.hpp"
-
 inline namespace arba
 {
 namespace core
 {
 
-template <intrusive_sharable elem_type>
+template <typename elem_type>
 class intrusive_shared_ptr
 {
 public:
@@ -56,13 +54,13 @@ private:
 
     element_type* pointer_ = nullptr;
 
-    template <intrusive_sharable Up>
+    template <typename Up>
     friend class intrusive_shared_ptr;
-    template <intrusive_latent Up>
+    template <typename Up>
     friend class intrusive_weak_ptr;
 };
 
-template <intrusive_sharable Type>
+template <typename Type>
 inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(Type* ptr)
     : pointer_(ptr)
 {
@@ -70,13 +68,13 @@ inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(Type* ptr)
         intrusive_shared_ptr_add_ref(pointer_);
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(element_type* ptr, lock_tag)
     : pointer_(ptr)
 {
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_shared_ptr& isptr)
     : pointer_(isptr.pointer_)
 {
@@ -84,7 +82,7 @@ inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_shared_p
         intrusive_shared_ptr_add_ref(pointer_);
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 template <typename Up>
     requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<Type>>
 inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_shared_ptr<Up>& isptr)
@@ -94,14 +92,14 @@ inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(const intrusive_shared_p
         intrusive_shared_ptr_add_ref(pointer_);
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(intrusive_shared_ptr&& isptr)
     : pointer_(isptr.pointer_)
 {
     isptr.pointer_ = nullptr;
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 template <typename Up>
     requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<Type>>
 inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(intrusive_shared_ptr<Up>&& isptr)
@@ -110,21 +108,21 @@ inline intrusive_shared_ptr<Type>::intrusive_shared_ptr(intrusive_shared_ptr<Up>
     isptr.pointer_ = nullptr;
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 inline intrusive_shared_ptr<Type>::~intrusive_shared_ptr()
 {
     if (pointer_)
         intrusive_shared_ptr_release(pointer_);
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 inline intrusive_shared_ptr<Type>& intrusive_shared_ptr<Type>::operator=(intrusive_shared_ptr<Type> isptr)
 {
     std::swap(pointer_, isptr.pointer_);
     return *this;
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 template <typename Up>
     requires std::is_convertible_v<std::add_pointer_t<Up>, std::add_pointer_t<Type>>
 inline intrusive_shared_ptr<Type>& intrusive_shared_ptr<Type>::operator=(intrusive_shared_ptr<Up> isptr)
@@ -134,7 +132,7 @@ inline intrusive_shared_ptr<Type>& intrusive_shared_ptr<Type>::operator=(intrusi
     return *this;
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 inline Type* intrusive_shared_ptr<Type>::release() noexcept
 {
     if (pointer_)
@@ -147,7 +145,7 @@ inline Type* intrusive_shared_ptr<Type>::release() noexcept
     return nullptr;
 }
 
-template <intrusive_sharable Type>
+template <typename Type>
 inline void intrusive_shared_ptr<Type>::reset(Type* pointer) noexcept
 {
     if (pointer_)
@@ -157,7 +155,7 @@ inline void intrusive_shared_ptr<Type>::reset(Type* pointer) noexcept
 }
 
 
-template <intrusive_sharable val_type, class... args_types>
+template <typename val_type, class... args_types>
 inline intrusive_shared_ptr<val_type> make_intrusive_shared_ptr(args_types&&... args)
 {
     return intrusive_shared_ptr<val_type>(new val_type(std::forward<args_types>(args)...));
