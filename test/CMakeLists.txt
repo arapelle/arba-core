@@ -24,3 +24,4 @@ add_cpp_library_basic_tests(GTest::gtest_main
 add_subdirectory(template)
 add_subdirectory(memory)
 add_subdirectory(plugin_tests)
+add_subdirectory(version)
