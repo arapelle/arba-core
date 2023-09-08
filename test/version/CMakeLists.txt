@@ -5,4 +5,5 @@ add_cpp_library_basic_tests(GTest::gtest_main
     SOURCES
         trinum_version_tests.cpp
         constexpr_trinum_version_tests.cpp
+        semantic_version_tests.cpp
 )
