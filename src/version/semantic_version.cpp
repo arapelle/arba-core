@@ -58,11 +58,8 @@ semantic_version::semantic_version(std::string_view version_str)
 
 bool semantic_version::operator<(const semantic_version& other) const
 {
-    return static_cast<const trinum_version&>(*this) < static_cast<const trinum_version&>(other)
-           ||
-           (static_cast<const trinum_version&>(*this) == static_cast<const trinum_version&>(other)
-            && pre_release_version_is_less_than_(other.pre_release_version_)
-            );
+    auto cmp_res = static_cast<const trinum_version&>(*this) <=> static_cast<const trinum_version&>(other);
+    return cmp_res < 0 || (cmp_res == 0 && pre_release_version_is_less_than_(other.pre_release_version_));
 }
 
 [[nodiscard]] int semantic_version::compare_submatchs_(std::sub_match<std::string::const_iterator> const& match,

@@ -45,11 +45,11 @@ public:
 
 public:
     constexpr semantic_version(uint64_t major, uint32_t minor, uint32_t patch)
-        : trinum_version(major, minor, patch), pre_release_version_(), build_metadata_()
+        : trinum_version(major, minor, patch)
     {}
 
     semantic_version(uint64_t major, uint32_t minor, uint32_t patch,
-                     std::string_view pre_release_version, std::string_view build_metadata);
+                     std::string_view pre_release_version, std::string_view build_metadata = std::string_view());
 
     semantic_version(std::string_view version_str);
 
