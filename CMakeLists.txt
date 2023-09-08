@@ -41,10 +41,6 @@ set(headers
     include/arba/core/io/check_file.hpp
     include/arba/core/io/copy_stream.hpp
     include/arba/core/io/open_file.hpp
-    include/arba/core/memory/intrusive_concepts.hpp
-    include/arba/core/memory/intrusive_ref_counter.hpp
-    include/arba/core/memory/intrusive_shared_ptr.hpp
-    include/arba/core/memory/intrusive_weak_ptr.hpp
     include/arba/core/plugin.hpp
     include/arba/core/random.hpp
     include/arba/core/sbrm.hpp
