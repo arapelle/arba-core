@@ -77,6 +77,8 @@ bool semantic_version::pre_release_version_is_less_than_(const std::string& othe
 {
     if (pre_release_version_.empty())
         return false;
+    if (other_pre_release_version.empty())
+        return true;
 
     static std::regex field_regex(R"((0|[1-9]\d*)|(\d*[a-zA-Z-][0-9a-zA-Z-]*))", std::regex::optimize);
 
