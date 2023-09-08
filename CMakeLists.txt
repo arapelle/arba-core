@@ -16,7 +16,7 @@ set_build_type_ifndef()
 set(PROJECT_NAME "arba-core")
 set(project_namespace "arba")
 set(project_base_name "core")
-set(PROJECT_VERSION 0.16.0)
+set(PROJECT_VERSION 0.17.0)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
@@ -41,10 +41,6 @@ set(headers
     include/arba/core/io/check_file.hpp
     include/arba/core/io/copy_stream.hpp
     include/arba/core/io/open_file.hpp
-    include/arba/core/memory/intrusive_concepts.hpp
-    include/arba/core/memory/intrusive_ref_counter.hpp
-    include/arba/core/memory/intrusive_shared_ptr.hpp
-    include/arba/core/memory/intrusive_weak_ptr.hpp
     include/arba/core/plugin.hpp
     include/arba/core/random.hpp
     include/arba/core/sbrm.hpp
@@ -57,6 +53,8 @@ set(headers
     include/arba/core/template/thread_policy.hpp
     include/arba/core/type_traits.hpp
     include/arba/core/uuid.hpp
+    include/arba/core/version/semantic_version.hpp
+    include/arba/core/version/trinum_version.hpp
 )
 
 ## Sources:
@@ -68,6 +66,8 @@ set(sources
     src/plugin.cpp
     src/span.cpp
     src/uuid.cpp
+    src/version/semantic_version.cpp
+    src/version/trinum_version.cpp
 )
 
 ## Add C++ library
