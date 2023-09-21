@@ -112,7 +112,7 @@ TEST(random_tests, test_urng_u8_max)
 
 TEST(random_tests, test_urng_u8)
 {
-    core::urng_u8<> rng(42, 1, 100);
+    core::urng_u8 rng(42, 1, 100);
     ASSERT_EQ(rng.min(), std::mt19937::min());
     ASSERT_EQ(rng.max(), std::mt19937::max());
 
