@@ -1,11 +1,8 @@
 #include <arba/core/random.hpp>
 #include <experimental/random>
 #include <gtest/gtest.h>
-#include <gmock/gmock.h>
 #include <algorithm>
 #include <cstdlib>
-
-using namespace ::testing;
 
 TEST(random_tests, test_reseed)
 {
@@ -29,7 +26,8 @@ TEST(random_tests, test_rand_int_min_max)
     for (unsigned times = (counters.size() - 1) * factor; times; --times)
     {
         uint16_t index = core::rand_int<uint16_t>(1, counters.size() - 1);
-        ASSERT_THAT(index, AllOf(Ge(1), Le(counters.size() - 1)));
+        ASSERT_GE(index, 1);
+        ASSERT_LE(index, counters.size() - 1);
         ++counters.at(index);
     }
 
@@ -52,7 +50,8 @@ TEST(random_tests, test_rand_int_0_max)
     for (unsigned times = counters.size() * factor; times; --times)
     {
         uint16_t index = core::rand_int<uint16_t>(counters.size() - 1);
-        ASSERT_THAT(index, AllOf(Ge(0), Le(counters.size() - 1)));
+        ASSERT_GE(index, 0);
+        ASSERT_LE(index, counters.size() - 1);
         ++counters.at(index);
     }
 
