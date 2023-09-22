@@ -21,6 +21,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
         type_traits_tests.cpp
 )
 
+add_subdirectory(debug)
 add_subdirectory(template)
 add_subdirectory(plugin_tests)
 add_subdirectory(version)
