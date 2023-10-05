@@ -43,6 +43,26 @@ inline void reseed(private_::rand_int_engine_type_::result_type value)
     private_::rand_int_engine_().seed(value);
 }
 
+[[nodiscard]] inline uint8_t rand_u8(uint8_t min, uint8_t max) { return rand_int<uint8_t>(min, max); }
+[[nodiscard]] inline uint16_t rand_u16(uint16_t min, uint16_t max) { return rand_int<uint16_t>(min, max); }
+[[nodiscard]] inline uint32_t rand_u32(uint32_t min, uint32_t max) { return rand_int<uint32_t>(min, max); }
+[[nodiscard]] inline uint64_t rand_u64(uint64_t min, uint64_t max) { return rand_int<uint64_t>(min, max); }
+
+[[nodiscard]] inline int8_t rand_i8(int8_t min, int8_t max) { return rand_int<int8_t>(min, max); }
+[[nodiscard]] inline int16_t rand_i16(int16_t min, int16_t max) { return rand_int<int16_t>(min, max); }
+[[nodiscard]] inline int32_t rand_i32(int32_t min, int32_t max) { return rand_int<int32_t>(min, max); }
+[[nodiscard]] inline int64_t rand_i64(int64_t min, int64_t max) { return rand_int<int64_t>(min, max); }
+
+[[nodiscard]] inline uint8_t rand_u8(uint8_t max) { return rand_int<uint8_t>(max); }
+[[nodiscard]] inline uint16_t rand_u16(uint16_t max) { return rand_int<uint16_t>(max); }
+[[nodiscard]] inline uint32_t rand_u32(uint32_t max) { return rand_int<uint32_t>(max); }
+[[nodiscard]] inline uint64_t rand_u64(uint64_t max) { return rand_int<uint64_t>(max); }
+
+[[nodiscard]] inline int8_t rand_i8(int8_t max) { return rand_int<int8_t>(max); }
+[[nodiscard]] inline int16_t rand_i16(int16_t max) { return rand_int<int16_t>(max); }
+[[nodiscard]] inline int32_t rand_i32(int32_t max) { return rand_int<int32_t>(max); }
+[[nodiscard]] inline int64_t rand_i64(int64_t max) { return rand_int<int64_t>(max); }
+
 namespace private_
 {
 
