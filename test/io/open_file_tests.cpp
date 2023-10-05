@@ -1,4 +1,4 @@
-#include <arba/core/io/check_file.hpp>
+#include <arba/core/io/open_file.hpp>
 #include <gtest/gtest.h>
 #include <fstream>
 #include <sstream>
@@ -7,24 +7,26 @@
 
 std::filesystem::path create_resource()
 {
-    std::filesystem::path rsc_dpath = std::filesystem::temp_directory_path()/"arba/core/rsc";
-    std::filesystem::path story_fpath = rsc_dpath/"check_file.txt";
+    std::filesystem::path root_dpath = std::filesystem::temp_directory_path() / "arba/core" / "open_file_tests";
+    if (std::filesystem::exists(root_dpath))
+        std::filesystem::remove_all(root_dpath);
+    std::filesystem::create_directories(root_dpath);
 
-    if (!std::filesystem::exists(story_fpath))
-    {
-        std::filesystem::create_directories(rsc_dpath);
-        std::ofstream rsc_fstream(story_fpath);
-        rsc_fstream << "Once upon a time";
-    }
+    std::filesystem::path rsc_dpath = root_dpath / "rsc";
+    std::filesystem::create_directories(rsc_dpath);
+
+    std::filesystem::path story_fpath = rsc_dpath/"open_file.txt";
+    std::ofstream rsc_fstream(story_fpath);
+    rsc_fstream << "Once upon a time";
 
     return story_fpath;
 }
 
-TEST(check_file_tests, test_check_input_file)
+TEST(open_file_tests, test_open_input_file)
 {
     try
     {
-        core::check_input_file(create_resource());
+        std::ifstream input_fstream = core::open_input_file(create_resource());
         SUCCEED();
     }
     catch (...)
@@ -33,11 +35,11 @@ TEST(check_file_tests, test_check_input_file)
     }
 }
 
-TEST(check_file_tests, test_check_input_file_exception_file_not_found)
+TEST(open_file_tests, test_open_input_file_exception_file_not_found)
 {
     try
     {
-        core::check_input_file("/__does_not_exist__");
+        std::ifstream input_fstream = core::open_input_file("/__does_not_exist__");
         FAIL();
     }
     catch (const std::filesystem::filesystem_error& err)
@@ -51,11 +53,11 @@ TEST(check_file_tests, test_check_input_file_exception_file_not_found)
     }
 }
 
-TEST(check_file_tests, test_check_input_file_exception_not_regular_file)
+TEST(open_file_tests, test_open_input_file_exception_not_regular_file)
 {
     try
     {
-        core::check_input_file(std::filesystem::temp_directory_path());
+        std::ifstream input_fstream = core::open_input_file(std::filesystem::temp_directory_path());
         FAIL();
     }
     catch (const std::filesystem::filesystem_error& err)

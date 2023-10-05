@@ -4,6 +4,8 @@
 #include <format>
 #include <regex>
 
+std::filesystem::path plugin_dir = PLUGIN_DIR;
+
 TEST(PluginTest, ConstructorEmpty_NominalCase_ExpectNoException)
 {
     try
@@ -13,7 +15,7 @@ TEST(PluginTest, ConstructorEmpty_NominalCase_ExpectNoException)
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -28,12 +30,12 @@ TEST(PluginTest, LoadFromFile_ExistingLibraryWithExtension_ExpectNoException)
             "so";
 #endif
         core::plugin plugin;
-        plugin.load_from_file(std::filesystem::current_path() / "rng" / std::format("librng.{}", ext));
+        plugin.load_from_file(plugin_dir / std::format("librng.{}", ext));
         ASSERT_TRUE(plugin.is_loaded());
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -42,12 +44,12 @@ TEST(PluginTest, LoadFromFile_ExistingLibraryNoExtension_ExpectNoException)
     try
     {
         core::plugin plugin;
-        plugin.load_from_file(std::filesystem::current_path() / "rng" / "librng");
+        plugin.load_from_file(plugin_dir / "librng");
         ASSERT_TRUE(plugin.is_loaded());
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -73,7 +75,7 @@ TEST(PluginTest, LoadFromFile_UnfoundLibrary_ExpectException)
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -81,12 +83,12 @@ TEST(PluginTest, Constructor_ExistingLibraryNoExtension_ExpectNoException)
 {
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        core::plugin plugin(plugin_dir / "librng");
         ASSERT_TRUE(plugin.is_loaded());
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -111,7 +113,7 @@ TEST(PluginTest, Constructor_UnfoundLibrary_ExpectException)
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -119,14 +121,14 @@ TEST(PluginTest, Unload_NomicalCase_ExpectNoException)
 {
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        core::plugin plugin(plugin_dir / "librng");
         ASSERT_TRUE(plugin.is_loaded());
         plugin.unload();
         ASSERT_FALSE(plugin.is_loaded());
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -134,7 +136,7 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectNoException)
 {
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        core::plugin plugin(plugin_dir / "librng");
         auto execute = plugin.find_function_ptr<void(*)(int&)>("execute");
         ASSERT_NE(execute, nullptr);
         int value = -1;
@@ -143,13 +145,13 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectNoException)
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
 TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
 {
-    std::filesystem::path lib_path = std::filesystem::current_path() / "rng/librng";
+    std::filesystem::path lib_path = plugin_dir / "librng";
     std::string_view function_name("not_found_function");
 
     try
@@ -171,7 +173,7 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -181,14 +183,14 @@ TEST(PluginTest, MakeInstance_FunctionExists_ReturnUniquePtr)
 
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        core::plugin plugin(plugin_dir / "librng");
         std::unique_ptr<GeneratorInterface> generator = plugin.make_unique_instance<GeneratorInterface>(function_name);
         std::cout << generator->generate() << std::endl;
         SUCCEED();
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -198,14 +200,14 @@ TEST(PluginTest, MakeSharedInstance_FunctionExists_ReturnSharedPtr)
 
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        core::plugin plugin(plugin_dir / "librng");
         std::shared_ptr<GeneratorInterface> generator = plugin.make_shared_instance<GeneratorInterface>(function_name);
         std::cout << generator->generate() << std::endl;
         SUCCEED();
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -215,14 +217,14 @@ TEST(PluginTest, InstanceRef_FunctionExists_ReturnTypeRef)
 
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        core::plugin plugin(plugin_dir / "librng");
         GeneratorInterface& generator = plugin.instance_ref<GeneratorInterface>(function_name);
         std::cout << generator.generate() << std::endl;
         SUCCEED();
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -232,13 +234,13 @@ TEST(PluginTest, InstanceCref_FunctionExists_ReturnTypeConstRef)
 
     try
     {
-        core::plugin plugin(std::filesystem::current_path() / "rng" / "librng");
+        core::plugin plugin(plugin_dir / "librng");
         const GeneratorInterface& generator = plugin.instance_cref<GeneratorInterface>(function_name);
         std::cout << generator.generate() << std::endl;
         SUCCEED();
     }
     catch(...)
     {
-        FAIL();
+        throw;
     }
 }
