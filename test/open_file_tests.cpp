@@ -7,15 +7,17 @@
 
 std::filesystem::path create_resource()
 {
-    std::filesystem::path rsc_dpath = std::filesystem::temp_directory_path()/"arba/core/rsc";
-    std::filesystem::path story_fpath = rsc_dpath/"open_file.txt";
+    std::filesystem::path root_dpath = std::filesystem::temp_directory_path() / "arba/core" / "open_file_tests";
+    if (std::filesystem::exists(root_dpath))
+        std::filesystem::remove_all(root_dpath);
+    std::filesystem::create_directories(root_dpath);
 
-    if (!std::filesystem::exists(story_fpath))
-    {
-        std::filesystem::create_directories(rsc_dpath);
-        std::ofstream rsc_fstream(story_fpath);
-        rsc_fstream << "Once upon a time";
-    }
+    std::filesystem::path rsc_dpath = root_dpath / "rsc";
+    std::filesystem::create_directories(rsc_dpath);
+
+    std::filesystem::path story_fpath = rsc_dpath/"open_file.txt";
+    std::ofstream rsc_fstream(story_fpath);
+    rsc_fstream << "Once upon a time";
 
     return story_fpath;
 }

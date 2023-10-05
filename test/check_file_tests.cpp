@@ -3,19 +3,22 @@
 #include <fstream>
 #include <sstream>
 #include <format>
+#include <chrono>
 #include <cstdlib>
 
 std::filesystem::path create_resource()
 {
-    std::filesystem::path rsc_dpath = std::filesystem::temp_directory_path()/"arba/core/rsc";
-    std::filesystem::path story_fpath = rsc_dpath/"check_file.txt";
+    std::filesystem::path root_dpath = std::filesystem::temp_directory_path() / "arba/core" / "check_file_tests";
+    if (std::filesystem::exists(root_dpath))
+        std::filesystem::remove_all(root_dpath);
+    std::filesystem::create_directories(root_dpath);
 
-    if (!std::filesystem::exists(story_fpath))
-    {
-        std::filesystem::create_directories(rsc_dpath);
-        std::ofstream rsc_fstream(story_fpath);
-        rsc_fstream << "Once upon a time";
-    }
+    std::filesystem::path rsc_dpath = root_dpath / "rsc";
+    std::filesystem::create_directories(rsc_dpath);
+
+    std::filesystem::path story_fpath = rsc_dpath / "check_file_1.2.3.txt";
+    std::ofstream rsc_fstream(story_fpath, std::ios::trunc);
+    rsc_fstream << std::chrono::system_clock::now() << std::endl;
 
     return story_fpath;
 }
@@ -29,9 +32,27 @@ TEST(check_file_tests, test_check_input_file)
     }
     catch (...)
     {
-        FAIL();
+        throw;
     }
 }
+
+#if linux || __APPLE__
+TEST(check_file_tests, test_check_input_file__symlink__ok)
+{
+    std::filesystem::path rsc_file = create_resource();
+    try
+    {
+        std::filesystem::path rsc_slpath = rsc_file.parent_path() / "check_file.txt";
+        std::filesystem::create_symlink(rsc_file, rsc_slpath);
+        core::check_input_file(rsc_slpath);
+        SUCCEED();
+    }
+    catch (...)
+    {
+        throw;
+    }
+}
+#endif
 
 TEST(check_file_tests, test_check_input_file_exception_file_not_found)
 {
@@ -47,7 +68,7 @@ TEST(check_file_tests, test_check_input_file_exception_file_not_found)
     }
     catch (const std::iostream::failure& err)
     {
-        FAIL();
+        throw;
     }
 }
 
@@ -69,6 +90,6 @@ TEST(check_file_tests, test_check_input_file_exception_not_regular_file)
     }
     catch (const std::iostream::failure& err)
     {
-        FAIL();
+        throw;
     }
 }
