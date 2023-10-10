@@ -19,18 +19,23 @@ TEST(PluginTest, ConstructorEmpty_NominalCase_ExpectNoException)
     }
 }
 
+TEST(PluginTest, PluginFileExtension_NoArg_ExpectNoException)
+{
+    constexpr std::string_view ext =
+#ifdef WIN32
+        ".dll";
+#else
+        ".so";
+#endif
+    ASSERT_EQ(core::plugin::file_extension, ext);
+}
+
 TEST(PluginTest, LoadFromFile_ExistingLibraryWithExtension_ExpectNoException)
 {
     try
     {
-        constexpr std::string_view ext =
-#ifdef WIN32
-            "dll";
-#else
-            "so";
-#endif
         core::plugin plugin;
-        plugin.load_from_file(plugin_dir / std::format("librng.{}", ext));
+        plugin.load_from_file(plugin_dir / std::format("librng{}", core::plugin::file_extension));
         ASSERT_TRUE(plugin.is_loaded());
     }
     catch(...)
