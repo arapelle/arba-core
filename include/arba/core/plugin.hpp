@@ -32,6 +32,13 @@ class plugin_error : public
 class plugin
 {
 public:
+    static constexpr std::string_view file_extension =
+#ifdef WIN32
+        ".dll";
+#else
+        ".so";
+#endif
+
     inline plugin() {}
 
     /**
