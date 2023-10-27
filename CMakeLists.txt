@@ -37,6 +37,7 @@ set(headers
     include/arba/core/algorithm.hpp
     include/arba/core/byte_swap.hpp
     include/arba/core/chrono/duration.hpp
+    include/arba/core/chrono/format_time_point.hpp
     include/arba/core/debug/assert.hpp
     include/arba/core/debug/assert_msg.hpp
     include/arba/core/debug/breakpoint.hpp
@@ -63,6 +64,7 @@ set(headers
 
 ## Sources:
 set(sources
+    src/chrono/format_time_point.cpp
     src/debug/assert.cpp
     src/debug/assert_msg.cpp
     src/hash.cpp
