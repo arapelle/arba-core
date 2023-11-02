@@ -46,6 +46,7 @@ TEST(hash_tests, test_neutral_murmur_hash_64_eq)
     uint64_t hash = core::neutral_murmur_hash_64(bytes.data(), bytes.size());
     uint64_t hash2 = core::neutral_murmur_hash_64(bytes.data(), bytes.size());
     ASSERT_EQ(hash, hash2);
+    ASSERT_EQ(hash, 2734389338834563531);
 }
 
 TEST(hash_tests, test_neutral_murmur_hash_64_neq_data)
