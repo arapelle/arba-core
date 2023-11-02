@@ -11,11 +11,7 @@ namespace private_
 
 using rand_int_engine_type_ = std::mt19937_64;
 
-inline rand_int_engine_type_& rand_int_engine_()
-{
-    static thread_local rand_int_engine_type_ rand_engine{std::random_device{}()};
-    return rand_engine;
-}
+rand_int_engine_type_& rand_int_engine_();
 
 }
 

@@ -72,6 +72,7 @@ set(sources
     src/io/copy_stream.cpp
     src/io/open_file.cpp
     src/plugin.cpp
+    src/random.cpp
     src/span.cpp
     src/uuid.cpp
     src/version/semantic_version.cpp
