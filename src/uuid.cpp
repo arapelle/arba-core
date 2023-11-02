@@ -1,5 +1,6 @@
 #include <arba/core/uuid.hpp>
 #include <arba/core/hash.hpp>
+#include <arba/core/random.hpp>
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
@@ -121,6 +122,11 @@ std::string uuid::to_string() const
            << std::setw(2) << (int)data_[14]
            << std::setw(2) << (int)data_[15];
     return stream.str();
+}
+
+uuid uuid::make_random_uuid()
+{
+    return make_random_uuid(static_cast<uint64_t (&)()>(rand_u64));
 }
 
 std::ostream& operator<<(std::ostream& stream, const uuid& uuid)
