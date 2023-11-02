@@ -4,4 +4,5 @@ add_cpp_library_basic_tests(GTest::gtest_main
     STATIC ${PROJECT_NAME}-static
     SOURCES
         format_time_point_tests.cpp
+        stopwatch_tests.cpp
 )
