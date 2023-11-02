@@ -6,6 +6,29 @@ inline namespace arba
 {
 namespace core
 {
+
+template <typename IntType, typename UrngT>
+    requires std::is_integral_v<IntType>
+[[nodiscard]] inline IntType rand_int(UrngT& rng)
+{
+    if constexpr (std::is_same_v<IntType, typename UrngT::result_type>)
+    {
+        return rng();
+    }
+    else
+    {
+        return std::uniform_int_distribution<IntType>(std::numeric_limits<IntType>::min(),
+                                                      std::numeric_limits<IntType>::max())(rng);
+    }
+}
+
+template <typename IntType, typename UrngT>
+    requires std::is_integral_v<IntType>
+[[nodiscard]] inline IntType rand_int(UrngT& rng, IntType min, IntType max)
+{
+    return std::uniform_int_distribution<IntType>(min, max)(rng);
+}
+
 namespace private_
 {
 
@@ -47,6 +70,26 @@ inline void reseed(private_::rand_int_engine_type_::result_type value)
 {
     private_::rand_int_engine_().seed(value);
 }
+
+[[nodiscard]] inline uint8_t rand_u8(auto& rng) { return rand_int<uint8_t>(rng); }
+[[nodiscard]] inline uint16_t rand_u16(auto& rng) { return rand_int<uint16_t>(rng); }
+[[nodiscard]] inline uint32_t rand_u32(auto& rng) { return rand_int<uint32_t>(rng); }
+[[nodiscard]] inline uint64_t rand_u64(auto& rng) { return rand_int<uint64_t>(rng); }
+
+[[nodiscard]] inline int8_t rand_i8(auto& rng) { return rand_int<int8_t>(rng); }
+[[nodiscard]] inline int16_t rand_i16(auto& rng) { return rand_int<int16_t>(rng); }
+[[nodiscard]] inline int32_t rand_i32(auto& rng) { return rand_int<int32_t>(rng); }
+[[nodiscard]] inline int64_t rand_i64(auto& rng) { return rand_int<int64_t>(rng); }
+
+[[nodiscard]] inline uint8_t rand_u8(auto& rng, uint8_t min, uint8_t max) { return rand_int<uint8_t>(rng, min, max); }
+[[nodiscard]] inline uint16_t rand_u16(auto& rng, uint16_t min, uint16_t max) { return rand_int<uint16_t>(rng, min, max); }
+[[nodiscard]] inline uint32_t rand_u32(auto& rng, uint32_t min, uint32_t max) { return rand_int<uint32_t>(rng, min, max); }
+[[nodiscard]] inline uint64_t rand_u64(auto& rng, uint64_t min, uint64_t max) { return rand_int<uint64_t>(rng, min, max); }
+
+[[nodiscard]] inline int8_t rand_i8(auto& rng, int8_t min, int8_t max) { return rand_int<int8_t>(rng, min, max); }
+[[nodiscard]] inline int16_t rand_i16(auto& rng, int16_t min, int16_t max) { return rand_int<int16_t>(rng, min, max); }
+[[nodiscard]] inline int32_t rand_i32(auto& rng, int32_t min, int32_t max) { return rand_int<int32_t>(rng, min, max); }
+[[nodiscard]] inline int64_t rand_i64(auto& rng, int64_t min, int64_t max) { return rand_int<int64_t>(rng, min, max); }
 
 [[nodiscard]] inline uint8_t rand_u8() { return rand_int<uint8_t>(); }
 [[nodiscard]] inline uint16_t rand_u16() { return rand_int<uint16_t>(); }
@@ -91,7 +134,16 @@ public:
 
     result_type operator()()
     {
-        return std::uniform_int_distribution<result_type>(min(), max())(static_cast<RNG&>(*this));
+        if constexpr (std::is_same_v<result_type, typename RNG::result_type>
+                      && min() == std::numeric_limits<result_type>::min()
+                      && max() == std::numeric_limits<result_type>::max())
+        {
+            return static_cast<RNG&>(*this);
+        }
+        else
+        {
+            return std::uniform_int_distribution<result_type>(min(), max())(static_cast<RNG&>(*this));
+        }
     }
 
     static constexpr result_type min() { return MinValue; }
