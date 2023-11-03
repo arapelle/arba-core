@@ -81,6 +81,8 @@ inline void reseed(private_::rand_int_engine_type_::result_type value)
 [[nodiscard]] inline int32_t rand_i32(auto& rng) { return rand_int<int32_t>(rng); }
 [[nodiscard]] inline int64_t rand_i64(auto& rng) { return rand_int<int64_t>(rng); }
 
+[[nodiscard]] inline std::byte rand_byte(auto& rng) { return std::byte{rand_int<std::underlying_type_t<std::byte>>(rng)}; }
+
 [[nodiscard]] inline uint8_t rand_u8(auto& rng, uint8_t min, uint8_t max) { return rand_int<uint8_t>(rng, min, max); }
 [[nodiscard]] inline uint16_t rand_u16(auto& rng, uint16_t min, uint16_t max) { return rand_int<uint16_t>(rng, min, max); }
 [[nodiscard]] inline uint32_t rand_u32(auto& rng, uint32_t min, uint32_t max) { return rand_int<uint32_t>(rng, min, max); }
@@ -90,6 +92,17 @@ inline void reseed(private_::rand_int_engine_type_::result_type value)
 [[nodiscard]] inline int16_t rand_i16(auto& rng, int16_t min, int16_t max) { return rand_int<int16_t>(rng, min, max); }
 [[nodiscard]] inline int32_t rand_i32(auto& rng, int32_t min, int32_t max) { return rand_int<int32_t>(rng, min, max); }
 [[nodiscard]] inline int64_t rand_i64(auto& rng, int64_t min, int64_t max) { return rand_int<int64_t>(rng, min, max); }
+
+[[nodiscard]] inline std::byte rand_byte(auto& rng,
+                                         std::underlying_type_t<std::byte> min, std::underlying_type_t<std::byte> max)
+{
+    return std::byte{rand_int<std::underlying_type_t<std::byte>>(rng, min, max)};
+}
+[[nodiscard]] inline std::byte rand_byte(auto& rng, std::byte min, std::byte max)
+{
+    using byte_int_t = std::underlying_type_t<std::byte>;
+    return std::byte{rand_int<byte_int_t>(rng, static_cast<byte_int_t>(min), static_cast<byte_int_t>(max))};
+}
 
 [[nodiscard]] inline uint8_t rand_u8() { return rand_int<uint8_t>(); }
 [[nodiscard]] inline uint16_t rand_u16() { return rand_int<uint16_t>(); }
@@ -101,6 +114,8 @@ inline void reseed(private_::rand_int_engine_type_::result_type value)
 [[nodiscard]] inline int32_t rand_i32() { return rand_int<int32_t>(); }
 [[nodiscard]] inline int64_t rand_i64() { return rand_int<int64_t>(); }
 
+[[nodiscard]] inline std::byte rand_byte() { return std::byte{rand_int<std::underlying_type_t<std::byte>>()}; }
+
 [[nodiscard]] inline uint8_t rand_u8(uint8_t min, uint8_t max) { return rand_int<uint8_t>(min, max); }
 [[nodiscard]] inline uint16_t rand_u16(uint16_t min, uint16_t max) { return rand_int<uint16_t>(min, max); }
 [[nodiscard]] inline uint32_t rand_u32(uint32_t min, uint32_t max) { return rand_int<uint32_t>(min, max); }
@@ -110,6 +125,16 @@ inline void reseed(private_::rand_int_engine_type_::result_type value)
 [[nodiscard]] inline int16_t rand_i16(int16_t min, int16_t max) { return rand_int<int16_t>(min, max); }
 [[nodiscard]] inline int32_t rand_i32(int32_t min, int32_t max) { return rand_int<int32_t>(min, max); }
 [[nodiscard]] inline int64_t rand_i64(int64_t min, int64_t max) { return rand_int<int64_t>(min, max); }
+
+[[nodiscard]] inline std::byte rand_byte(std::underlying_type_t<std::byte> min, std::underlying_type_t<std::byte> max)
+{
+    return std::byte{rand_int<std::underlying_type_t<std::byte>>(min, max)};
+}
+[[nodiscard]] inline std::byte rand_byte(std::byte min, std::byte max)
+{
+    using byte_int_t = std::underlying_type_t<std::byte>;
+    return std::byte{rand_int<byte_int_t>(static_cast<byte_int_t>(min), static_cast<byte_int_t>(max))};
+}
 
 namespace private_
 {
