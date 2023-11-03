@@ -94,6 +94,8 @@ public:
         return reinterpret_cast<PointerType>(this->find_symbol_pointer_(std::string(function_name)));
     }
 
+    static constexpr std::string_view default_instance_ref_func_name = "instance_ref";
+
     /**
      * @brief instance_ref Find a function returning a reference to a global variable and call it to return the reference.
      * @tparam InstanceType The type of the global variable.
@@ -103,12 +105,15 @@ public:
      * @warning There is no guarantee that the global variable getter function returns the wanted type.
      */
     template <typename InstanceType>
-    InstanceType& instance_ref(const std::string_view getter_function_name = "instance_ref")
+    InstanceType& instance_ref(const std::string_view getter_function_name =
+                               default_instance_ref_func_name)
     {
         using MainObjectGetter = InstanceType&(*)();
         MainObjectGetter getter = this->find_function_ptr<MainObjectGetter>(getter_function_name);
         return getter();
     }
+
+    static constexpr std::string_view default_instance_cref_func_name = "instance_cref";
 
     /**
      * @brief instance_cref Find a function returning a const reference to a global variable and call it to return the const reference.
@@ -119,12 +124,15 @@ public:
      * @warning There is no guarantee that the global variable getter function returns the wanted type.
      */
     template <typename InstanceType>
-    const InstanceType& instance_cref(const std::string_view getter_function_name = "instance_cref")
+    const InstanceType& instance_cref(const std::string_view getter_function_name =
+                                      default_instance_cref_func_name)
     {
         using MainObjectMaker = const InstanceType&(*)();
         MainObjectMaker getter = this->find_function_ptr<MainObjectMaker>(getter_function_name);
         return getter();
     }
+
+    static constexpr std::string_view default_make_unique_func_name = "make_unique_instance";
 
     /**
      * @brief make_unique_instance Find a function making a new instance stored in a std::unique_ptr and call it to return the std::unique_ptr.
@@ -137,12 +145,34 @@ public:
      */
     template <typename ClassType, typename DeleterType = typename std::unique_ptr<ClassType>::deleter_type>
         requires std::has_virtual_destructor_v<ClassType>
-    std::unique_ptr<ClassType> make_unique_instance(const std::string_view maker_function_name = "make_unique_instance")
+    std::unique_ptr<ClassType, DeleterType> make_unique_instance(const std::string_view maker_function_name =
+                                                              default_make_unique_func_name)
     {
         using InstanceMaker = std::unique_ptr<ClassType, DeleterType>(*)();
         InstanceMaker maker = this->find_function_ptr<InstanceMaker>(maker_function_name);
         return maker();
     }
+
+    /**
+     * @brief make_unique_instance Find a function making a new instance stored in a std::unique_ptr and call it to return the std::unique_ptr.
+     * @tparam ClassType The type of the made instance.
+     * @tparam DeleterType The type of the deleter functor used by std::unique_ptr. (default is std::unique_ptr<ClassType>::deleter_type>)
+     * @tparam ArgsT... The types of the arguments to pass to the maker function.
+     * @param maker_function_name The name of the maker function to find in the plugin. (default is "make_instance")
+     * @return A std::unique_ptr<ClassType[, DeleterType]> holding the pointer to the made instance.
+     * @details The signature of the maker function is expected to be std::unique_ptr<ClassType[, DeleterType]>(*)().
+     * @warning There is no guarantee that the global variable getter function returns the wanted type.
+     */
+    template <typename ClassType, typename DeleterType = typename std::unique_ptr<ClassType>::deleter_type, typename... ArgsT>
+        requires std::has_virtual_destructor_v<ClassType> && (sizeof...(ArgsT) > 0)
+    std::unique_ptr<ClassType, DeleterType> make_unique_instance(const std::string_view maker_function_name, ArgsT&&... args)
+    {
+        using InstanceMaker = std::unique_ptr<ClassType, DeleterType>(*)(ArgsT&&...);
+        InstanceMaker maker = this->find_function_ptr<InstanceMaker>(maker_function_name);
+        return maker(std::forward<ArgsT>(args)...);
+    }
+
+    static constexpr std::string_view default_make_shared_func_name = "make_shared_instance";
 
     /**
      * @brief make_shared_instance Find a function making a new instance stored in a std::shared_ptr and call it to return the std::shared_ptr.
@@ -154,11 +184,30 @@ public:
      */
     template <typename ClassType>
         requires std::has_virtual_destructor_v<ClassType>
-    std::shared_ptr<ClassType> make_shared_instance(const std::string_view maker_function_name = "make_shared_instance")
+    std::shared_ptr<ClassType> make_shared_instance(const std::string_view maker_function_name =
+                                                    default_make_shared_func_name)
     {
         using InstanceMaker = std::shared_ptr<ClassType>(*)();
         InstanceMaker maker = this->find_function_ptr<InstanceMaker>(maker_function_name);
         return maker();
+    }
+
+    /**
+     * @brief make_shared_instance Find a function making a new instance stored in a std::shared_ptr and call it to return the std::shared_ptr.
+     * @tparam ClassType The type of the made instance.
+     * @tparam ArgsT... The types of the arguments to pass to the maker function.
+     * @param maker_function_name The name of the maker function to find in the plugin. (default is "make_shared_instance")
+     * @return A std::shared_ptr<ClassType> holding the pointer to the made instance.
+     * @details The signature of the maker function is expected to be std::shared_ptr<ClassType>(*)().
+     * @warning There is no guarantee that the global variable getter function returns the wanted type.
+     */
+    template <typename ClassType, typename... ArgsT>
+        requires std::has_virtual_destructor_v<ClassType> && (sizeof...(ArgsT) > 0)
+    std::shared_ptr<ClassType> make_shared_instance(const std::string_view maker_function_name, ArgsT&&... args)
+    {
+        using InstanceMaker = std::shared_ptr<ClassType>(*)(ArgsT&&...);
+        InstanceMaker maker = this->find_function_ptr<InstanceMaker>(maker_function_name);
+        return maker(std::forward<ArgsT>(args)...);
     }
 
 private:

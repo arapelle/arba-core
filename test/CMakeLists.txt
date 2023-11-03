@@ -18,6 +18,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
         type_traits_tests.cpp
 )
 
+add_subdirectory(chrono)
 add_subdirectory(debug)
 add_subdirectory(io)
 add_subdirectory(plugin_tests)

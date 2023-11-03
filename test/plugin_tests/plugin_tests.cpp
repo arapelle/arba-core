@@ -6,6 +6,14 @@
 
 std::filesystem::path plugin_dir = PLUGIN_DIR;
 
+TEST(PluginTest, CheckDefaultFuncNames_Eq_Ok)
+{
+    ASSERT_EQ(core::plugin::default_instance_ref_func_name, "instance_ref");
+    ASSERT_EQ(core::plugin::default_instance_cref_func_name, "instance_cref");
+    ASSERT_EQ(core::plugin::default_make_unique_func_name, "make_unique_instance");
+    ASSERT_EQ(core::plugin::default_make_shared_func_name, "make_shared_instance");
+}
+
 TEST(PluginTest, ConstructorEmpty_NominalCase_ExpectNoException)
 {
     try
@@ -199,6 +207,30 @@ TEST(PluginTest, MakeInstance_FunctionExists_ReturnUniquePtr)
     }
 }
 
+TEST(PluginTest, MakeInstance_FunctionTakingArgsExists_ReturnUniquePtr)
+{
+    std::string_view function_name("make_unique_instance_from_args");
+
+    try
+    {
+        core::plugin plugin(plugin_dir / "librng");
+        std::unique_ptr<GeneratorInterface> generator;
+
+        generator = plugin.make_unique_instance<GeneratorInterface>(function_name, 100, 200);
+        std::cout << generator->generate() << std::endl;
+
+        using generator_deleter_type = std::unique_ptr<GeneratorInterface>::deleter_type;
+        generator = plugin.make_unique_instance<GeneratorInterface, generator_deleter_type>(function_name, 100, 200);
+        std::cout << generator->generate() << std::endl;
+
+        SUCCEED();
+    }
+    catch(...)
+    {
+        throw;
+    }
+}
+
 TEST(PluginTest, MakeSharedInstance_FunctionExists_ReturnSharedPtr)
 {
     std::string_view function_name("make_shared_instance");
@@ -207,6 +239,23 @@ TEST(PluginTest, MakeSharedInstance_FunctionExists_ReturnSharedPtr)
     {
         core::plugin plugin(plugin_dir / "librng");
         std::shared_ptr<GeneratorInterface> generator = plugin.make_shared_instance<GeneratorInterface>(function_name);
+        std::cout << generator->generate() << std::endl;
+        SUCCEED();
+    }
+    catch(...)
+    {
+        throw;
+    }
+}
+
+TEST(PluginTest, MakeSharedInstance_FunctionTakingArgsExists_ReturnSharedPtr)
+{
+    std::string_view function_name("make_shared_instance_from_args");
+
+    try
+    {
+        core::plugin plugin(plugin_dir / "librng");
+        std::shared_ptr<GeneratorInterface> generator = plugin.make_shared_instance<GeneratorInterface>(function_name, 100, 200);
         std::cout << generator->generate() << std::endl;
         SUCCEED();
     }

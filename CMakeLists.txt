@@ -16,7 +16,7 @@ set_build_type_ifndef()
 set(PROJECT_NAME "arba-core")
 set(project_namespace "arba")
 set(project_base_name "core")
-set(PROJECT_VERSION 0.20.0)
+set(PROJECT_VERSION 0.21.0)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
@@ -36,6 +36,9 @@ generate_version_macro_header(generated_version_header
 set(headers
     include/arba/core/algorithm.hpp
     include/arba/core/byte_swap.hpp
+    include/arba/core/chrono/duration.hpp
+    include/arba/core/chrono/format_time_point.hpp
+    include/arba/core/chrono/stopwatch.hpp
     include/arba/core/debug/assert.hpp
     include/arba/core/debug/assert_msg.hpp
     include/arba/core/debug/breakpoint.hpp
@@ -62,6 +65,8 @@ set(headers
 
 ## Sources:
 set(sources
+    src/chrono/format_time_point.cpp
+    src/chrono/stopwatch.cpp
     src/debug/assert.cpp
     src/debug/assert_msg.cpp
     src/hash.cpp
@@ -69,6 +74,7 @@ set(sources
     src/io/copy_stream.cpp
     src/io/open_file.cpp
     src/plugin.cpp
+    src/random.cpp
     src/span.cpp
     src/uuid.cpp
     src/version/semantic_version.cpp

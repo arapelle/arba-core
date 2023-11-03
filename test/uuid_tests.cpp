@@ -1,4 +1,5 @@
 #include <arba/core/uuid.hpp>
+#include <arba/core/random.hpp>
 #include <gtest/gtest.h>
 #include <sstream>
 #include <cstdlib>
@@ -26,4 +27,22 @@ TEST(uuid_tests, test_uuid_cmp_eq)
     ASSERT_NE(uuid, uuid_a);
     ASSERT_NE(uuid, uuid_b);
     ASSERT_EQ(uuid_a, uuid_b);
+}
+
+TEST(uuid_tests, test_random_uuid)
+{
+    core::reseed(42);
+    core::uuid uuid = core::uuid::make_random_uuid();
+    ASSERT_EQ(uuid.to_string(), "d6e2e56e-7ddf-41c1-a802-25b9b98f97a3");
+    ASSERT_EQ(uuid.data()[8] >> 6, 0b00000010);
+    ASSERT_EQ(uuid.data()[6] >> 4, 0b00000100);
+}
+
+TEST(uuid_tests, test_random_uuid_urng)
+{
+    core::urng_u64 urng(45);
+    core::uuid uuid = core::uuid::make_random_uuid(urng);
+    ASSERT_EQ(uuid.to_string(), "db7d5d12-5b01-48e7-b079-ba5eb7c4eeb1");
+    ASSERT_EQ(uuid.data()[8] >> 6, 0b00000010);
+    ASSERT_EQ(uuid.data()[6] >> 4, 0b00000100);
 }
