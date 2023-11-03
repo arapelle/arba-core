@@ -16,7 +16,7 @@ set_build_type_ifndef()
 set(PROJECT_NAME "arba-core")
 set(project_namespace "arba")
 set(project_base_name "core")
-set(PROJECT_VERSION 0.21.0)
+set(PROJECT_VERSION 0.22.0)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
