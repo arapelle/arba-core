@@ -42,6 +42,7 @@ set(headers
     include/arba/core/debug/assert.hpp
     include/arba/core/debug/assert_msg.hpp
     include/arba/core/debug/breakpoint.hpp
+    include/arba/core/design_pattern/singleton.hpp
     include/arba/core/hash.hpp
     include/arba/core/htow.hpp
     include/arba/core/io/check_file.hpp
