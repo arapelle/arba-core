@@ -16,7 +16,7 @@ set_build_type_ifndef()
 set(PROJECT_NAME "arba-core")
 set(project_namespace "arba")
 set(project_base_name "core")
-set(PROJECT_VERSION 0.21.0)
+set(PROJECT_VERSION 0.22.0)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
@@ -42,6 +42,7 @@ set(headers
     include/arba/core/debug/assert.hpp
     include/arba/core/debug/assert_msg.hpp
     include/arba/core/debug/breakpoint.hpp
+    include/arba/core/design_pattern/singleton.hpp
     include/arba/core/hash.hpp
     include/arba/core/htow.hpp
     include/arba/core/io/check_file.hpp

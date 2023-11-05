@@ -20,6 +20,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
 
 add_subdirectory(chrono)
 add_subdirectory(debug)
+add_subdirectory(design_pattern)
 add_subdirectory(io)
 add_subdirectory(plugin_tests)
 add_subdirectory(template)
