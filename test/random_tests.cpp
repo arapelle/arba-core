@@ -146,3 +146,28 @@ TEST(random_tests, test_urng_i8_min_max)
                               EXPECT_GE(counter, 0.9 * factor);
                           });
 }
+
+TEST(random_tests, test_urng_byte_min_max)
+{
+    core::urng_byte<std::byte{1}, std::byte{100}> rng(42);
+    ASSERT_EQ(rng.min(), std::byte{1});
+    ASSERT_EQ(rng.max(), std::byte{100});
+
+    std::array<unsigned, static_cast<unsigned>(decltype(rng)::max()) + 1> counters{ 0 };
+    ASSERT_TRUE(std::ranges::all_of(counters, [](auto counter){ return counter == 0; }));
+
+    constexpr unsigned factor = 1000;
+    for (unsigned times = (counters.size() - 1) * factor; times; --times)
+    {
+        std::byte byte = rng();
+        unsigned index = static_cast<unsigned>(byte);
+        ++counters.at(index);
+    }
+
+    EXPECT_EQ(counters.front(), 0);
+    std::ranges::for_each(std::ranges::subrange(counters.begin() + 1, counters.end()),
+                          [=](const auto& counter)
+                          {
+                              EXPECT_GE(counter, 0.9 * factor);
+                          });
+}

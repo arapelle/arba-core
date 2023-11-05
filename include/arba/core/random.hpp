@@ -139,6 +139,26 @@ inline void reseed(private_::rand_int_engine_type_::result_type value)
 namespace private_
 {
 
+template <typename Type>
+struct integer_type_;
+
+template <typename Type>
+    requires std::is_integral_v<Type>
+struct integer_type_<Type>
+{
+    using type = Type;
+};
+
+template <typename Type>
+    requires std::is_enum_v<Type>
+struct integer_type_<Type>
+{
+    using type = std::underlying_type_t<Type>;
+};
+
+template <typename Type>
+using integer_type_t_ = typename integer_type_<Type>::type;
+
 template <class RNG, class IntType, IntType... IntParams>
 class uniform_engine_impl_;
 
@@ -146,8 +166,9 @@ template <class RNG, class IntType, IntType MinValue, IntType MaxValue>
 class uniform_engine_impl_<RNG, IntType, MinValue, MaxValue> : public RNG
 {
 public:
+    using integer_type = integer_type_t_<IntType>;
     using result_type = IntType;
-    using distribution_type = std::uniform_int_distribution<result_type>;
+    using distribution_type = std::uniform_int_distribution<integer_type>;
 
     explicit uniform_engine_impl_(typename RNG::result_type seed)
         : RNG(seed)
@@ -159,29 +180,36 @@ public:
 
     result_type operator()()
     {
-        if constexpr (std::is_same_v<result_type, typename RNG::result_type>
-                      && min() == std::numeric_limits<result_type>::min()
-                      && max() == std::numeric_limits<result_type>::max())
+        if constexpr (std::is_same_v<integer_type, typename RNG::result_type>
+                      && static_cast<integer_type>(min()) == std::numeric_limits<integer_type>::min()
+                      && static_cast<integer_type>(max()) == std::numeric_limits<integer_type>::max())
         {
-            return static_cast<RNG&>(*this);
+            return result_type(static_cast<RNG&>(*this)());
         }
         else
         {
-            return std::uniform_int_distribution<result_type>(min(), max())(static_cast<RNG&>(*this));
+            return result_type(distribution()(static_cast<RNG&>(*this)));
         }
     }
 
     static constexpr result_type min() { return MinValue; }
 
     static constexpr result_type max() { return MaxValue; }
+
+    static constexpr distribution_type distribution()
+    {
+        return std::uniform_int_distribution<integer_type>(static_cast<integer_type>(min()),
+                                                           static_cast<integer_type>(max()));
+    }
 };
 
 template <class RNG, class IntType>
 class uniform_engine_impl_<RNG, IntType> : public RNG
 {
 public:
+    using integer_type = integer_type_t_<IntType>;
     using result_type = IntType;
-    using distribution_type = std::uniform_int_distribution<result_type>;
+    using distribution_type = std::uniform_int_distribution<integer_type>;
 
     explicit uniform_engine_impl_(typename RNG::result_type seed, distribution_type dist = distribution_type())
         : RNG(seed), dist_(std::move(dist))
@@ -205,7 +233,7 @@ public:
 
     result_type operator()()
     {
-        return dist_(static_cast<RNG&>(*this));
+        return result_type(dist_(static_cast<RNG&>(*this)));
     }
 
     const distribution_type& distribution() const { return dist_; }
@@ -260,6 +288,9 @@ using urng_u64 = uniform_engine<std::mt19937_64, std::uint_fast64_t, IntParams..
 
 template <std::int_fast64_t... IntParams>
 using urng_i64 = uniform_engine<std::mt19937_64, std::int_fast64_t, IntParams...>;
+
+template <std::byte... IntParams>
+using urng_byte = uniform_engine<std::mt19937_64, std::byte, IntParams...>;
 
 }
 }
