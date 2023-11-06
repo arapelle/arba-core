@@ -51,6 +51,13 @@ public:
     semantic_version(uint64_t major, uint32_t minor, uint32_t patch,
                      std::string_view pre_release_version, std::string_view build_metadata = std::string_view());
 
+    template <class VersionCoreT>
+    semantic_version(const VersionCoreT& version_core,
+                     std::string_view pre_release_version, std::string_view build_metadata = std::string_view())
+        : semantic_version(version_core.major(), version_core.minor(), version_core.patch(),
+                           pre_release_version, build_metadata)
+    {}
+
     semantic_version(std::string_view version_str);
 
     constexpr const trinum_version& version_core() const noexcept { return static_cast<const trinum_version&>(*this); }

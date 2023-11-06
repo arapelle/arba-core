@@ -31,6 +31,28 @@ TEST(semantic_version_tests, semantic_version_constructor__x_y_z_pr_bm__no_excep
     ASSERT_EQ(version.build_metadata(), "specific-build");
 }
 
+TEST(semantic_version_tests, semantic_version_constructor__ver_pr__no_exception)
+{
+    core::trinum_version version_core(1, 2, 3);
+    core::semantic_version version(version_core, "pre-release.1");
+    ASSERT_EQ(version.major(), 1);
+    ASSERT_EQ(version.minor(), 2);
+    ASSERT_EQ(version.patch(), 3);
+    ASSERT_EQ(version.pre_release_version(), "pre-release.1");
+    ASSERT_EQ(version.build_metadata(), "");
+}
+
+TEST(semantic_version_tests, semantic_version_constructor__ver_pr_bm__no_exception)
+{
+    core::trinum_version version_core(1, 2, 3);
+    core::semantic_version version(version_core, "alpha.1", "specific-build");
+    ASSERT_EQ(version.major(), 1);
+    ASSERT_EQ(version.minor(), 2);
+    ASSERT_EQ(version.patch(), 3);
+    ASSERT_EQ(version.pre_release_version(), "alpha.1");
+    ASSERT_EQ(version.build_metadata(), "specific-build");
+}
+
 TEST(semantic_version_tests, semantic_version_constructor__x_y_z_bpr_bm__expect_exception)
 {
     try
