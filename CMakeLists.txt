@@ -26,7 +26,7 @@ endmacro()
 set(PROJECT_NAME "arba-core")
 set(PROJECT_NAMESPACE "arba")
 set(PROJECT_BASE_NAME "core")
-set(PROJECT_VERSION 0.23.0)
+set(PROJECT_VERSION 0.24.0)
 set(PROJECT_VERSION_PRE_RELEASE "dev")
 string(TIMESTAMP PROJECT_VERSION_BUILD_METADATA "%Y%m%d-%H%M%S" UTC)
 set_PROJECT_SEMANTIC_VERSION()
@@ -36,7 +36,7 @@ project(${PROJECT_NAME}
         DESCRIPTION "C++ core functions."
         HOMEPAGE_URL "https://github.com/arapelle/arba-core"
         LANGUAGES CXX)
-message(STATUS "PROJECT : ${PROJECT_NAME} ${PROJECT_VERSION} ${CMAKE_BUILD_TYPE}")
+message(STATUS "PROJECT : ${PROJECT_NAME} ${PROJECT_SEMANTIC_VERSION} ${CMAKE_BUILD_TYPE}")
 include(CTest)
 
 # Add external dependencies (submodules and fetch/find packages)
