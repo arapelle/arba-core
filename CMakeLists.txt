@@ -74,6 +74,7 @@ set(headers
     include/arba/core/version/is_compatible_with.hpp
     include/arba/core/version/semantic_version.hpp
     include/arba/core/version/simple_version.hpp
+    include/arba/core/version/simple_version_tag.hpp
 )
 
 ## Sources:
