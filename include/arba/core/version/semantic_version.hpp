@@ -1,104 +1,232 @@
 #pragma once
 
-#include "trinum_version.hpp"
+#include "simple_version.hpp"
+#include "_private/extract_semantic_version.hpp"
+#include "concepts/semantic_version.hpp"
 
 inline namespace arba
 {
 namespace core
 {
-
 // https://semver.org/spec/v2.0.0.html
 
-class semantic_version : protected trinum_version<>
+class semantic_version : protected simple_version
 {
 public:
-    static constexpr std::string pre_release_version_regex_str()
-    {
-        return R"((0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)";
-    }
+    constexpr semantic_version(uint64_t major, uint32_t minor, uint32_t patch,
+                               std::string_view pre_release = std::string_view(),
+                               std::string_view build_metadata = std::string_view());
 
-    static constexpr std::string build_metadata_regex_str()
-    {
-        return R"([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)";
-    }
+    constexpr explicit semantic_version(const SimpleVersion auto& version_core,
+                                        std::string_view pre_release = std::string_view(),
+                                        std::string_view build_metadata = std::string_view());
 
-    static constexpr std::string regex_str()
-    {
-        std::string regex_str = std::string("^") + trinum_regex_str() + R"''(
-    (-(
-        (0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)
-        (\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*
-    ))?
-    (\+(
-        [0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*
-    ))?
-    $
-)''";
-        std::erase_if(regex_str, isspace);
-        return regex_str;
-    }
+    constexpr semantic_version(std::string_view version);
 
-    static const std::regex regex;
+    constexpr const simple_version& core() const noexcept { return static_cast<const simple_version&>(*this); }
+    constexpr simple_version& core() noexcept { return static_cast<simple_version&>(*this); }
+    constexpr std::string_view pre_release() const noexcept { return pre_release_; }
+    constexpr std::string_view build_metadata() const noexcept { return build_metadata_; }
 
-    static constexpr uint8_t pre_release_version_submatch_id = 5;
-    static constexpr uint8_t build_metadata_submatch_id = 10;
+    using simple_version::major;
+    using simple_version::minor;
+    using simple_version::patch;
+    using simple_version::set_major;
+    using simple_version::set_minor;
+    using simple_version::set_patch;
+    using simple_version::up_major;
+    using simple_version::up_minor;
+    using simple_version::up_patch;
+    using simple_version::is_major_compatible_with;
+    using simple_version::is_minor_compatible_with;
+    using simple_version::is_patch_compatible_with;
 
-public:
-    constexpr semantic_version(uint64_t major, uint32_t minor, uint32_t patch)
-        : trinum_version(major, minor, patch)
-    {}
-
-    semantic_version(uint64_t major, uint32_t minor, uint32_t patch,
-                     std::string_view pre_release_version, std::string_view build_metadata = std::string_view());
-
-    template <class VersionCoreT>
-    semantic_version(const VersionCoreT& version_core,
-                     std::string_view pre_release_version, std::string_view build_metadata = std::string_view())
-        : semantic_version(version_core.major(), version_core.minor(), version_core.patch(),
-                           pre_release_version, build_metadata)
-    {}
-
-    semantic_version(std::string_view version_str);
-
-    constexpr const trinum_version& version_core() const noexcept { return static_cast<const trinum_version&>(*this); }
-    constexpr trinum_version& version_core() noexcept { return static_cast<trinum_version&>(*this); }
-    inline std::string_view pre_release_version() const noexcept { return pre_release_version_; }
-    inline std::string_view build_metadata() const noexcept { return build_metadata_; }
-
-    using trinum_version::major;
-    using trinum_version::minor;
-    using trinum_version::patch;
-    using trinum_version::set_major;
-    using trinum_version::set_minor;
-    using trinum_version::set_patch;
-    using trinum_version::up_major;
-    using trinum_version::up_minor;
-    using trinum_version::up_patch;
-
-    using trinum_version::is_major_compatible_with;
-    using trinum_version::is_minor_compatible_with;
-
-    constexpr bool operator==(const semantic_version& other) const;
-    bool operator<(const semantic_version& other) const;
+    inline constexpr bool operator==(const semantic_version& other) const;
+    inline constexpr bool operator<(const semantic_version& other) const;
     inline constexpr bool operator!=(const semantic_version& other) const { return !(other == *this); }
-    inline bool operator>(const semantic_version& other) const { return other < *this; }
-    inline bool operator<=(const semantic_version& other) const { return !(other < *this); }
-    inline bool operator>=(const semantic_version& other) const { return !(*this < other); }
+    inline constexpr bool operator>(const semantic_version& other) const { return other < *this; }
+    inline constexpr bool operator<=(const semantic_version& other) const { return !(other < *this); }
+    inline constexpr bool operator>=(const semantic_version& other) const { return !(*this < other); }
 
 private:
-    bool pre_release_version_is_less_than_(const std::string& other_pre_release_version) const;
-    [[nodiscard]] static int compare_submatchs_(std::sub_match<std::string::const_iterator> const& match,
-                                                std::sub_match<std::string::const_iterator> const& other_match);
+    constexpr bool pre_release_is_less_than_(const std::string& right_pr) const;
+
+    static constexpr semantic_version valid_semantic_version_(std::string_view semver);
+    static constexpr std::string_view valid_pre_release_(std::string_view pre_release_version);
+    static constexpr std::string_view valid_build_metadata_(std::string_view build_metadata);
 
 private:
-    std::string pre_release_version_;
+    std::string pre_release_;
     std::string build_metadata_;
 };
 
-constexpr bool semantic_version::operator==(const semantic_version& other) const
+constexpr semantic_version::semantic_version(uint64_t major, uint32_t minor, uint32_t patch,
+                                             std::string_view pre_release,
+                                             std::string_view build_metadata)
+    : simple_version(major, minor, patch),
+    pre_release_(valid_pre_release_(pre_release)),
+    build_metadata_(valid_build_metadata_(build_metadata))
+{}
+
+constexpr semantic_version::semantic_version(const SimpleVersion auto& version_core,
+                                             std::string_view pre_release, std::string_view build_metadata)
+    : simple_version(version_core.major(), version_core.minor(), version_core.patch()),
+    pre_release_(valid_pre_release_(pre_release)),
+    build_metadata_(valid_build_metadata_(build_metadata))
+{}
+
+constexpr semantic_version::semantic_version(std::string_view version)
+    : simple_version(),
+    pre_release_(),
+    build_metadata_()
 {
-    return static_cast<const trinum_version&>(*this) == static_cast<const trinum_version&>(other)
-           && pre_release_version_ == other.pre_release_version_;
+    *this = valid_semantic_version_(version);
+}
+
+inline constexpr bool semantic_version::operator==(const semantic_version& other) const
+{
+    return static_cast<const simple_version&>(*this) == static_cast<const simple_version&>(other)
+           && pre_release_ == other.pre_release_;
+}
+
+inline constexpr bool semantic_version::operator<(const semantic_version& other) const
+{
+    auto cmp_res = static_cast<const simple_version&>(*this) <=> static_cast<const simple_version&>(other);
+    return cmp_res < 0 || (cmp_res == 0 && pre_release_is_less_than_(other.pre_release_));
+}
+
+constexpr bool semantic_version::pre_release_is_less_than_(const std::string& right_pr) const
+{
+    if (pre_release_.empty())
+        return false;
+    else if (right_pr.empty())
+        return true;
+
+    bool left_is_shortest = false;
+    bool left_is_num = true;
+    bool right_is_num = true;
+
+    const auto left_end_iter = pre_release_.end();
+    const auto right_end_iter = right_pr.end();
+    auto left_iter = pre_release_.begin();
+    auto right_iter = right_pr.begin();
+    char left_ch = '\0';
+    char right_ch = '\0';
+
+    for (;; ++left_iter, ++right_iter)
+    {
+        if (left_iter == left_end_iter)
+        {
+            if (right_iter == right_end_iter)
+                return false;
+            left_is_shortest = true;
+            break;
+        }
+        else if (right_iter == right_end_iter)
+            break;
+
+        left_ch = *left_iter;
+        right_ch = *right_iter;
+        if (left_ch != right_ch)
+            break;
+
+        if (left_ch == '.')
+            left_is_num = true;
+        else
+            left_is_num = left_is_num && (left_ch >= '0' && left_ch <= '9');
+    }
+
+    right_is_num = left_is_num;
+    bool left_is_lt = left_ch < right_ch;
+    bool length_break = true;
+
+    if (left_ch != right_ch)
+    {
+        length_break = false;
+        left_is_num = left_is_num && (left_ch >= '0' && left_ch <= '9');
+        right_is_num = right_is_num && (right_ch >= '0' && right_ch <= '9');
+        if (!left_is_num && !right_is_num)
+            return left_is_lt;
+    }
+    else if (!left_is_num && !right_is_num)
+    {
+        return left_is_shortest;
+    }
+
+    for (; left_iter != left_end_iter && left_is_num; ++left_iter)
+    {
+        left_ch = *left_iter;
+        if (left_ch == '.')
+            break;
+        left_is_num = left_is_num && (left_ch >= '0' && left_ch <= '9');
+    }
+
+    for (; right_iter != right_end_iter && right_is_num; ++ right_iter)
+    {
+        right_ch = *right_iter;
+        if (right_ch == '.')
+            break;
+        right_is_num = right_is_num && (right_ch >= '0' && right_ch <= '9');
+    }
+
+    if (left_is_num)
+    {
+        if (!right_is_num)
+            return true;
+        return left_is_lt || (length_break && left_is_shortest);
+    }
+    if (right_is_num)
+        return false;
+    return left_is_lt;
+}
+
+constexpr semantic_version semantic_version::valid_semantic_version_(std::string_view semver)
+{
+    std::string_view major, minor, patch, pr, bm;
+    if (!private_::extract_semantic_version_(semver, major, minor, patch, pr, bm)) [[unlikely]]
+    {
+        if (std::is_constant_evaluated())
+        {
+            compile_time_error("'semver' is not a valid semantic version.");
+        }
+        throw std::invalid_argument(std::string(semver));
+    }
+
+    return semantic_version(stoi64(major), stoi64(minor), stoi64(patch), pr, bm);
+}
+
+constexpr std::string_view semantic_version::valid_pre_release_(std::string_view pre_release_version)
+{
+    if (!pre_release_version.empty())
+    {
+        if (!private_::extract_pre_release_(pre_release_version, pre_release_version)) [[unlikely]]
+        {
+            if (std::is_constant_evaluated())
+            {
+                compile_time_error("'pre_release_version' is not a valid pre-release version.");
+            }
+            throw std::invalid_argument(std::string(pre_release_version));
+        }
+    }
+
+    return pre_release_version;
+}
+
+constexpr std::string_view semantic_version::valid_build_metadata_(std::string_view build_metadata)
+{
+    if (!build_metadata.empty())
+    {
+        if (!private_::check_build_metadata_(build_metadata)) [[unlikely]]
+        {
+            if (std::is_constant_evaluated())
+            {
+                compile_time_error("'build_metadata' is not a valid build metadata string.");
+            }
+            throw std::invalid_argument(std::string(build_metadata));
+        }
+    }
+
+    return build_metadata;
 }
 
 }
@@ -114,6 +242,6 @@ struct std::formatter<::arba::core::semantic_version, CharT>
     auto format(const ::arba::core::semantic_version& version, FormatContext& ctx) const
     {
         return std::format_to(ctx.out(), "{}-{}+{}",
-                              version.version_core(), version.pre_release_version(), version.build_metadata());
+                              version.core(), version.pre_release(), version.build_metadata());
     }
 };

@@ -73,7 +73,7 @@ set(headers
     include/arba/core/version/_private/extract_simple_version.hpp
     include/arba/core/version/is_compatible_with.hpp
     include/arba/core/version/semantic_version.hpp
-    include/arba/core/version/trinum_version.hpp
+    include/arba/core/version/simple_version.hpp
 )
 
 ## Sources:
@@ -90,8 +90,6 @@ set(sources
     src/random.cpp
     src/span.cpp
     src/uuid.cpp
-    src/version/semantic_version.cpp
-    src/version/trinum_version.cpp
 )
 
 ## Add C++ library
