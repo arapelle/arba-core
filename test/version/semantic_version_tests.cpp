@@ -33,7 +33,7 @@ TEST(semantic_version_tests, semantic_version_constructor__x_y_z_pr_bm__no_excep
 
 TEST(semantic_version_tests, semantic_version_constructor__ver_pr__no_exception)
 {
-    core::simple_version version_core(1, 2, 3);
+    core::tri_version version_core(1, 2, 3);
     core::semantic_version version(version_core, "pre-release.1");
     ASSERT_EQ(version.major(), 1);
     ASSERT_EQ(version.minor(), 2);
@@ -44,7 +44,7 @@ TEST(semantic_version_tests, semantic_version_constructor__ver_pr__no_exception)
 
 TEST(semantic_version_tests, semantic_version_constructor__ver_pr_bm__no_exception)
 {
-    core::simple_version version_core(1, 2, 3);
+    core::tri_version version_core(1, 2, 3);
     core::semantic_version version(version_core, "alpha.1", "specific-build");
     ASSERT_EQ(version.major(), 1);
     ASSERT_EQ(version.minor(), 2);
@@ -153,9 +153,9 @@ TEST(semantic_version_tests, semantic_version_constructor__bad_sv__expect_except
 TEST(semantic_version_tests, version_core__normal__no_exception)
 {
     core::semantic_version version(0,1,2);
-    ASSERT_EQ(version.core(), core::simple_version(0,1,2));
+    ASSERT_EQ(version.core(), core::tri_version(0,1,2));
     const core::semantic_version c_version(0,1,2);
-    ASSERT_EQ(c_version.core(), core::simple_version(0,1,2));
+    ASSERT_EQ(c_version.core(), core::tri_version(0,1,2));
 }
 
 TEST(semantic_version_tests, operator_eq__normal__no_exception)

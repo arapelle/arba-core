@@ -83,13 +83,13 @@ set(headers
     include/arba/core/type_traits.hpp
     include/arba/core/uuid.hpp
     include/arba/core/version/concepts/semantic_version.hpp
-    include/arba/core/version/concepts/simple_version.hpp
+    include/arba/core/version/concepts/tri_version.hpp
     include/arba/core/version/_private/extract_semantic_version.hpp
-    include/arba/core/version/_private/extract_simple_version.hpp
+    include/arba/core/version/_private/extract_tri_version.hpp
     include/arba/core/version/is_compatible_with.hpp
     include/arba/core/version/semantic_version.hpp
-    include/arba/core/version/simple_version.hpp
-    include/arba/core/version/simple_version_tag.hpp
+    include/arba/core/version/tri_version.hpp
+    include/arba/core/version/tri_version_tag.hpp
 )
 
 ## Sources:

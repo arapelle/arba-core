@@ -1,6 +1,6 @@
 #pragma once
 
-#include "extract_simple_version.hpp"
+#include "extract_tri_version.hpp"
 
 inline namespace arba
 {
@@ -119,7 +119,7 @@ extract_semantic_version_(std::string_view str,
     auto iter = str.cbegin();
     const auto end_iter = str.cend();
 
-    if (!extract_simple_version_(iter, end_iter, major, minor, patch))
+    if (!extract_tri_version_(iter, end_iter, major, minor, patch))
         return false;
     if (iter == end_iter)
         return true;

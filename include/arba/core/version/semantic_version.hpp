@@ -1,6 +1,6 @@
 #pragma once
 
-#include "simple_version.hpp"
+#include "tri_version.hpp"
 #include "_private/extract_semantic_version.hpp"
 #include "concepts/semantic_version.hpp"
 
@@ -10,36 +10,36 @@ namespace core
 {
 // https://semver.org/spec/v2.0.0.html
 
-class semantic_version : protected simple_version
+class semantic_version : protected tri_version
 {
 public:
     constexpr semantic_version(uint64_t major, uint32_t minor, uint32_t patch,
                                std::string_view pre_release = std::string_view(),
                                std::string_view build_metadata = std::string_view());
 
-    constexpr explicit semantic_version(const SimpleVersion auto& version_core,
+    constexpr explicit semantic_version(const TriVersion auto& version_core,
                                         std::string_view pre_release = std::string_view(),
                                         std::string_view build_metadata = std::string_view());
 
     constexpr semantic_version(std::string_view version);
 
-    constexpr const simple_version& core() const noexcept { return static_cast<const simple_version&>(*this); }
-    constexpr simple_version& core() noexcept { return static_cast<simple_version&>(*this); }
+    constexpr const tri_version& core() const noexcept { return static_cast<const tri_version&>(*this); }
+    constexpr tri_version& core() noexcept { return static_cast<tri_version&>(*this); }
     constexpr std::string_view pre_release() const noexcept { return pre_release_; }
     constexpr std::string_view build_metadata() const noexcept { return build_metadata_; }
 
-    using simple_version::major;
-    using simple_version::minor;
-    using simple_version::patch;
-    using simple_version::set_major;
-    using simple_version::set_minor;
-    using simple_version::set_patch;
-    using simple_version::up_major;
-    using simple_version::up_minor;
-    using simple_version::up_patch;
-    using simple_version::is_major_compatible_with;
-    using simple_version::is_minor_compatible_with;
-    using simple_version::is_patch_compatible_with;
+    using tri_version::major;
+    using tri_version::minor;
+    using tri_version::patch;
+    using tri_version::set_major;
+    using tri_version::set_minor;
+    using tri_version::set_patch;
+    using tri_version::up_major;
+    using tri_version::up_minor;
+    using tri_version::up_patch;
+    using tri_version::is_major_compatible_with;
+    using tri_version::is_minor_compatible_with;
+    using tri_version::is_patch_compatible_with;
 
     inline constexpr bool operator==(const semantic_version& other) const;
     inline constexpr bool operator<(const semantic_version& other) const;
@@ -63,20 +63,20 @@ private:
 constexpr semantic_version::semantic_version(uint64_t major, uint32_t minor, uint32_t patch,
                                              std::string_view pre_release,
                                              std::string_view build_metadata)
-    : simple_version(major, minor, patch),
+    : tri_version(major, minor, patch),
     pre_release_(valid_pre_release_(pre_release)),
     build_metadata_(valid_build_metadata_(build_metadata))
 {}
 
-constexpr semantic_version::semantic_version(const SimpleVersion auto& version_core,
+constexpr semantic_version::semantic_version(const TriVersion auto& version_core,
                                              std::string_view pre_release, std::string_view build_metadata)
-    : simple_version(version_core.major(), version_core.minor(), version_core.patch()),
+    : tri_version(version_core.major(), version_core.minor(), version_core.patch()),
     pre_release_(valid_pre_release_(pre_release)),
     build_metadata_(valid_build_metadata_(build_metadata))
 {}
 
 constexpr semantic_version::semantic_version(std::string_view version)
-    : simple_version(),
+    : tri_version(),
     pre_release_(),
     build_metadata_()
 {
@@ -85,13 +85,13 @@ constexpr semantic_version::semantic_version(std::string_view version)
 
 inline constexpr bool semantic_version::operator==(const semantic_version& other) const
 {
-    return static_cast<const simple_version&>(*this) == static_cast<const simple_version&>(other)
+    return static_cast<const tri_version&>(*this) == static_cast<const tri_version&>(other)
            && pre_release_ == other.pre_release_;
 }
 
 inline constexpr bool semantic_version::operator<(const semantic_version& other) const
 {
-    auto cmp_res = static_cast<const simple_version&>(*this) <=> static_cast<const simple_version&>(other);
+    auto cmp_res = static_cast<const tri_version&>(*this) <=> static_cast<const tri_version&>(other);
     return cmp_res < 0 || (cmp_res == 0 && pre_release_is_less_than_(other.pre_release_));
 }
 

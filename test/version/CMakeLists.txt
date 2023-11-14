@@ -4,8 +4,8 @@ add_cpp_library_basic_tests(GTest::gtest_main
     STATIC ${PROJECT_NAME}-static
     SOURCES
         extract_semantic_version_tests.cpp
-        extract_simple_version_tests.cpp
-        simple_version_tests.cpp
-        simple_version_tag_tests.cpp
+        extract_tri_version_tests.cpp
+        tri_version_tests.cpp
+        tri_version_tag_tests.cpp
         semantic_version_tests.cpp
 )
