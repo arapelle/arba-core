@@ -67,6 +67,8 @@ set(headers
     include/arba/core/template/thread_policy.hpp
     include/arba/core/type_traits.hpp
     include/arba/core/uuid.hpp
+    include/arba/core/version/concepts/semantic_version.hpp
+    include/arba/core/version/concepts/simple_version.hpp
     include/arba/core/version/semantic_version.hpp
     include/arba/core/version/trinum_version.hpp
 )
