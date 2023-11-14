@@ -75,7 +75,7 @@ set(headers
     include/arba/core/string/fixed_string.hpp
     include/arba/core/string.hpp
     include/arba/core/string/string_conversion.hpp
-    include/arba/core/string_tokenizer.hpp
+    include/arba/core/string/string_tokenizer.hpp
     include/arba/core/template/default_type.hpp
     include/arba/core/template/exception_policy.hpp
     include/arba/core/template/request_type.hpp
