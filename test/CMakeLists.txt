@@ -10,7 +10,6 @@ add_cpp_library_basic_tests(GTest::gtest_main
         hash_tests.cpp
         byte_swap_tests.cpp
         htow_tests.cpp
-        string_tests.cpp
         sbrm_tests.cpp
         random_tests.cpp
         span_tests.cpp
@@ -18,6 +17,7 @@ add_cpp_library_basic_tests(GTest::gtest_main
         string/fixed_string_tests.cpp
         string/string_conversion_tests.cpp
         string/string_tokenizer_tests.cpp
+        string/trim_tests.cpp
 )
 
 add_subdirectory(chrono)
