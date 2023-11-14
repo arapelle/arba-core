@@ -69,6 +69,8 @@ set(headers
     include/arba/core/uuid.hpp
     include/arba/core/version/concepts/semantic_version.hpp
     include/arba/core/version/concepts/simple_version.hpp
+    include/arba/core/version/_private/extract_semantic_version.hpp
+    include/arba/core/version/_private/extract_simple_version.hpp
     include/arba/core/version/is_compatible_with.hpp
     include/arba/core/version/semantic_version.hpp
     include/arba/core/version/trinum_version.hpp
