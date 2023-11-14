@@ -36,6 +36,7 @@ generate_version_macro_header(generated_version_header
 set(headers
     include/arba/core/algorithm.hpp
     include/arba/core/byte_swap.hpp
+    include/arba/core/compile_time_error.hpp
     include/arba/core/chrono/duration.hpp
     include/arba/core/chrono/format_time_point.hpp
     include/arba/core/chrono/stopwatch.hpp
