@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.26)
 
 project(basic_cmake_project)
 
-add_executable(${PROJECT_NAME} main.cpp)
-add_executable(${PROJECT_NAME}-static main.cpp)
+add_executable(${PROJECT_NAME} basic_cmake_project.cpp)
+add_executable(${PROJECT_NAME}-static basic_cmake_project.cpp)
 # Find package arba-core:
 find_package(arba-core 0.23.0 CONFIG REQUIRED)
 # Use arba-core release shared target:

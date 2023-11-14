@@ -1,15 +1,10 @@
 #include <arba/core/version.hpp>
 #include <gtest/gtest.h>
-#include <format>
-#include <cstdlib>
 
-TEST(project_version_tests, test_version_macros)
+TEST(project_version_tests, test_version_core)
 {
-    const unsigned major = 0;
-    const unsigned minor = 23;
-    const unsigned patch = 0;
-    ASSERT_EQ(ARBA_CORE_VERSION_MAJOR, major);
-    ASSERT_EQ(ARBA_CORE_VERSION_MINOR, minor);
-    ASSERT_EQ(ARBA_CORE_VERSION_PATCH, patch);
-    ASSERT_EQ(ARBA_CORE_VERSION, std::format("{}.{}.{}", major, minor, patch));
+    constexpr unsigned major = 0;
+    constexpr unsigned minor = 23;
+    constexpr unsigned patch = 0;
+    static_assert(arba::core::version.core() == arba::core::simple_version(major, minor, patch));
 }
