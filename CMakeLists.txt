@@ -13,9 +13,9 @@ set_build_type_ifndef()
 
 # C++ PROJECT
 
-set(PROJECT_NAME "arba-core")
-set(project_namespace "arba")
-set(project_base_name "core")
+set(PROJECT_NAMESPACE "arba")
+set(PROJECT_BASE_NAME "core")
+set(PROJECT_NAME "${PROJECT_NAMESPACE}-${PROJECT_BASE_NAME}")
 set(PROJECT_VERSION 0.23.0)
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
@@ -24,6 +24,10 @@ project(${PROJECT_NAME}
         LANGUAGES CXX)
 message(STATUS "PROJECT : ${PROJECT_NAME} ${PROJECT_VERSION} ${CMAKE_BUILD_TYPE}")
 include(CTest)
+
+# Add external dependencies (submodules and fetch/find packages)
+
+add_subdirectory(external)
 
 # C++ LIBRARY
 
@@ -36,10 +40,10 @@ generate_version_macro_header(generated_version_header
 set(headers
     include/arba/core/algorithm.hpp
     include/arba/core/byte_swap.hpp
-    include/arba/core/compile_time_error.hpp
     include/arba/core/chrono/duration.hpp
     include/arba/core/chrono/format_time_point.hpp
     include/arba/core/chrono/stopwatch.hpp
+    include/arba/core/compile_time_error.hpp
     include/arba/core/debug/assert.hpp
     include/arba/core/debug/assert_msg.hpp
     include/arba/core/debug/breakpoint.hpp
@@ -54,8 +58,8 @@ set(headers
     include/arba/core/sbrm.hpp
     include/arba/core/span.hpp
     include/arba/core/string/fixed_string.hpp
-    include/arba/core/string/string_conversion.hpp
     include/arba/core/string.hpp
+    include/arba/core/string/string_conversion.hpp
     include/arba/core/string_tokenizer.hpp
     include/arba/core/template/default_type.hpp
     include/arba/core/template/exception_policy.hpp
@@ -102,7 +106,7 @@ if(NOT WIN32)
     cpp_library_link_libraries(
         SHARED ${PROJECT_NAME}
         STATIC ${PROJECT_NAME}-static
-        PUBLIC ${dl-static_path}
+        PRIVATE ${dl-static_path}
     )
 endif()
 
