@@ -5,7 +5,7 @@
 
 int main()
 {
-    std::cout << "arba-core-" << ARBA_CORE_VERSION << std::endl;
+    std::cout << std::format("arba-core-{}", arba::core::version) << std::endl;
     arba::core::uuid id("03b0d57c-a6bd-40de-bbb7-d26534801bb0");
     std::cout << "uuid: " << id << std::endl;
     core::uuid id2("78fdfce9-76f0-4088-ba95-713cf711781a");

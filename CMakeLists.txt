@@ -11,12 +11,26 @@ include(cmtk/CppLibraryProject)
 disable_in_source_build()
 set_build_type_ifndef()
 
+macro(set_PROJECT_SEMANTIC_VERSION)
+    set(PROJECT_SEMANTIC_VERSION "${PROJECT_VERSION}")
+    if(PROJECT_VERSION_PRE_RELEASE)
+        string(APPEND PROJECT_SEMANTIC_VERSION "-${PROJECT_VERSION_PRE_RELEASE}")
+    endif()
+    if(PROJECT_VERSION_BUILD_METADATA)
+        string(APPEND PROJECT_SEMANTIC_VERSION "+${PROJECT_VERSION_BUILD_METADATA}")
+    endif()
+endmacro()
+
 # C++ PROJECT
 
 set(PROJECT_NAME "arba-core")
-set(project_namespace "arba")
-set(project_base_name "core")
-set(PROJECT_VERSION 0.22.0)
+set(PROJECT_NAMESPACE "arba")
+set(PROJECT_BASE_NAME "core")
+set(PROJECT_VERSION 0.23.0)
+set(PROJECT_VERSION_PRE_RELEASE "dev")
+string(TIMESTAMP PROJECT_VERSION_BUILD_METADATA "%Y%m%d-%H%M%S" UTC)
+set_PROJECT_SEMANTIC_VERSION()
+
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
         DESCRIPTION "C++ core functions."
@@ -25,12 +39,17 @@ project(${PROJECT_NAME}
 message(STATUS "PROJECT : ${PROJECT_NAME} ${PROJECT_VERSION} ${CMAKE_BUILD_TYPE}")
 include(CTest)
 
+# Add external dependencies (submodules and fetch/find packages)
+
+add_subdirectory(external)
+
 # C++ LIBRARY
 
 ## Generated/Configured headers:
-generate_version_macro_header(generated_version_header
-                              ${project_namespace}_${project_base_name}
-                              ${project_namespace}/${project_base_name}/version.hpp)
+configure_headers(configured_headers
+    FILES
+        include/${PROJECT_NAMESPACE}/${PROJECT_BASE_NAME}/version.hpp.in
+)
 
 ## Headers:
 set(headers
@@ -39,6 +58,7 @@ set(headers
     include/arba/core/chrono/duration.hpp
     include/arba/core/chrono/format_time_point.hpp
     include/arba/core/chrono/stopwatch.hpp
+    include/arba/core/compile_time_error.hpp
     include/arba/core/debug/assert.hpp
     include/arba/core/debug/assert_msg.hpp
     include/arba/core/debug/breakpoint.hpp
@@ -52,7 +72,9 @@ set(headers
     include/arba/core/random.hpp
     include/arba/core/sbrm.hpp
     include/arba/core/span.hpp
+    include/arba/core/string/fixed_string.hpp
     include/arba/core/string.hpp
+    include/arba/core/string/string_conversion.hpp
     include/arba/core/string_tokenizer.hpp
     include/arba/core/template/default_type.hpp
     include/arba/core/template/exception_policy.hpp
@@ -60,8 +82,14 @@ set(headers
     include/arba/core/template/thread_policy.hpp
     include/arba/core/type_traits.hpp
     include/arba/core/uuid.hpp
+    include/arba/core/version/concepts/semantic_version.hpp
+    include/arba/core/version/concepts/tri_version.hpp
+    include/arba/core/version/_private/extract_semantic_version.hpp
+    include/arba/core/version/_private/extract_tri_version.hpp
+    include/arba/core/version/is_compatible_with.hpp
     include/arba/core/version/semantic_version.hpp
-    include/arba/core/version/trinum_version.hpp
+    include/arba/core/version/tri_version.hpp
+    include/arba/core/version/tri_version_tag.hpp
 )
 
 ## Sources:
@@ -78,8 +106,6 @@ set(sources
     src/random.cpp
     src/span.cpp
     src/uuid.cpp
-    src/version/semantic_version.cpp
-    src/version/trinum_version.cpp
 )
 
 ## Add C++ library
@@ -88,7 +114,7 @@ add_cpp_library(
     STATIC ${PROJECT_NAME}-static
     BUILD_SHARED BUILD_arba-arba
     BUILD_STATIC BUILD_arba-arba-static
-    HEADERS ${headers} ${generated_version_header}
+    HEADERS ${headers} ${configured_headers}
     SOURCES ${sources}
     CXX_STANDARD 20
 )
@@ -99,7 +125,7 @@ if(NOT WIN32)
     cpp_library_link_libraries(
         SHARED ${PROJECT_NAME}
         STATIC ${PROJECT_NAME}-static
-        PUBLIC ${dl-static_path}
+        PRIVATE ${dl-static_path}
     )
 endif()
 

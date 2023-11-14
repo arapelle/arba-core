@@ -16,6 +16,8 @@ add_cpp_library_basic_tests(GTest::gtest_main
         random_tests.cpp
         span_tests.cpp
         type_traits_tests.cpp
+        string/fixed_string_tests.cpp
+        string/string_conversion_tests.cpp
 )
 
 add_subdirectory(chrono)
