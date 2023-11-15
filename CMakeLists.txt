@@ -54,7 +54,8 @@ configure_headers(configured_headers
 ## Headers:
 set(headers
     include/arba/core/algorithm.hpp
-    include/arba/core/byte_swap.hpp
+    include/arba/core/bit/byte_swap.hpp
+    include/arba/core/bit/htow.hpp
     include/arba/core/chrono/duration.hpp
     include/arba/core/chrono/format_time_point.hpp
     include/arba/core/chrono/stopwatch.hpp
@@ -64,7 +65,6 @@ set(headers
     include/arba/core/debug/breakpoint.hpp
     include/arba/core/design_pattern/singleton.hpp
     include/arba/core/hash.hpp
-    include/arba/core/htow.hpp
     include/arba/core/io/check_file.hpp
     include/arba/core/io/copy_stream.hpp
     include/arba/core/io/open_file.hpp
@@ -73,9 +73,9 @@ set(headers
     include/arba/core/sbrm.hpp
     include/arba/core/span.hpp
     include/arba/core/string/fixed_string.hpp
-    include/arba/core/string/trim.hpp
     include/arba/core/string/string_conversion.hpp
     include/arba/core/string/string_tokenizer.hpp
+    include/arba/core/string/trim.hpp
     include/arba/core/template/default_type.hpp
     include/arba/core/template/exception_policy.hpp
     include/arba/core/template/request_type.hpp
@@ -84,9 +84,9 @@ set(headers
     include/arba/core/uuid.hpp
     include/arba/core/version/concepts/semantic_version.hpp
     include/arba/core/version/concepts/tri_version.hpp
+    include/arba/core/version/is_compatible_with.hpp
     include/arba/core/version/_private/extract_semantic_version.hpp
     include/arba/core/version/_private/extract_tri_version.hpp
-    include/arba/core/version/is_compatible_with.hpp
     include/arba/core/version/semantic_version.hpp
     include/arba/core/version/tri_version.hpp
     include/arba/core/version/tri_version_tag.hpp

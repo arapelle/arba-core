@@ -4,20 +4,20 @@ add_cpp_library_basic_tests(GTest::gtest_main
     SHARED ${PROJECT_NAME}
     STATIC ${PROJECT_NAME}-static
     SOURCES
-        project_version_tests.cpp
-        algorithm_tests.cpp
-        uuid_tests.cpp
-        hash_tests.cpp
-        byte_swap_tests.cpp
-        htow_tests.cpp
-        sbrm_tests.cpp
-        random_tests.cpp
-        span_tests.cpp
-        type_traits_tests.cpp
+        bit/byte_swap_tests.cpp
+        bit/htow_tests.cpp
         string/fixed_string_tests.cpp
         string/string_conversion_tests.cpp
         string/string_tokenizer_tests.cpp
         string/trim_tests.cpp
+        algorithm_tests.cpp
+        uuid_tests.cpp
+        hash_tests.cpp
+        sbrm_tests.cpp
+        random_tests.cpp
+        span_tests.cpp
+        type_traits_tests.cpp
+        project_version_tests.cpp
 )
 
 add_subdirectory(chrono)
