@@ -70,7 +70,8 @@ set(headers
     include/arba/core/io/open_file.hpp
     include/arba/core/plugin.hpp
     include/arba/core/random.hpp
-    include/arba/core/sbrm.hpp
+    include/arba/core/sbrm/sb_file_remover.hpp
+    include/arba/core/sbrm/sbrm.hpp
     include/arba/core/span.hpp
     include/arba/core/string/fixed_string.hpp
     include/arba/core/string/string_conversion.hpp

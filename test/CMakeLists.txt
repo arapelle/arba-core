@@ -6,6 +6,8 @@ add_cpp_library_basic_tests(GTest::gtest_main
     SOURCES
         bit/byte_swap_tests.cpp
         bit/htow_tests.cpp
+        sbrm/sbrm_tests.cpp
+        sbrm/sb_file_remover_tests.cpp
         string/fixed_string_tests.cpp
         string/string_conversion_tests.cpp
         string/string_tokenizer_tests.cpp
@@ -13,7 +15,6 @@ add_cpp_library_basic_tests(GTest::gtest_main
         algorithm_tests.cpp
         uuid_tests.cpp
         hash_tests.cpp
-        sbrm_tests.cpp
         random_tests.cpp
         span_tests.cpp
         type_traits_tests.cpp
