@@ -95,18 +95,18 @@ set(headers
 
 ## Sources:
 set(sources
-    src/chrono/format_time_point.cpp
-    src/chrono/stopwatch.cpp
-    src/debug/assert.cpp
-    src/debug/assert_msg.cpp
-    src/hash.cpp
-    src/io/check_file.cpp
-    src/io/copy_stream.cpp
-    src/io/open_file.cpp
-    src/plugin.cpp
-    src/random.cpp
-    src/span.cpp
-    src/uuid.cpp
+    src/arba/core/chrono/format_time_point.cpp
+    src/arba/core/chrono/stopwatch.cpp
+    src/arba/core/debug/assert.cpp
+    src/arba/core/debug/assert_msg.cpp
+    src/arba/core/hash.cpp
+    src/arba/core/io/check_file.cpp
+    src/arba/core/io/copy_stream.cpp
+    src/arba/core/io/open_file.cpp
+    src/arba/core/plugin.cpp
+    src/arba/core/random.cpp
+    src/arba/core/span.cpp
+    src/arba/core/uuid.cpp
 )
 
 ## Add C++ library
