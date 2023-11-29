@@ -15,7 +15,8 @@ set_build_type_ifndef()
 
 set_project_name(NAMESPACE "arba" BASE_NAME "core")
 string(TIMESTAMP configure_datetime "%Y%m%d-%H%M%S" UTC)
-set_project_semantic_version("0.24.0"
+set_project_semantic_version("0.25.0"
+    PRE_RELEASE "dev"
     BUILD_METADATA "${configure_datetime}"
 )
 
