@@ -21,40 +21,48 @@ advance_alphanum_str_(std::string_view::const_iterator& iter, std::string_view::
         return true;
     };
 
-    if (iter == end_iter)
+    if (check_end(iter))
         return false;
 
-    bool alpha_ok = true;
-
     char ch = *iter;
+    bool digit_ok = private_::is_digit_(ch);
+    bool alpha_ok = private_::is_alpha_(ch);
+    bool expect_alpha = alpha_ok;
+
+    ++iter;
     if (ch == '0')
     {
-        if (check_end(++iter))
-            return iter != begin;
-        if (private_::is_digit_(ch))
+        if (check_end(iter))
+            return true;
+        expect_alpha = true;
+    }
+
+    if (digit_ok)
+    {
+        for (;; ++iter)
         {
-            alpha_ok = false;
-            ++iter;
+            if (check_end(iter))
+                return digit_ok && !expect_alpha;
+
+            if (!private_::is_digit_(*iter))
+            {
+                expect_alpha = true;
+                digit_ok = false;
+                alpha_ok = private_::is_alpha_(*iter);
+                break;
+            }
         }
     }
 
     for (;; ++iter)
     {
-        if (iter == end_iter)
-            return alpha_ok;
+        if (check_end(iter))
+            return alpha_ok && expect_alpha;
 
-        if (private_::is_digit_(*iter))
+        if (private_::is_alphanum_(*iter))
             continue;
-        if (private_::is_alpha_(*iter))
-            alpha_ok = true;
-        else
-            break;
+        return false;
     }
-
-    if (check_end(iter))
-        return alpha_ok && iter != begin;
-
-    return false;
 }
 
 [[nodiscard]] constexpr bool

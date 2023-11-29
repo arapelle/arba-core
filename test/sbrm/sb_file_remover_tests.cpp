@@ -1,4 +1,4 @@
-#include <arba/core/sbrm.hpp>
+#include <arba/core/sbrm/sb_file_remover.hpp>
 #include <gtest/gtest.h>
 #include <fstream>
 
@@ -15,18 +15,7 @@ std::filesystem::path resource_dir()
     return rsc_dpath;
 }
 
-
-TEST(sbrm_tests, test_sbrm)
-{
-    bool active = true;
-    {
-        core::sbrm sentry([&active]{ active = false; });
-        ASSERT_EQ(active, true);
-    }
-    ASSERT_EQ(active, false);
-}
-
-TEST(sbrm_tests, test_sb_file_remover)
+TEST(sb_file_remover, test_sb_file_remover)
 {
     std::filesystem::path rsc_dir = resource_dir();
     std::filesystem::path output_fpath = rsc_dir/"output_file.txt";
@@ -39,7 +28,7 @@ TEST(sbrm_tests, test_sb_file_remover)
     ASSERT_FALSE(std::filesystem::exists(output_fpath));
 }
 
-TEST(sbrm_tests, test_sb_file_remover_rvalue)
+TEST(sb_file_remover, test_sb_file_remover_rvalue)
 {
     std::filesystem::path rsc_dir = resource_dir();
     std::filesystem::path output_fpath = rsc_dir/"output_file.txt";
@@ -52,7 +41,7 @@ TEST(sbrm_tests, test_sb_file_remover_rvalue)
     ASSERT_FALSE(std::filesystem::exists(output_fpath));
 }
 
-TEST(sbrm_tests, test_sb_file_remover_ec)
+TEST(sb_file_remover, test_sb_file_remover_ec)
 {
     std::filesystem::path rsc_dir = resource_dir();
     std::filesystem::path output_fpath = rsc_dir/"output_file.txt";
@@ -67,7 +56,7 @@ TEST(sbrm_tests, test_sb_file_remover_ec)
     ASSERT_EQ(ec.value(), 0);
 }
 
-TEST(sbrm_tests, test_sb_file_remover_ec_rvalue)
+TEST(sb_file_remover, test_sb_file_remover_ec_rvalue)
 {
     std::filesystem::path rsc_dir = resource_dir();
     std::filesystem::path output_fpath = rsc_dir/"output_file.txt";
@@ -82,7 +71,7 @@ TEST(sbrm_tests, test_sb_file_remover_ec_rvalue)
     ASSERT_EQ(ec.value(), 0);
 }
 
-TEST(sbrm_tests, test_sb_all_files_remover)
+TEST(sb_file_remover, test_sb_all_files_remover)
 {
     std::filesystem::path rsc_dir = resource_dir();
     std::filesystem::path jpg_dpath = rsc_dir/"jpg/";
@@ -105,7 +94,7 @@ TEST(sbrm_tests, test_sb_all_files_remover)
     ASSERT_FALSE(std::filesystem::exists(output_fpath));
 }
 
-TEST(sbrm_tests, test_sb_all_files_remover_rvalue)
+TEST(sb_file_remover, test_sb_all_files_remover_rvalue)
 {
     std::filesystem::path rsc_dir = resource_dir();
     std::filesystem::path jpg_dpath = rsc_dir/"jpg/";
@@ -128,7 +117,7 @@ TEST(sbrm_tests, test_sb_all_files_remover_rvalue)
     ASSERT_FALSE(std::filesystem::exists(output_fpath));
 }
 
-TEST(sbrm_tests, test_sb_all_files_remover_ec)
+TEST(sb_file_remover, test_sb_all_files_remover_ec)
 {
     std::filesystem::path rsc_dir = resource_dir();
     std::filesystem::path jpg_dpath = rsc_dir/"jpg/";
@@ -153,7 +142,7 @@ TEST(sbrm_tests, test_sb_all_files_remover_ec)
     ASSERT_EQ(ec.value(), 0);
 }
 
-TEST(sbrm_tests, test_sb_all_files_remover_ec_rvalue)
+TEST(sb_file_remover, test_sb_all_files_remover_ec_rvalue)
 {
     std::filesystem::path rsc_dir = resource_dir();
     std::filesystem::path jpg_dpath = rsc_dir/"jpg/";

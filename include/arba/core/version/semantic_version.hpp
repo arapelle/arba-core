@@ -113,7 +113,10 @@ constexpr bool semantic_version::pre_release_is_less_than_(const std::string& ri
     char left_ch = '\0';
     char right_ch = '\0';
 
-    for (;; ++left_iter, ++right_iter)
+    auto left_part_iter = left_iter;
+    auto right_part_iter = right_iter;
+
+    for (;; )
     {
         if (left_iter == left_end_iter)
         {
@@ -130,8 +133,14 @@ constexpr bool semantic_version::pre_release_is_less_than_(const std::string& ri
         if (left_ch != right_ch)
             break;
 
+        ++left_iter, ++right_iter;
         if (left_ch == '.')
+        {
             left_is_num = true;
+            left_part_iter = left_iter;
+            right_part_iter = right_iter;
+            // save first char pos of the part.
+        }
         else
             left_is_num = left_is_num && (left_ch >= '0' && left_ch <= '9');
     }
@@ -173,7 +182,9 @@ constexpr bool semantic_version::pre_release_is_less_than_(const std::string& ri
     {
         if (!right_is_num)
             return true;
-        return left_is_lt || (length_break && left_is_shortest);
+        unsigned left_number = std::stoi(std::string(left_part_iter, left_iter));
+        unsigned right_number = std::stoi(std::string(right_part_iter, right_iter));
+        return left_number < right_number || (length_break && left_is_shortest);
     }
     if (right_is_num)
         return false;

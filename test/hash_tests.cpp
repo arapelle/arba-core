@@ -38,6 +38,15 @@ TEST(hash_tests, test_murmur_hash_64_eq_from_range)
     ASSERT_EQ(hash, hash2);
 }
 
+TEST(hash_tests, test_murmur_hash_64_eq_from_span_bytes)
+{
+    std::array<std::uint8_t, 8> a_bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
+    std::vector<std::uint8_t> v_bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
+    uint64_t hash = core::murmur_hash_64(std::span(a_bytes));
+    uint64_t hash2 = core::murmur_hash_64(v_bytes);
+    ASSERT_EQ(hash, hash2);
+}
+
 // neutral_murmur_hash_64:
 
 TEST(hash_tests, test_neutral_murmur_hash_64_eq)
@@ -75,6 +84,15 @@ TEST(hash_tests, test_neutral_murmur_hash_64_eq_from_range)
     ASSERT_EQ(hash, hash2);
 }
 
+TEST(hash_tests, test_neutral_murmur_hash_64_eq_from_span_bytes)
+{
+    std::array<std::uint8_t, 8> a_bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
+    std::vector<std::uint8_t> v_bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
+    uint64_t hash = core::neutral_murmur_hash_64(std::span(a_bytes));
+    uint64_t hash2 = core::neutral_murmur_hash_64(v_bytes);
+    ASSERT_EQ(hash, hash2);
+}
+
 // neutral_murmur_hash_array_16:
 
 TEST(hash_tests, test_neutral_murmur_hash_array_16_eq)
@@ -107,6 +125,15 @@ TEST(hash_tests, test_neutral_murmur_hash_array_16_neq_seed_from_range)
     std::array<std::uint8_t, 8> a_bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
     std::vector<std::uint8_t> v_bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
     std::array<std::uint8_t, 16> hash = core::neutral_murmur_hash_array_16(a_bytes);
+    std::array<std::uint8_t, 16> hash2 = core::neutral_murmur_hash_array_16(v_bytes);
+    ASSERT_EQ(hash, hash2);
+}
+
+TEST(hash_tests, test_neutral_murmur_hash_array_16_neq_seed_from_span_bytes)
+{
+    std::array<std::uint8_t, 8> a_bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
+    std::vector<std::uint8_t> v_bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
+    std::array<std::uint8_t, 16> hash = core::neutral_murmur_hash_array_16(std::span(a_bytes));
     std::array<std::uint8_t, 16> hash2 = core::neutral_murmur_hash_array_16(v_bytes);
     ASSERT_EQ(hash, hash2);
 }
