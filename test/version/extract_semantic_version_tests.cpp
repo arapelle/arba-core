@@ -34,6 +34,13 @@ TEST(extract_semantic_version, advance_alphanum_str__valid_end_is_ok__true)
     ASSERT_TRUE(advance_alphanum_str_("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-"));
 }
 
+TEST(extract_semantic_version, advance_alphanum_str__empty__false)
+{
+    ASSERT_FALSE(advance_alphanum_str_(""));
+    ASSERT_FALSE(advance_alphanum_str_("."));
+    ASSERT_FALSE(advance_alphanum_str_("+"));
+}
+
 TEST(extract_semantic_version, advance_alphanum_str__zero_num__false)
 {
     ASSERT_FALSE(advance_alphanum_str_("00"));
@@ -43,6 +50,12 @@ TEST(extract_semantic_version, advance_alphanum_str__zero_num__false)
 TEST(extract_semantic_version, advance_alphanum_str__bad_char__false)
 {
     ASSERT_FALSE(advance_alphanum_str_("#"));
+    ASSERT_FALSE(advance_alphanum_str_("0#"));
+    ASSERT_FALSE(advance_alphanum_str_("00#"));
+    ASSERT_FALSE(advance_alphanum_str_("07#"));
+    ASSERT_FALSE(advance_alphanum_str_("0a#"));
+    ASSERT_FALSE(advance_alphanum_str_("a#"));
+    ASSERT_FALSE(advance_alphanum_str_("a0#"));
     ASSERT_FALSE(advance_alphanum_str_("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-#"));
 }
 

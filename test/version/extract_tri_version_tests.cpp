@@ -28,6 +28,9 @@ TEST(extract_tri_version, extract_version_number__empty_str__false)
 {
     std::string_view num_sv;
     ASSERT_FALSE(extract_version_number_("", num_sv, ".-+", true));
+    ASSERT_FALSE(extract_version_number_(".", num_sv, ".-+", true));
+    ASSERT_FALSE(extract_version_number_("-", num_sv, ".-+", true));
+    ASSERT_FALSE(extract_version_number_("+", num_sv, ".-+", true));
 }
 
 TEST(extract_tri_version, extract_version_number__bad_char__false)
