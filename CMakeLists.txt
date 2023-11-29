@@ -11,25 +11,14 @@ include(cmtk/CppLibraryProject)
 disable_in_source_build()
 set_build_type_ifndef()
 
-macro(set_PROJECT_SEMANTIC_VERSION)
-    set(PROJECT_SEMANTIC_VERSION "${PROJECT_VERSION}")
-    if(PROJECT_VERSION_PRE_RELEASE)
-        string(APPEND PROJECT_SEMANTIC_VERSION "-${PROJECT_VERSION_PRE_RELEASE}")
-    endif()
-    if(PROJECT_VERSION_BUILD_METADATA)
-        string(APPEND PROJECT_SEMANTIC_VERSION "+${PROJECT_VERSION_BUILD_METADATA}")
-    endif()
-endmacro()
-
 # C++ PROJECT
 
-set(PROJECT_NAME "arba-core")
-set(PROJECT_NAMESPACE "arba")
-set(PROJECT_BASE_NAME "core")
-set(PROJECT_VERSION 0.24.0)
-set(PROJECT_VERSION_PRE_RELEASE "dev")
-string(TIMESTAMP PROJECT_VERSION_BUILD_METADATA "%Y%m%d-%H%M%S" UTC)
-set_PROJECT_SEMANTIC_VERSION()
+set_project_name(NAMESPACE "arba" BASE_NAME "core")
+string(TIMESTAMP configure_datetime "%Y%m%d-%H%M%S" UTC)
+set_project_semantic_version("0.24.0"
+    PRE_RELEASE "dev"
+    BUILD_METADATA "${configure_datetime}"
+)
 
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
