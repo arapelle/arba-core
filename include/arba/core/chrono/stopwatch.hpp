@@ -31,8 +31,8 @@ class stopwatch : protected basic_stopwatch
 
 public:
     using typename base_::clock_type;
-    using typename base_::time_point;
     using typename base_::duration;
+    using typename base_::time_point;
 
     stopwatch();
 

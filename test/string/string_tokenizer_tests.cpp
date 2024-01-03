@@ -1,8 +1,8 @@
 #include <arba/core/string/string_tokenizer.hpp>
+#include <cstdlib>
 #include <gtest/gtest.h>
 #include <iterator>
 #include <ranges>
-#include <cstdlib>
 
 // string_view tests:
 
@@ -55,7 +55,7 @@ TEST(string_view_tokenizer_tests, test_tokenizer_char)
 
     std::vector<std::string_view> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string_view> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string_view> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
@@ -66,7 +66,7 @@ TEST(string_view_tokenizer_tests, test_tokenizer_char_set_cstr)
 
     std::vector<std::string_view> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string_view> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string_view> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
@@ -77,7 +77,7 @@ TEST(string_view_tokenizer_tests, test_tokenizer_char_set_strv)
 
     std::vector<std::string_view> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string_view> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string_view> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
@@ -89,7 +89,7 @@ TEST(string_view_tokenizer_tests, test_tokenizer_char_set_str)
 
     std::vector<std::string_view> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string_view> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string_view> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
@@ -100,17 +100,17 @@ TEST(string_view_tokenizer_tests, test_tokenizer_function)
 
     std::vector<std::string_view> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string_view> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string_view> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
 TEST(string_view_tokenizer_tests, test_tokenizer_functor)
 {
     std::string_view str("Some   beautiful\ttext.cool");
-    core::string_view_tokenizer str_tokens(str, [](char ch){ return isspace(ch) || ispunct(ch);});
+    core::string_view_tokenizer str_tokens(str, [](char ch) { return isspace(ch) || ispunct(ch); });
     std::vector<std::string_view> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string_view> expected_sv_tokens{"Some", "beautiful", "text", "cool"};
+    std::vector<std::string_view> expected_sv_tokens{ "Some", "beautiful", "text", "cool" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
@@ -165,10 +165,11 @@ TEST(string_tokenizer_tests, test_tokenizer_char)
 
     std::vector<std::string> s_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(s_tokens));
-    std::vector<std::string> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(s_tokens, expected_sv_tokens);
 
-//    std::ranges::subrange<core::string_view_token_iterator<char>>(core::string_view_token_iterator<char>(str, ' '), core::string_view_token_iterator<char>());
+    //    std::ranges::subrange<core::string_view_token_iterator<char>>(core::string_view_token_iterator<char>(str, '
+    //    '), core::string_view_token_iterator<char>());
 }
 
 TEST(string_tokenizer_tests, test_tokenizer_char_set_cstr)
@@ -178,7 +179,7 @@ TEST(string_tokenizer_tests, test_tokenizer_char_set_cstr)
 
     std::vector<std::string> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
@@ -189,7 +190,7 @@ TEST(string_tokenizer_tests, test_tokenizer_char_set_strv)
 
     std::vector<std::string> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
@@ -201,7 +202,7 @@ TEST(string_tokenizer_tests, test_tokenizer_char_set_str)
 
     std::vector<std::string> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
@@ -212,16 +213,16 @@ TEST(string_tokenizer_tests, test_tokenizer_function)
 
     std::vector<std::string> sv_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(sv_tokens));
-    std::vector<std::string> expected_sv_tokens{"Some", "beautiful", "text"};
+    std::vector<std::string> expected_sv_tokens{ "Some", "beautiful", "text" };
     ASSERT_EQ(sv_tokens, expected_sv_tokens);
 }
 
 TEST(string_tokenizer_tests, test_tokenizer_functor)
 {
     std::string_view str("Some   beautiful\ttext.cool");
-    core::string_tokenizer str_tokens(str, [](char ch){ return isspace(ch) || ispunct(ch);});
+    core::string_tokenizer str_tokens(str, [](char ch) { return isspace(ch) || ispunct(ch); });
     std::vector<std::string> v_tokens;
     std::ranges::copy(str_tokens, std::back_inserter(v_tokens));
-    std::vector<std::string> expected_v_tokens{"Some", "beautiful", "text", "cool"};
+    std::vector<std::string> expected_v_tokens{ "Some", "beautiful", "text", "cool" };
     ASSERT_EQ(v_tokens, expected_v_tokens);
 }

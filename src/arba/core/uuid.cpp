@@ -1,7 +1,7 @@
-#include <arba/core/uuid.hpp>
+#include <algorithm>
 #include <arba/core/hash.hpp>
 #include <arba/core/random.hpp>
-#include <algorithm>
+#include <arba/core/uuid.hpp>
 #include <iomanip>
 #include <sstream>
 
@@ -11,37 +11,36 @@ namespace core
 {
 namespace detail
 {
-   template <typename TChar>
-   constexpr inline unsigned char hex2char(TChar const ch)
-   {
-      if (ch >= static_cast<TChar>('0') && ch <= static_cast<TChar>('9'))
-         return ch - static_cast<TChar>('0');
-      if (ch >= static_cast<TChar>('a') && ch <= static_cast<TChar>('f'))
-         return 10 + ch - static_cast<TChar>('a');
-      if (ch >= static_cast<TChar>('A') && ch <= static_cast<TChar>('F'))
-         return 10 + ch - static_cast<TChar>('A');
-      return 0;
-   }
-
-   template <typename TChar>
-   constexpr inline bool is_hex(TChar const ch)
-   {
-      return
-         (ch >= static_cast<TChar>('0') && ch <= static_cast<TChar>('9')) ||
-         (ch >= static_cast<TChar>('a') && ch <= static_cast<TChar>('f')) ||
-         (ch >= static_cast<TChar>('A') && ch <= static_cast<TChar>('F'));
-   }
-
-   template <typename TChar>
-   constexpr inline unsigned char hexpair2char(TChar const a, TChar const b)
-   {
-      return (hex2char(a) << 4) | hex2char(b);
-   }
+template <typename TChar>
+constexpr inline unsigned char hex2char(TChar const ch)
+{
+    if (ch >= static_cast<TChar>('0') && ch <= static_cast<TChar>('9'))
+        return ch - static_cast<TChar>('0');
+    if (ch >= static_cast<TChar>('a') && ch <= static_cast<TChar>('f'))
+        return 10 + ch - static_cast<TChar>('a');
+    if (ch >= static_cast<TChar>('A') && ch <= static_cast<TChar>('F'))
+        return 10 + ch - static_cast<TChar>('A');
+    return 0;
 }
 
-uuid::uuid()
-    : data_{ 0 }
-{}
+template <typename TChar>
+constexpr inline bool is_hex(TChar const ch)
+{
+    return (ch >= static_cast<TChar>('0') && ch <= static_cast<TChar>('9'))
+           || (ch >= static_cast<TChar>('a') && ch <= static_cast<TChar>('f'))
+           || (ch >= static_cast<TChar>('A') && ch <= static_cast<TChar>('F'));
+}
+
+template <typename TChar>
+constexpr inline unsigned char hexpair2char(TChar const a, TChar const b)
+{
+    return (hex2char(a) << 4) | hex2char(b);
+}
+}
+
+uuid::uuid() : data_{ 0 }
+{
+}
 
 uuid::uuid(const std::string_view& str)
 {
@@ -100,27 +99,12 @@ bool uuid::is_nil() const
 std::string uuid::to_string() const
 {
     std::ostringstream stream;
-    stream << std::hex << std::setfill('0')
-           << std::setw(2) << (int)data_[0]
-           << std::setw(2) << (int)data_[1]
-           << std::setw(2) << (int)data_[2]
-           << std::setw(2) << (int)data_[3]
-           << '-'
-           << std::setw(2) << (int)data_[4]
-           << std::setw(2) << (int)data_[5]
-           << '-'
-           << std::setw(2) << (int)data_[6]
-           << std::setw(2) << (int)data_[7]
-           << '-'
-           << std::setw(2) << (int)data_[8]
-           << std::setw(2) << (int)data_[9]
-           << '-'
-           << std::setw(2) << (int)data_[10]
-           << std::setw(2) << (int)data_[11]
-           << std::setw(2) << (int)data_[12]
-           << std::setw(2) << (int)data_[13]
-           << std::setw(2) << (int)data_[14]
-           << std::setw(2) << (int)data_[15];
+    stream << std::hex << std::setfill('0') << std::setw(2) << (int)data_[0] << std::setw(2) << (int)data_[1]
+           << std::setw(2) << (int)data_[2] << std::setw(2) << (int)data_[3] << '-' << std::setw(2) << (int)data_[4]
+           << std::setw(2) << (int)data_[5] << '-' << std::setw(2) << (int)data_[6] << std::setw(2) << (int)data_[7]
+           << '-' << std::setw(2) << (int)data_[8] << std::setw(2) << (int)data_[9] << '-' << std::setw(2)
+           << (int)data_[10] << std::setw(2) << (int)data_[11] << std::setw(2) << (int)data_[12] << std::setw(2)
+           << (int)data_[13] << std::setw(2) << (int)data_[14] << std::setw(2) << (int)data_[15];
     return stream.str();
 }
 
@@ -140,7 +124,7 @@ std::ostream& operator<<(std::ostream& stream, const uuid& uuid)
 namespace std
 {
 
-std::size_t hash< ::arba::core::uuid>::operator()(const ::arba::core::uuid& uuid) const
+std::size_t hash<::arba::core::uuid>::operator()(const ::arba::core::uuid& uuid) const
 {
     uint64_t hash = core::murmur_hash_64(&uuid.data().front(), uuid.data().size());
     return static_cast<std::size_t>(hash);

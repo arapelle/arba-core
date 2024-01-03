@@ -7,10 +7,16 @@ inline namespace arba
 namespace core
 {
 
-struct thread_safe_t { explicit thread_safe_t() = default; };
+struct thread_safe_t
+{
+    explicit thread_safe_t() = default;
+};
 constexpr thread_safe_t thread_safe;
 
-struct thread_unsafe_t { explicit thread_unsafe_t() = default; };
+struct thread_unsafe_t
+{
+    explicit thread_unsafe_t() = default;
+};
 constexpr thread_unsafe_t thread_unsafe;
 
 template <class tag_type>

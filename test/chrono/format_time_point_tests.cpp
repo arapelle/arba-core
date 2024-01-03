@@ -1,7 +1,7 @@
 #include <arba/core/chrono/format_time_point.hpp>
-#include <gtest/gtest.h>
-#include <format>
 #include <cstdlib>
+#include <format>
+#include <gtest/gtest.h>
 
 std::chrono::system_clock::time_point make_time_point(std::string_view date_str, unsigned ms = 0, unsigned mcs = 0)
 {
@@ -9,8 +9,8 @@ std::chrono::system_clock::time_point make_time_point(std::string_view date_str,
     std::stringstream stream(date_str.data());
     std::tm tm = {};
     stream >> std::get_time(&tm, "%Y/%m/%d %T");
-    time_point = std::chrono::system_clock::from_time_t(std::mktime(&tm))
-                 + std::chrono::milliseconds(ms) + std::chrono::microseconds(mcs);
+    time_point = std::chrono::system_clock::from_time_t(std::mktime(&tm)) + std::chrono::milliseconds(ms)
+                 + std::chrono::microseconds(mcs);
     return time_point;
 }
 
@@ -43,7 +43,6 @@ TEST(format_time_point_tests, test_format_log)
     ASSERT_EQ(core::format_log_Ymd_HMS(time_point), "2014-01-09 12:35:34");
     ASSERT_EQ(core::format_log_Ymd_HMS_ms(time_point), "2014-01-09 12:35:34.123");
     ASSERT_EQ(core::format_log_Ymd_HMS_mcs(time_point), "2014-01-09 12:35:34.123000");
-
 
     time_point = make_time_point("2014/01/09 12:35:34", 123, 786);
     ASSERT_EQ(core::format_log_Ymd_HMS(time_point), "2014-01-09 12:35:34");

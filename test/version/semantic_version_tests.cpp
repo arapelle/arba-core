@@ -79,8 +79,8 @@ TEST(semantic_version_tests, semantic_version_constructor__x_y_z_pr_bbm__expect_
     }
 }
 
-void test_semver_valid_sv(unsigned major, unsigned minor, unsigned patch,
-                    std::string_view pre_release = "", std::string_view build_metadata = "")
+void test_semver_valid_sv(unsigned major, unsigned minor, unsigned patch, std::string_view pre_release = "",
+                          std::string_view build_metadata = "")
 {
     std::string version_str = std::format("{}.{}.{}", major, minor, patch);
     if (!pre_release.empty())
@@ -98,14 +98,14 @@ void test_semver_valid_sv(unsigned major, unsigned minor, unsigned patch,
 
 TEST(semantic_version_tests, semantic_version_constructor__sv_triv__no_exception)
 {
-    test_semver_valid_sv(0, 11,  0);
-    test_semver_valid_sv(0, 11,  1);
+    test_semver_valid_sv(0, 11, 0);
+    test_semver_valid_sv(0, 11, 1);
     test_semver_valid_sv(0, 11, 12);
-    test_semver_valid_sv(0, 11,  0, "pre");
-    test_semver_valid_sv(0, 11,  1, "pre");
+    test_semver_valid_sv(0, 11, 0, "pre");
+    test_semver_valid_sv(0, 11, 1, "pre");
     test_semver_valid_sv(0, 11, 12, "pre");
-    test_semver_valid_sv(0, 11,  0, "", "bm");
-    test_semver_valid_sv(0, 11,  1, "", "bm");
+    test_semver_valid_sv(0, 11, 0, "", "bm");
+    test_semver_valid_sv(0, 11, 1, "", "bm");
     test_semver_valid_sv(0, 11, 12, "", "bm");
 }
 
@@ -252,24 +252,28 @@ TEST(semantic_version_tests, semantic_version_constructor__bad_sv__expect_except
 
 TEST(semantic_version_tests, version_core__normal__no_exception)
 {
-    core::semantic_version version(0,1,2);
-    ASSERT_EQ(version.core(), core::tri_version(0,1,2));
-    const core::semantic_version c_version(0,1,2);
-    ASSERT_EQ(c_version.core(), core::tri_version(0,1,2));
+    core::semantic_version version(0, 1, 2);
+    ASSERT_EQ(version.core(), core::tri_version(0, 1, 2));
+    const core::semantic_version c_version(0, 1, 2);
+    ASSERT_EQ(c_version.core(), core::tri_version(0, 1, 2));
 }
 
 TEST(semantic_version_tests, operator_eq__normal__no_exception)
 {
-    ASSERT_EQ(core::semantic_version(0,1,2,"alpha.1","build-title"), core::semantic_version(0,1,2,"alpha.1","build-title"));
-    ASSERT_EQ(core::semantic_version(0,1,2,"alpha.1","build-title"), core::semantic_version(0,1,2,"alpha.1"));
-    ASSERT_EQ(core::semantic_version(0,1,2,"alpha.1","build-title"), core::semantic_version("0.1.2-alpha.1+build-title"));
-    ASSERT_EQ(core::semantic_version(0,1,2,"alpha.1","build-title"), core::semantic_version("0.1.2-alpha.1"));
+    ASSERT_EQ(core::semantic_version(0, 1, 2, "alpha.1", "build-title"),
+              core::semantic_version(0, 1, 2, "alpha.1", "build-title"));
+    ASSERT_EQ(core::semantic_version(0, 1, 2, "alpha.1", "build-title"), core::semantic_version(0, 1, 2, "alpha.1"));
+    ASSERT_EQ(core::semantic_version(0, 1, 2, "alpha.1", "build-title"),
+              core::semantic_version("0.1.2-alpha.1+build-title"));
+    ASSERT_EQ(core::semantic_version(0, 1, 2, "alpha.1", "build-title"), core::semantic_version("0.1.2-alpha.1"));
 }
 
 TEST(semantic_version_tests, operator_ne__normal__no_exception)
 {
-    ASSERT_NE(core::semantic_version(0,1,2,"alpha.1","build-title"), core::semantic_version(0,1,2,"alpha.2","build-title"));
-    ASSERT_NE(core::semantic_version(0,1,3,"alpha.1","build-title"), core::semantic_version(0,1,2,"alpha.1","build-title"));
+    ASSERT_NE(core::semantic_version(0, 1, 2, "alpha.1", "build-title"),
+              core::semantic_version(0, 1, 2, "alpha.2", "build-title"));
+    ASSERT_NE(core::semantic_version(0, 1, 3, "alpha.1", "build-title"),
+              core::semantic_version(0, 1, 2, "alpha.1", "build-title"));
 }
 
 TEST(semantic_version_tests, operator_lt__normal__no_exception)

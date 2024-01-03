@@ -1,6 +1,6 @@
 #include <arba/core/string/string_conversion.hpp>
-#include <gtest/gtest.h>
 #include <cstdlib>
+#include <gtest/gtest.h>
 
 TEST(string_conversion_tests, stoi64__string_0__ok)
 {

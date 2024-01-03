@@ -62,7 +62,6 @@ TEST(tri_version_tests, constructor__invalid_string__expect_invalid_argument)
     EXPECT_THROW(core::tri_version sv("0.1.2x");, std::invalid_argument);
 }
 
-
 TEST(tri_version_tests, constructor__string_quadnum__expect_invalid_argument)
 {
     EXPECT_THROW(core::tri_version version("1.2.3.4");, std::invalid_argument);
@@ -247,7 +246,7 @@ TEST(tri_version_tests, operator_gt__ge_version__expect_false)
 
 TEST(tri_version_tests, std_format__version__correct_formatted_string)
 {
-    ASSERT_EQ(std::format("{}", core::tri_version(2,10,5)), "2.10.5");
+    ASSERT_EQ(std::format("{}", core::tri_version(2, 10, 5)), "2.10.5");
 }
 
 TEST(tri_version_tests, constexpr__valid_args__no_compile_error)

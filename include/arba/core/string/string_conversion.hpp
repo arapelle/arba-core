@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string_view>
 #include <cstdint>
 #include <stdexcept>
+#include <string_view>
 
 inline namespace arba
 {
@@ -40,7 +40,8 @@ static constexpr int64_t stoi64(std::string_view str)
         int64_t number = ch - '0';
         result += number * multiplier;
         multiplier *= 10;
-        // TODO? https://stackoverflow.com/questions/1815367/catch-and-compute-overflow-during-multiplication-of-two-large-integers
+        // TODO?
+        // https://stackoverflow.com/questions/1815367/catch-and-compute-overflow-during-multiplication-of-two-large-integers
     }
 
     return sign * result;

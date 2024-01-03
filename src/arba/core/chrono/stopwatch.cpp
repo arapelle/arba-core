@@ -7,9 +7,9 @@ namespace core
 inline namespace chrono
 {
 
-basic_stopwatch::basic_stopwatch()
-    : start_(clock_type::now())
-{}
+basic_stopwatch::basic_stopwatch() : start_(clock_type::now())
+{
+}
 
 stopwatch::duration basic_stopwatch::restart()
 {
@@ -18,9 +18,9 @@ stopwatch::duration basic_stopwatch::restart()
     return start_ - previous;
 }
 
-
 stopwatch::stopwatch()
-{}
+{
+}
 
 stopwatch::duration stopwatch::elapsed() const
 {

@@ -1,8 +1,8 @@
 #include <arba/core/io/copy_stream.hpp>
-#include <gtest/gtest.h>
-#include <fstream>
-#include <sstream>
 #include <cstdlib>
+#include <fstream>
+#include <gtest/gtest.h>
+#include <sstream>
 
 std::filesystem::path create_resource()
 {
@@ -14,7 +14,7 @@ std::filesystem::path create_resource()
     std::filesystem::path rsc_dpath = root_dpath / "rsc";
     std::filesystem::create_directories(rsc_dpath);
 
-    std::filesystem::path story_fpath = rsc_dpath/"open_file.txt";
+    std::filesystem::path story_fpath = rsc_dpath / "open_file.txt";
     std::ofstream rsc_fstream(story_fpath);
     rsc_fstream << "Once upon a time";
 

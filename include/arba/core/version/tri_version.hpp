@@ -3,11 +3,12 @@
 #include "_private/extract_tri_version.hpp"
 #include "concepts/tri_version.hpp"
 #include "is_compatible_with.hpp"
-#include <arba/core/string/string_conversion.hpp>
+
 #include <arba/core/compile_time_error.hpp>
-#include <tuple>
+#include <arba/core/string/string_conversion.hpp>
 #include <cstdint>
 #include <format>
+#include <tuple>
 
 inline namespace arba
 {
@@ -35,8 +36,17 @@ public:
     inline constexpr void set_minor(uint32_t minor) noexcept { std::get<1>(*this) = minor; }
     inline constexpr void set_patch(uint32_t patch) noexcept { std::get<2>(*this) = patch; }
 
-    inline constexpr void up_major() noexcept { ++std::get<0>(*this); std::get<1>(*this) = 0; std::get<2>(*this) = 0; }
-    inline constexpr void up_minor() noexcept { ++std::get<1>(*this); std::get<2>(*this) = 0; }
+    inline constexpr void up_major() noexcept
+    {
+        ++std::get<0>(*this);
+        std::get<1>(*this) = 0;
+        std::get<2>(*this) = 0;
+    }
+    inline constexpr void up_minor() noexcept
+    {
+        ++std::get<1>(*this);
+        std::get<2>(*this) = 0;
+    }
     inline constexpr void up_patch() noexcept { ++std::get<2>(*this); }
 
     inline constexpr bool is_major_compatible_with(const TriVersion auto& rv) const noexcept
@@ -58,23 +68,23 @@ private:
     static constexpr tri_version make_instance_(std::string_view version_str);
 };
 
-constexpr tri_version::tri_version()
-    : tuple_type{ 0, 1, 0 }
-{}
+constexpr tri_version::tri_version() : tuple_type{ 0, 1, 0 }
+{
+}
 
-constexpr tri_version::tri_version(uint64_t major, uint32_t minor, uint32_t patch)
-    : tuple_type{ major, minor, patch }
-{}
+constexpr tri_version::tri_version(uint64_t major, uint32_t minor, uint32_t patch) : tuple_type{ major, minor, patch }
+{
+}
 
 constexpr tri_version::tri_version(const TriVersion auto& version)
-    : tuple_type{ static_cast<uint64_t>(version.major()),
-                 static_cast<uint32_t>(version.minor()),
-                 static_cast<uint32_t>(version.patch()) }
-{}
+    : tuple_type{ static_cast<uint64_t>(version.major()), static_cast<uint32_t>(version.minor()),
+                  static_cast<uint32_t>(version.patch()) }
+{
+}
 
-constexpr tri_version::tri_version(std::string_view version_str)
-    : tri_version(make_instance_(version_str))
-{}
+constexpr tri_version::tri_version(std::string_view version_str) : tri_version(make_instance_(version_str))
+{
+}
 
 constexpr tri_version tri_version::make_instance_(std::string_view version_str)
 {
@@ -98,12 +108,14 @@ template <class CharT>
 struct std::formatter<::arba::core::tri_version, CharT>
 {
     template <class FormatParseContext>
-    inline constexpr auto parse(FormatParseContext& ctx) { return ctx.begin(); }
+    inline constexpr auto parse(FormatParseContext& ctx)
+    {
+        return ctx.begin();
+    }
 
     template <class FormatContext>
     auto format(const ::arba::core::tri_version& version, FormatContext& ctx) const
     {
-        return std::format_to(ctx.out(), "{}.{}.{}",
-                              version.major(), version.minor(), version.patch());
+        return std::format_to(ctx.out(), "{}.{}.{}", version.major(), version.minor(), version.patch());
     }
 };

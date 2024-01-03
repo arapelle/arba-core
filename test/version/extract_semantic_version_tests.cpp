@@ -8,8 +8,7 @@ namespace core
 namespace private_
 {
 
-[[nodiscard]] constexpr bool
-advance_alphanum_str_(std::string_view str)
+[[nodiscard]] constexpr bool advance_alphanum_str_(std::string_view str)
 {
     auto iter = str.cbegin();
     bool res = advance_alphanum_str_(iter, str.cend());
@@ -63,22 +62,28 @@ TEST(extract_semantic_version, advance_alphanum_str__valid_dot_sep__true)
 {
     std::string_view::const_iterator iter;
     std::string_view str;
-    str = "0."; iter = str.cbegin();
+    str = "0.";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '.');
-    str = "10."; iter = str.cbegin();
+    str = "10.";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '.');
-    str = "00a."; iter = str.cbegin();
+    str = "00a.";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '.');
-    str = "00A."; iter = str.cbegin();
+    str = "00A.";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '.');
-    str = "00-."; iter = str.cbegin();
+    str = "00-.";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '.');
-    str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-."; iter = str.cbegin();
+    str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '.');
 }
@@ -87,22 +92,28 @@ TEST(extract_semantic_version, advance_alphanum_str__valid_plus_sep__true)
 {
     std::string_view::const_iterator iter;
     std::string_view str;
-    str = "0+"; iter = str.cbegin();
+    str = "0+";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '+');
-    str = "10+"; iter = str.cbegin();
+    str = "10+";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '+');
-    str = "00a+"; iter = str.cbegin();
+    str = "00a+";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '+');
-    str = "00A+"; iter = str.cbegin();
+    str = "00A+";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '+');
-    str = "00-+"; iter = str.cbegin();
+    str = "00-+";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '+');
-    str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-+"; iter = str.cbegin();
+    str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-+";
+    iter = str.cbegin();
     ASSERT_TRUE(advance_alphanum_str_(iter, str.cend()));
     ASSERT_EQ(*iter, '+');
 }
@@ -205,51 +216,63 @@ TEST(extract_semantic_version, extract_pre_release__valid_last_char_is_plus__tru
     std::string_view pr_sv;
     std::string_view str;
     std::string_view::const_iterator iter;
-    str = "0+"; iter = str.cbegin();
+    str = "0+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "0");
     ASSERT_EQ(*iter, '+');
-    str = "10+"; iter = str.cbegin();
+    str = "10+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "10");
     ASSERT_EQ(*iter, '+');
-    str = "00a+"; iter = str.cbegin();
+    str = "00a+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "00a");
     ASSERT_EQ(*iter, '+');
-    str = "00A+"; iter = str.cbegin();
+    str = "00A+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "00A");
     ASSERT_EQ(*iter, '+');
-    str = "00-+"; iter = str.cbegin();
+    str = "00-+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "00-");
     ASSERT_EQ(*iter, '+');
-    str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-+"; iter = str.cbegin();
+    str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-");
     ASSERT_EQ(*iter, '+');
-    str = "0.al07+"; iter = str.cbegin();
+    str = "0.al07+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "0.al07");
     ASSERT_EQ(*iter, '+');
-    str = "10.al07+"; iter = str.cbegin();
+    str = "10.al07+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "10.al07");
     ASSERT_EQ(*iter, '+');
-    str = "00a.al07+"; iter = str.cbegin();
+    str = "00a.al07+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "00a.al07");
     ASSERT_EQ(*iter, '+');
-    str = "00A.al07+"; iter = str.cbegin();
+    str = "00A.al07+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "00A.al07");
     ASSERT_EQ(*iter, '+');
-    str = "00-.al07+"; iter = str.cbegin();
+    str = "00-.al07+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "00-.al07");
     ASSERT_EQ(*iter, '+');
-    str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.al07+"; iter = str.cbegin();
+    str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.al07+";
+    iter = str.cbegin();
     ASSERT_TRUE(extract_pre_release_(iter, str.cend(), pr_sv));
     ASSERT_EQ(pr_sv, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-.al07");
     ASSERT_EQ(*iter, '+');
@@ -310,7 +333,8 @@ TEST(extract_semantic_version, check_build_metadata__bad_char__false)
 TEST(extract_semantic_version, extract_semantic_version__valid__true)
 {
     std::string_view major, minor, patch, pre_rel, bdata;
-    ASSERT_TRUE(extract_semantic_version_("72.20.37-alpha.1+20231114-004100.hope", major, minor, patch, pre_rel, bdata));
+    ASSERT_TRUE(
+        extract_semantic_version_("72.20.37-alpha.1+20231114-004100.hope", major, minor, patch, pre_rel, bdata));
     ASSERT_EQ(major, "72");
     ASSERT_EQ(minor, "20");
     ASSERT_EQ(patch, "37");

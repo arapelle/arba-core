@@ -1,7 +1,7 @@
 #include <arba/core/template/default_type.hpp>
+#include <cstdlib>
 #include <gtest/gtest.h>
 #include <sstream>
-#include <cstdlib>
 
 TEST(default_type_tests, test_parameter_type_or_t__expect_parameter_type)
 {

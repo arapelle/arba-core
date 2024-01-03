@@ -1,6 +1,7 @@
-#pragma once 
+#pragma once
 
 #include "byte_swap.hpp"
+
 #include <bit>
 
 inline namespace arba

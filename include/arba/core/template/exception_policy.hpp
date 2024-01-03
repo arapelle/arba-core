@@ -1,14 +1,17 @@
 #pragma once
 
-#include <type_traits>
 #include <new>
+#include <type_traits>
 
 inline namespace arba
 {
 namespace core
 {
 
-struct maythrow_t { explicit maythrow_t() = default; };
+struct maythrow_t
+{
+    explicit maythrow_t() = default;
+};
 constexpr maythrow_t maythrow;
 
 template <class tag_type>

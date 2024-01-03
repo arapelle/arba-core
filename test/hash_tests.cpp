@@ -1,6 +1,6 @@
 #include <arba/core/hash.hpp>
-#include <gtest/gtest.h>
 #include <cstdlib>
+#include <gtest/gtest.h>
 
 // murmur_hash_64:
 
@@ -25,7 +25,7 @@ TEST(hash_tests, test_murmur_hash_64_neq_seed)
 {
     std::array<std::uint8_t, 8> bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
     uint64_t hash = core::murmur_hash_64(bytes.data(), bytes.size());
-    uint64_t hash2 = core::murmur_hash_64(bytes.data(), bytes.size(), 8467930056364136223ULL);
+    uint64_t hash2 = core::murmur_hash_64(bytes.data(), bytes.size(), 8'467'930'056'364'136'223ULL);
     ASSERT_NE(hash, hash2);
 }
 
@@ -55,7 +55,7 @@ TEST(hash_tests, test_neutral_murmur_hash_64_eq)
     uint64_t hash = core::neutral_murmur_hash_64(bytes.data(), bytes.size());
     uint64_t hash2 = core::neutral_murmur_hash_64(bytes.data(), bytes.size());
     ASSERT_EQ(hash, hash2);
-    ASSERT_EQ(hash, 2734389338834563531);
+    ASSERT_EQ(hash, 2'734'389'338'834'563'531);
 }
 
 TEST(hash_tests, test_neutral_murmur_hash_64_neq_data)
@@ -71,7 +71,7 @@ TEST(hash_tests, test_neutral_murmur_hash_64_neq_seed)
 {
     std::array<std::uint8_t, 8> bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
     uint64_t hash = core::neutral_murmur_hash_64(bytes.data(), bytes.size());
-    uint64_t hash2 = core::neutral_murmur_hash_64(bytes.data(), bytes.size(), 8467930056364136223ULL);
+    uint64_t hash2 = core::neutral_murmur_hash_64(bytes.data(), bytes.size(), 8'467'930'056'364'136'223ULL);
     ASSERT_NE(hash, hash2);
 }
 
@@ -116,7 +116,8 @@ TEST(hash_tests, test_neutral_murmur_hash_array_16_neq_seed)
 {
     std::array<std::uint8_t, 8> bytes{ 102, 26, 64, 25, 55, 224, 146, 246 };
     std::array<std::uint8_t, 16> hash = core::neutral_murmur_hash_array_16(bytes.data(), bytes.size());
-    std::array<std::uint8_t, 16> hash2 = core::neutral_murmur_hash_array_16(bytes.data(), bytes.size(), 8467930056364136223ULL);
+    std::array<std::uint8_t, 16> hash2 =
+        core::neutral_murmur_hash_array_16(bytes.data(), bytes.size(), 8'467'930'056'364'136'223ULL);
     ASSERT_NE(hash, hash2);
 }
 

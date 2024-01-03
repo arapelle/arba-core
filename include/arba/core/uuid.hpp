@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string_view>
 #include <array>
-#include <string>
-#include <type_traits>
 #include <cstdint>
+#include <string>
+#include <string_view>
+#include <type_traits>
 
 inline namespace arba
 {
@@ -36,17 +36,17 @@ public:
         uint64_t uval = rng();
         auto iter = id.data().begin();
         for (unsigned i = 0; i < 8; ++i, ++iter)
-            *iter = static_cast<uint64_t>((uval >> (i*8)) & 0xFF);
+            *iter = static_cast<uint64_t>((uval >> (i * 8)) & 0xFF);
         uval = rng();
         for (unsigned i = 0; i < 8; ++i, ++iter)
-            *iter = static_cast<uint64_t>((uval >> (i*8)) & 0xFF);
+            *iter = static_cast<uint64_t>((uval >> (i * 8)) & 0xFF);
         //  https://www.rfc-editor.org/rfc/rfc4122#section-4.4
         // set variant: must be 0b10xxxxxx
         id.data()[8] &= 0xBF;
         id.data()[8] |= 0x80;
         // set version: must be 0b0100xxxx
-        id.data()[6] &= 0x4F; //0b01001111
-        id.data()[6] |= 0x40; //0b01000000
+        id.data()[6] &= 0x4F; // 0b01001111
+        id.data()[6] |= 0x40; // 0b01000000
         return id;
     }
 
@@ -76,7 +76,7 @@ namespace std
 {
 
 template <>
-struct hash< ::arba::core::uuid>
+struct hash<::arba::core::uuid>
 {
     std::size_t operator()(const ::arba::core::uuid& uuid) const;
 };

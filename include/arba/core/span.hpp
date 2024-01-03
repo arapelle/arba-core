@@ -1,7 +1,6 @@
 #pragma once
 
 #include <arba/core/template/exception_policy.hpp>
-
 #include <new>
 #include <span>
 #include <system_error>
@@ -24,16 +23,15 @@ public:
 // as_span()
 
 template <class Type>
-inline std::span<const Type>
-as_span(std::span<std::byte> bytes, maythrow_t)
+inline std::span<const Type> as_span(std::span<std::byte> bytes, maythrow_t)
 {
     if (bytes.size() % sizeof(Type) != 0) [[unlikely]]
         throw span_size_error(bytes, sizeof(Type));
-    return std::span<const Type>{reinterpret_cast<const Type*>(bytes.data()), bytes.size() / sizeof(Type)};
+    return std::span<const Type>{ reinterpret_cast<const Type*>(bytes.data()), bytes.size() / sizeof(Type) };
 }
 
 template <class Type, size_t Extent>
-    requires (Extent == std::dynamic_extent || (Extent % sizeof(Type) == 0))
+    requires(Extent == std::dynamic_extent || (Extent % sizeof(Type) == 0))
 inline std::span<const Type, Extent == std::dynamic_extent ? std::dynamic_extent : Extent / sizeof(Type)>
 as_span(std::span<std::byte, Extent> bytes, std::nothrow_t)
 {
@@ -49,16 +47,15 @@ as_span(std::span<std::byte, Extent> bytes)
 }
 
 template <class Type>
-inline std::span<const Type>
-as_span(std::span<const std::byte> bytes, maythrow_t)
+inline std::span<const Type> as_span(std::span<const std::byte> bytes, maythrow_t)
 {
     if (bytes.size() % sizeof(Type) != 0) [[unlikely]]
         throw span_size_error(bytes, sizeof(Type));
-    return std::span<const Type>{reinterpret_cast<const Type*>(bytes.data()), bytes.size() / sizeof(Type)};
+    return std::span<const Type>{ reinterpret_cast<const Type*>(bytes.data()), bytes.size() / sizeof(Type) };
 }
 
 template <class Type, size_t Extent>
-    requires (Extent == std::dynamic_extent || (Extent % sizeof(Type) == 0))
+    requires(Extent == std::dynamic_extent || (Extent % sizeof(Type) == 0))
 inline std::span<const Type, Extent == std::dynamic_extent ? std::dynamic_extent : Extent / sizeof(Type)>
 as_span(std::span<const std::byte, Extent> bytes, std::nothrow_t)
 {
@@ -76,7 +73,7 @@ as_span(std::span<const std::byte, Extent> bytes)
 // as_writable_span()
 
 template <class Type>
-    requires (!std::is_const_v<Type>)
+    requires(!std::is_const_v<Type>)
 inline std::span<Type> as_writable_span(std::span<std::byte> bytes, maythrow_t)
 {
     if (bytes.size() % sizeof(Type) != 0) [[unlikely]]
@@ -85,7 +82,7 @@ inline std::span<Type> as_writable_span(std::span<std::byte> bytes, maythrow_t)
 }
 
 template <class Type, size_t Extent>
-    requires ((!std::is_const_v<Type>) && (Extent == std::dynamic_extent || (Extent % sizeof(Type) == 0)))
+    requires((!std::is_const_v<Type>) && (Extent == std::dynamic_extent || (Extent % sizeof(Type) == 0)))
 inline std::span<Type, Extent == std::dynamic_extent ? std::dynamic_extent : Extent / sizeof(Type)>
 as_writable_span(std::span<std::byte, Extent> bytes, std::nothrow_t)
 {
@@ -94,7 +91,7 @@ as_writable_span(std::span<std::byte, Extent> bytes, std::nothrow_t)
 }
 
 template <class Type, size_t Extent>
-    requires (!std::is_const_v<Type>)
+    requires(!std::is_const_v<Type>)
 inline std::span<Type, Extent == std::dynamic_extent ? std::dynamic_extent : Extent / sizeof(Type)>
 as_writable_span(std::span<std::byte, Extent> bytes)
 {

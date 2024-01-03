@@ -9,8 +9,8 @@ namespace core
 namespace private_
 {
 
-[[nodiscard]] constexpr bool
-advance_alphanum_str_(std::string_view::const_iterator& iter, std::string_view::const_iterator end_iter)
+[[nodiscard]] constexpr bool advance_alphanum_str_(std::string_view::const_iterator& iter,
+                                                   std::string_view::const_iterator end_iter)
 {
     const auto begin = iter;
 
@@ -65,9 +65,8 @@ advance_alphanum_str_(std::string_view::const_iterator& iter, std::string_view::
     }
 }
 
-[[nodiscard]] constexpr bool
-extract_pre_release_(std::string_view::const_iterator& iter, std::string_view::const_iterator end_iter,
-                     std::string_view& pr_sv)
+[[nodiscard]] constexpr bool extract_pre_release_(std::string_view::const_iterator& iter,
+                                                  std::string_view::const_iterator end_iter, std::string_view& pr_sv)
 {
     const auto begin = iter;
 
@@ -83,16 +82,14 @@ extract_pre_release_(std::string_view::const_iterator& iter, std::string_view::c
     return true;
 }
 
-[[nodiscard]] constexpr bool
-extract_pre_release_(std::string_view str, std::string_view& pr_sv)
+[[nodiscard]] constexpr bool extract_pre_release_(std::string_view str, std::string_view& pr_sv)
 {
     auto iter = str.cbegin();
     bool res = extract_pre_release_(iter, str.cend(), pr_sv);
     return res;
 }
 
-[[nodiscard]] constexpr bool
-check_build_metadata_(std::string_view str)
+[[nodiscard]] constexpr bool check_build_metadata_(std::string_view str)
 {
     auto iter = str.cbegin(), end_iter = str.cend();
 
@@ -116,10 +113,9 @@ check_build_metadata_(std::string_view str)
     return true;
 }
 
-[[nodiscard]] constexpr bool
-extract_semantic_version_(std::string_view str,
-                          std::string_view& major, std::string_view& minor, std::string_view& patch,
-                          std::string_view& pre_release, std::string_view& build_metadata)
+[[nodiscard]] constexpr bool extract_semantic_version_(std::string_view str, std::string_view& major,
+                                                       std::string_view& minor, std::string_view& patch,
+                                                       std::string_view& pre_release, std::string_view& build_metadata)
 {
     pre_release = std::string_view();
     build_metadata = std::string_view();

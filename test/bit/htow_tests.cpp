@@ -1,6 +1,6 @@
 #include <arba/core/bit/htow.hpp>
-#include <gtest/gtest.h>
 #include <cstdlib>
+#include <gtest/gtest.h>
 
 TEST(htow_tests, test_htow_u16)
 {
@@ -74,9 +74,21 @@ TEST(htow_tests, test_htow_i64)
     ASSERT_EQ(swapped_value, expected_value);
 }
 
-enum enum_u16 : uint16_t { Value_u16 = 0xaabb, Swapped_value_u16 = 0xbbaa };
-enum enum_u32 : uint32_t { Value_u32 = 0xaabbccdd, Swapped_value_u32 = 0xddccbbaa };
-enum enum_u64 : uint64_t { Value_u64 = 0x1122334455667788, Swapped_value_u64 = 0x8877665544332211 };
+enum enum_u16 : uint16_t
+{
+    Value_u16 = 0xaabb,
+    Swapped_value_u16 = 0xbbaa
+};
+enum enum_u32 : uint32_t
+{
+    Value_u32 = 0xaabbccdd,
+    Swapped_value_u32 = 0xddccbbaa
+};
+enum enum_u64 : uint64_t
+{
+    Value_u64 = 0x1122334455667788,
+    Swapped_value_u64 = 0x8877665544332211
+};
 
 TEST(htow_tests, test_htow_enum_u16)
 {
@@ -114,9 +126,21 @@ TEST(htow_tests, test_htow_enum_u64)
     ASSERT_EQ(swapped_value, expected_value);
 }
 
-enum enum_i16 : int16_t { Value_i16 = -4097, Swapped_value_i16 = -17 };
-enum enum_i32 : int32_t { Value_i32 = -268435457, Swapped_value_i32 = -17 };
-enum enum_i64 : int64_t { Value_i64 = -1152921504606846977, Swapped_value_i64 = -17 };
+enum enum_i16 : int16_t
+{
+    Value_i16 = -4097,
+    Swapped_value_i16 = -17
+};
+enum enum_i32 : int32_t
+{
+    Value_i32 = -268'435'457,
+    Swapped_value_i32 = -17
+};
+enum enum_i64 : int64_t
+{
+    Value_i64 = -1'152'921'504'606'846'977,
+    Swapped_value_i64 = -17
+};
 
 TEST(htow_tests, test_htow_enum_i16)
 {
@@ -154,9 +178,21 @@ TEST(htow_tests, test_htow_enum_i64)
     ASSERT_EQ(swapped_value, expected_value);
 }
 
-enum class enum_class_u16 : uint16_t { Value = 0xaabb, Swapped_value = 0xbbaa };
-enum class enum_class_u32 : uint32_t { Value = 0xaabbccdd, Swapped_value = 0xddccbbaa };
-enum class enum_class_u64 : uint64_t { Value = 0x1122334455667788, Swapped_value = 0x8877665544332211 };
+enum class enum_class_u16 : uint16_t
+{
+    Value = 0xaabb,
+    Swapped_value = 0xbbaa
+};
+enum class enum_class_u32 : uint32_t
+{
+    Value = 0xaabbccdd,
+    Swapped_value = 0xddccbbaa
+};
+enum class enum_class_u64 : uint64_t
+{
+    Value = 0x1122334455667788,
+    Swapped_value = 0x8877665544332211
+};
 
 TEST(htow_tests, test_htow_enum_class_u16)
 {
@@ -194,9 +230,21 @@ TEST(htow_tests, test_htow_enum_class_u64)
     ASSERT_EQ(swapped_value, expected_value);
 }
 
-enum class enum_class_i16 : int16_t { Value = -4097, Swapped_value = -17 };
-enum class enum_class_i32 : int32_t { Value = -268435457, Swapped_value = -17 };
-enum class enum_class_i64 : int64_t { Value = -1152921504606846977, Swapped_value = -17 };
+enum class enum_class_i16 : int16_t
+{
+    Value = -4097,
+    Swapped_value = -17
+};
+enum class enum_class_i32 : int32_t
+{
+    Value = -268'435'457,
+    Swapped_value = -17
+};
+enum class enum_class_i64 : int64_t
+{
+    Value = -1'152'921'504'606'846'977,
+    Swapped_value = -17
+};
 
 TEST(htow_tests, test_htow_enum_class_i16)
 {
