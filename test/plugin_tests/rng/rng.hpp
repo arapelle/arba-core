@@ -1,7 +1,7 @@
 #pragma once
 
-#include <rng_interface.hpp>
 #include <memory>
+#include <rng_interface.hpp>
 
 class Generator : public GeneratorInterface
 {

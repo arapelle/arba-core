@@ -11,10 +11,7 @@ struct scope_bound_data : public abstract_scope_bound_data
     bool* valid = nullptr;
 
     constexpr explicit scope_bound_data(bool& valid) : valid(&valid) { valid = true; }
-    virtual ~scope_bound_data() override
-    {
-        *valid = false;
-    }
+    virtual ~scope_bound_data() override { *valid = false; }
 };
 
 TEST(type_traits_tests, test_is_shared_ptr_move_assignable_to_itself)
@@ -44,4 +41,3 @@ TEST(type_traits_tests, test_is_unique_ptr_move_assignable_to_itself)
     }
     ASSERT_FALSE(valid);
 }
-

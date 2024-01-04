@@ -1,7 +1,7 @@
 #include <arba/core/io/copy_stream.hpp>
 #include <arba/core/io/open_file.hpp>
-#include <fstream>
 #include <array>
+#include <fstream>
 
 inline namespace arba
 {
@@ -35,7 +35,7 @@ void copy_fstream(std::ifstream& input_fstream, std::ostream& output_stream)
 
 void copy_file(const std::filesystem::path& input_fpath, std::ostream& output_stream)
 {
-    std::ifstream input_fstream = open_input_file(input_fpath, std::ifstream::ate|std::ifstream::binary);
+    std::ifstream input_fstream = open_input_file(input_fpath, std::ifstream::ate | std::ifstream::binary);
     std::size_t number_of_bytes = input_fstream.tellg();
     input_fstream.seekg(0, std::ifstream::beg);
     copy_stream(input_fstream, number_of_bytes, output_stream);

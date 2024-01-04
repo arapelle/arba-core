@@ -1,7 +1,7 @@
 #pragma once
 
-#include <optional>
 #include <functional>
+#include <optional>
 
 inline namespace arba
 {
@@ -16,13 +16,9 @@ class sbrm
 public:
     using deleter_type = functor_type;
 
-    sbrm(const deleter_type& deleter)
-        : deleter_(deleter)
-    {}
+    sbrm(const deleter_type& deleter) : deleter_(deleter) {}
 
-    sbrm(deleter_type&& deleter)
-        : deleter_(std::forward<deleter_type>(deleter))
-    {}
+    sbrm(deleter_type&& deleter) : deleter_(std::forward<deleter_type>(deleter)) {}
 
     ~sbrm()
     {
@@ -30,10 +26,7 @@ public:
             (*deleter_)();
     }
 
-    void disable()
-    {
-        deleter_ = std::nullopt;
-    }
+    void disable() { deleter_ = std::nullopt; }
 
 private:
     std::optional<deleter_type> deleter_;

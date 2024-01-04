@@ -1,7 +1,7 @@
-#include <arba/core/version.hpp>
 #include <arba/core/uuid.hpp>
-#include <iostream>
+#include <arba/core/version.hpp>
 #include <cstdlib>
+#include <iostream>
 
 int main()
 {

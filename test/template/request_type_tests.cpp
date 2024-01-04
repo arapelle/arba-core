@@ -1,9 +1,12 @@
 #include <arba/core/template/request_type.hpp>
+#include <cstdlib>
 #include <gtest/gtest.h>
 #include <sstream>
-#include <cstdlib>
 
-class serializable_tag { ~serializable_tag() = delete; };
+class serializable_tag
+{
+    ~serializable_tag() = delete;
+};
 
 ARBA_CORE_DEFINE_REQUESTED_TYPE(serializable_tag, std::string, std::u8string)
 

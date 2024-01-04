@@ -1,8 +1,8 @@
 #include <arba/core/algorithm.hpp>
-#include <gtest/gtest.h>
 #include <cstdlib>
-#include <memory>
+#include <gtest/gtest.h>
 #include <list>
+#include <memory>
 
 TEST(algorithm_tests, test_unstable_erase_string_unsafe_body_item)
 {
@@ -48,7 +48,6 @@ TEST(algorithm_tests, test_unstable_erase_safe)
     std::vector<int> expected_vec = { 0, 1, 10, 3, 4, 5, 6 };
     ASSERT_EQ(vec, expected_vec);
 }
-
 
 TEST(algorithm_tests, test_quick_erase_unsafe)
 {

@@ -1,8 +1,7 @@
-#include <arba/core/debug/breakpoint.hpp>
 #include <arba/core/debug/assert.hpp>
 #include <arba/core/debug/assert_msg.hpp>
+#include <arba/core/debug/breakpoint.hpp>
 #include <gtest/gtest.h>
-
 
 TEST(debug_tests, test_assert_macros)
 {

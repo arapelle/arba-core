@@ -8,9 +8,8 @@ namespace core
 namespace private_
 {
 
-[[nodiscard]] constexpr bool
-extract_version_number_(std::string_view version,
-                        std::string_view& num_sv, std::string_view sep, bool end_is_ok)
+[[nodiscard]] constexpr bool extract_version_number_(std::string_view version, std::string_view& num_sv,
+                                                     std::string_view sep, bool end_is_ok)
 {
     auto iter = version.cbegin();
     return extract_version_number_(iter, version.cend(), num_sv, sep, end_is_ok);

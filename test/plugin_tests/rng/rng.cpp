@@ -1,16 +1,16 @@
 #include "rng.hpp"
-#include <vector>
-#include <iostream>
 
-Generator::Generator(int a, int b)
-    : a_(a), b_(b)
-{}
+#include <iostream>
+#include <vector>
+
+Generator::Generator(int a, int b) : a_(a), b_(b)
+{
+}
 
 int Generator::generate() const
 {
     return a_ + (rand() % (b_ - a_));
 }
-
 
 extern "C" std::unique_ptr<GeneratorInterface> make_unique_instance()
 {

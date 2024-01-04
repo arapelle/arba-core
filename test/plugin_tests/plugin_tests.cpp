@@ -1,8 +1,8 @@
-#include <gtest/gtest.h>
 #include <arba/core/plugin.hpp>
-#include <rng_interface.hpp>
 #include <format>
+#include <gtest/gtest.h>
 #include <regex>
+#include <rng_interface.hpp>
 
 std::filesystem::path plugin_dir = PLUGIN_DIR;
 
@@ -21,7 +21,7 @@ TEST(PluginTest, ConstructorEmpty_NominalCase_ExpectNoException)
         core::plugin plugin;
         ASSERT_FALSE(plugin.is_loaded());
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -46,7 +46,7 @@ TEST(PluginTest, LoadFromFile_ExistingLibraryWithExtension_ExpectNoException)
         plugin.load_from_file(plugin_dir / std::format("librng{}", core::plugin::file_extension));
         ASSERT_TRUE(plugin.is_loaded());
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -60,7 +60,7 @@ TEST(PluginTest, LoadFromFile_ExistingLibraryNoExtension_ExpectNoException)
         plugin.load_from_file(plugin_dir / "librng");
         ASSERT_TRUE(plugin.is_loaded());
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -75,7 +75,7 @@ TEST(PluginTest, LoadFromFile_UnfoundLibrary_ExpectException)
         plugin.load_from_file(lib_path);
         FAIL();
     }
-    catch(const core::plugin_error& exception)
+    catch (const core::plugin_error& exception)
     {
         constexpr std::string_view expected_msg_fmt =
 #ifdef WIN32
@@ -86,7 +86,7 @@ TEST(PluginTest, LoadFromFile_UnfoundLibrary_ExpectException)
         std::string expected_msg(std::format(expected_msg_fmt, lib_path.generic_string()));
         ASSERT_EQ(std::string(exception.what()).find(expected_msg), 0);
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -99,7 +99,7 @@ TEST(PluginTest, Constructor_ExistingLibraryNoExtension_ExpectNoException)
         core::plugin plugin(plugin_dir / "librng");
         ASSERT_TRUE(plugin.is_loaded());
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -113,7 +113,7 @@ TEST(PluginTest, Constructor_UnfoundLibrary_ExpectException)
         core::plugin plugin(lib_path);
         FAIL();
     }
-    catch(const core::plugin_error& exception)
+    catch (const core::plugin_error& exception)
     {
         constexpr std::string_view expected_msg_fmt =
 #ifdef WIN32
@@ -124,7 +124,7 @@ TEST(PluginTest, Constructor_UnfoundLibrary_ExpectException)
         std::string expected_msg(std::format(expected_msg_fmt, lib_path.generic_string()));
         ASSERT_EQ(std::string(exception.what()).find(expected_msg), 0);
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -139,7 +139,7 @@ TEST(PluginTest, Unload_NomicalCase_ExpectNoException)
         plugin.unload();
         ASSERT_FALSE(plugin.is_loaded());
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -150,13 +150,13 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectNoException)
     try
     {
         core::plugin plugin(plugin_dir / "librng");
-        auto execute = plugin.find_function_ptr<void(*)(int&)>("execute");
+        auto execute = plugin.find_function_ptr<void (*)(int&)>("execute");
         ASSERT_NE(execute, nullptr);
         int value = -1;
         execute(value);
         ASSERT_GE(value, 0);
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -170,9 +170,9 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
     try
     {
         core::plugin plugin(lib_path);
-        plugin.find_function_ptr<void(*)(int&)>(function_name);
+        plugin.find_function_ptr<void (*)(int&)>(function_name);
     }
-    catch(const core::plugin_error& exception)
+    catch (const core::plugin_error& exception)
     {
         constexpr std::string_view expected_msg_fmt =
 #ifdef WIN32
@@ -184,7 +184,7 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
         std::string expected_msg(std::format(expected_msg_fmt, lib_path.generic_string(), function_name));
         ASSERT_TRUE(std::regex_match(exception_what, std::regex(expected_msg)));
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -201,7 +201,7 @@ TEST(PluginTest, MakeInstance_FunctionExists_ReturnUniquePtr)
         std::cout << generator->generate() << std::endl;
         SUCCEED();
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -225,7 +225,7 @@ TEST(PluginTest, MakeInstance_FunctionTakingArgsExists_ReturnUniquePtr)
 
         SUCCEED();
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -242,7 +242,7 @@ TEST(PluginTest, MakeSharedInstance_FunctionExists_ReturnSharedPtr)
         std::cout << generator->generate() << std::endl;
         SUCCEED();
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -255,11 +255,12 @@ TEST(PluginTest, MakeSharedInstance_FunctionTakingArgsExists_ReturnSharedPtr)
     try
     {
         core::plugin plugin(plugin_dir / "librng");
-        std::shared_ptr<GeneratorInterface> generator = plugin.make_shared_instance<GeneratorInterface>(function_name, 100, 200);
+        std::shared_ptr<GeneratorInterface> generator =
+            plugin.make_shared_instance<GeneratorInterface>(function_name, 100, 200);
         std::cout << generator->generate() << std::endl;
         SUCCEED();
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -276,7 +277,7 @@ TEST(PluginTest, InstanceRef_FunctionExists_ReturnTypeRef)
         std::cout << generator.generate() << std::endl;
         SUCCEED();
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }
@@ -293,7 +294,7 @@ TEST(PluginTest, InstanceCref_FunctionExists_ReturnTypeConstRef)
         std::cout << generator.generate() << std::endl;
         SUCCEED();
     }
-    catch(...)
+    catch (...)
     {
         throw;
     }

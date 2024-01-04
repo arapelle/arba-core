@@ -1,8 +1,8 @@
 #pragma once
 
-#include "tri_version.hpp"
 #include "_private/extract_semantic_version.hpp"
 #include "concepts/semantic_version.hpp"
+#include "tri_version.hpp"
 
 inline namespace arba
 {
@@ -28,6 +28,9 @@ public:
     constexpr std::string_view pre_release() const noexcept { return pre_release_; }
     constexpr std::string_view build_metadata() const noexcept { return build_metadata_; }
 
+    using tri_version::is_major_compatible_with;
+    using tri_version::is_minor_compatible_with;
+    using tri_version::is_patch_compatible_with;
     using tri_version::major;
     using tri_version::minor;
     using tri_version::patch;
@@ -37,9 +40,6 @@ public:
     using tri_version::up_major;
     using tri_version::up_minor;
     using tri_version::up_patch;
-    using tri_version::is_major_compatible_with;
-    using tri_version::is_minor_compatible_with;
-    using tri_version::is_patch_compatible_with;
 
     inline constexpr bool operator==(const semantic_version& other) const;
     inline constexpr bool operator<(const semantic_version& other) const;
@@ -61,24 +61,21 @@ private:
 };
 
 constexpr semantic_version::semantic_version(uint64_t major, uint32_t minor, uint32_t patch,
-                                             std::string_view pre_release,
-                                             std::string_view build_metadata)
-    : tri_version(major, minor, patch),
-    pre_release_(valid_pre_release_(pre_release)),
-    build_metadata_(valid_build_metadata_(build_metadata))
-{}
-
-constexpr semantic_version::semantic_version(const TriVersion auto& version_core,
                                              std::string_view pre_release, std::string_view build_metadata)
+    : tri_version(major, minor, patch), pre_release_(valid_pre_release_(pre_release)),
+      build_metadata_(valid_build_metadata_(build_metadata))
+{
+}
+
+constexpr semantic_version::semantic_version(const TriVersion auto& version_core, std::string_view pre_release,
+                                             std::string_view build_metadata)
     : tri_version(version_core.major(), version_core.minor(), version_core.patch()),
-    pre_release_(valid_pre_release_(pre_release)),
-    build_metadata_(valid_build_metadata_(build_metadata))
-{}
+      pre_release_(valid_pre_release_(pre_release)), build_metadata_(valid_build_metadata_(build_metadata))
+{
+}
 
 constexpr semantic_version::semantic_version(std::string_view version)
-    : tri_version(),
-    pre_release_(),
-    build_metadata_()
+    : tri_version(), pre_release_(), build_metadata_()
 {
     *this = valid_semantic_version_(version);
 }
@@ -116,7 +113,7 @@ constexpr bool semantic_version::pre_release_is_less_than_(const std::string& ri
     auto left_part_iter = left_iter;
     auto right_part_iter = right_iter;
 
-    for (;; )
+    for (;;)
     {
         if (left_iter == left_end_iter)
         {
@@ -170,7 +167,7 @@ constexpr bool semantic_version::pre_release_is_less_than_(const std::string& ri
         left_is_num = left_is_num && (left_ch >= '0' && left_ch <= '9');
     }
 
-    for (; right_iter != right_end_iter && right_is_num; ++ right_iter)
+    for (; right_iter != right_end_iter && right_is_num; ++right_iter)
     {
         right_ch = *right_iter;
         if (right_ch == '.')
@@ -247,12 +244,14 @@ template <class CharT>
 struct std::formatter<::arba::core::semantic_version, CharT>
 {
     template <class FormatParseContext>
-    inline constexpr auto parse(FormatParseContext& ctx) { return ctx.begin(); }
+    inline constexpr auto parse(FormatParseContext& ctx)
+    {
+        return ctx.begin();
+    }
 
     template <class FormatContext>
     auto format(const ::arba::core::semantic_version& version, FormatContext& ctx) const
     {
-        return std::format_to(ctx.out(), "{}-{}+{}",
-                              version.core(), version.pre_release(), version.build_metadata());
+        return std::format_to(ctx.out(), "{}-{}+{}", version.core(), version.pre_release(), version.build_metadata());
     }
 };

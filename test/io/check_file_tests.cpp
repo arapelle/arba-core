@@ -1,10 +1,10 @@
 #include <arba/core/io/check_file.hpp>
-#include <gtest/gtest.h>
-#include <fstream>
-#include <sstream>
-#include <format>
 #include <chrono>
 #include <cstdlib>
+#include <format>
+#include <fstream>
+#include <gtest/gtest.h>
+#include <sstream>
 
 std::filesystem::path create_resource()
 {
@@ -83,8 +83,9 @@ TEST(check_file_tests, test_check_input_file_exception_not_regular_file)
     {
         EXPECT_EQ(err.code().message(), "No such file or directory");
         std::string_view err_message(err.what());
-        std::string expected_err_string = std::format("filesystem error: Input path is not a regular file: No such file or directory [{}]",
-                                                      std::filesystem::temp_directory_path().string());
+        std::string expected_err_string =
+            std::format("filesystem error: Input path is not a regular file: No such file or directory [{}]",
+                        std::filesystem::temp_directory_path().string());
         EXPECT_EQ(err_message, expected_err_string);
         SUCCEED();
     }

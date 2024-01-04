@@ -1,6 +1,6 @@
 #include <arba/core/string/fixed_string.hpp>
-#include <gtest/gtest.h>
 #include <cstdlib>
+#include <gtest/gtest.h>
 
 TEST(basic_fixed_string_tests, basic_fixed_string__empty_string__ok)
 {

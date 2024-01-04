@@ -1,8 +1,8 @@
 #pragma once
 
+#include <filesystem>
 #include <istream>
 #include <ostream>
-#include <filesystem>
 
 inline namespace arba
 {

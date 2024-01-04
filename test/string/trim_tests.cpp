@@ -1,6 +1,6 @@
 #include <arba/core/string/trim.hpp>
-#include <gtest/gtest.h>
 #include <cstdlib>
+#include <gtest/gtest.h>
 
 TEST(string_tests, test_left_trim_string)
 {

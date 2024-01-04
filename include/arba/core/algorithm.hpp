@@ -1,8 +1,7 @@
 #pragma once
 
-#include <arba/core/type_traits.hpp>
-
 #include <algorithm>
+#include <arba/core/type_traits.hpp>
 #include <ranges>
 
 inline namespace arba
@@ -12,19 +11,23 @@ namespace core
 
 // unstable_erase()
 
-struct any_value_t { explicit any_value_t() = default; };
+struct any_value_t
+{
+    explicit any_value_t() = default;
+};
 constexpr any_value_t any_value;
 
-struct not_last_value_t { explicit not_last_value_t() = default; };
+struct not_last_value_t
+{
+    explicit not_last_value_t() = default;
+};
 constexpr not_last_value_t not_last_value;
 
 template <class tag_type>
-concept erase_value_policy = std::is_same_v<tag_type, any_value_t>
-                            || std::is_same_v<tag_type, not_last_value_t>;
+concept erase_value_policy = std::is_same_v<tag_type, any_value_t> || std::is_same_v<tag_type, not_last_value_t>;
 
 template <std::ranges::random_access_range range_type>
-inline void unstable_erase(range_type& range, std::ranges::iterator_t<range_type> iter,
-                           any_value_t = any_value)
+inline void unstable_erase(range_type& range, std::ranges::iterator_t<range_type> iter, any_value_t = any_value)
 {
     auto last_iter = --std::ranges::end(range);
     if constexpr (is_move_assignable_to_itself_v<std::ranges::range_value_t<range_type>>)

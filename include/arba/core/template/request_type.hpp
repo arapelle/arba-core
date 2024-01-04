@@ -24,14 +24,17 @@ using requested_type_t = typename requested_type<request_type_tag, observed_type
 // requested_type_or
 
 template <class request_type_tag, class observed_type, class or_type>
-struct requested_type_or { using type = or_type; };
+struct requested_type_or
+{
+    using type = or_type;
+};
 
 template <class request_type_tag, class observed_type, class or_type>
-requires requires
+    requires requires { typename requested_type_t<request_type_tag, observed_type>; }
+struct requested_type_or<request_type_tag, observed_type, or_type>
 {
-    typename requested_type_t<request_type_tag, observed_type>;
-}
-struct requested_type_or<request_type_tag, observed_type, or_type> { using type = requested_type_t<request_type_tag, observed_type>; };
+    using type = requested_type_t<request_type_tag, observed_type>;
+};
 
 template <class request_type_tag, class observed_type, class or_type>
 using requested_type_or_t = typename requested_type_or<request_type_tag, observed_type, or_type>::type;
@@ -40,6 +43,9 @@ using requested_type_or_t = typename requested_type_or<request_type_tag, observe
 
 // macro define helper
 
-#define ARBA_CORE_DEFINE_REQUESTED_TYPE(request_type_tag, observed_type, response_type) \
-    template <> struct arba::core::requested_type<request_type_tag, observed_type> \
-        : public define_requested_type<request_type_tag, observed_type, response_type> {};
+#define ARBA_CORE_DEFINE_REQUESTED_TYPE(request_type_tag, observed_type, response_type)                                \
+    template <>                                                                                                        \
+    struct arba::core::requested_type<request_type_tag, observed_type>                                                 \
+        : public define_requested_type<request_type_tag, observed_type, response_type>                                 \
+    {                                                                                                                  \
+    };

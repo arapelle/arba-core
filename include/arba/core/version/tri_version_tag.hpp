@@ -1,8 +1,9 @@
 #pragma once
 
-#include <tuple>
-#include <cstdint>
 #include "is_compatible_with.hpp"
+
+#include <cstdint>
+#include <tuple>
 
 inline namespace arba
 {

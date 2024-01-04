@@ -1,6 +1,6 @@
 #include <arba/core/sbrm/sb_file_remover.hpp>
-#include <gtest/gtest.h>
 #include <fstream>
+#include <gtest/gtest.h>
 
 std::filesystem::path resource_dir()
 {
@@ -18,7 +18,7 @@ std::filesystem::path resource_dir()
 TEST(sb_file_remover, test_sb_file_remover)
 {
     std::filesystem::path rsc_dir = resource_dir();
-    std::filesystem::path output_fpath = rsc_dir/"output_file.txt";
+    std::filesystem::path output_fpath = rsc_dir / "output_file.txt";
     std::ofstream().open(output_fpath);
 
     {
@@ -31,7 +31,7 @@ TEST(sb_file_remover, test_sb_file_remover)
 TEST(sb_file_remover, test_sb_file_remover_rvalue)
 {
     std::filesystem::path rsc_dir = resource_dir();
-    std::filesystem::path output_fpath = rsc_dir/"output_file.txt";
+    std::filesystem::path output_fpath = rsc_dir / "output_file.txt";
     std::ofstream().open(output_fpath);
 
     {
@@ -44,7 +44,7 @@ TEST(sb_file_remover, test_sb_file_remover_rvalue)
 TEST(sb_file_remover, test_sb_file_remover_ec)
 {
     std::filesystem::path rsc_dir = resource_dir();
-    std::filesystem::path output_fpath = rsc_dir/"output_file.txt";
+    std::filesystem::path output_fpath = rsc_dir / "output_file.txt";
     std::ofstream().open(output_fpath);
 
     std::error_code ec;
@@ -59,7 +59,7 @@ TEST(sb_file_remover, test_sb_file_remover_ec)
 TEST(sb_file_remover, test_sb_file_remover_ec_rvalue)
 {
     std::filesystem::path rsc_dir = resource_dir();
-    std::filesystem::path output_fpath = rsc_dir/"output_file.txt";
+    std::filesystem::path output_fpath = rsc_dir / "output_file.txt";
     std::ofstream().open(output_fpath);
 
     std::error_code ec;
@@ -74,9 +74,9 @@ TEST(sb_file_remover, test_sb_file_remover_ec_rvalue)
 TEST(sb_file_remover, test_sb_all_files_remover)
 {
     std::filesystem::path rsc_dir = resource_dir();
-    std::filesystem::path jpg_dpath = rsc_dir/"jpg/";
-    std::filesystem::path png_dpath = rsc_dir/"png/";
-    std::filesystem::path output_fpath = png_dpath/"output_file.txt";
+    std::filesystem::path jpg_dpath = rsc_dir / "jpg/";
+    std::filesystem::path png_dpath = rsc_dir / "png/";
+    std::filesystem::path output_fpath = png_dpath / "output_file.txt";
     std::filesystem::create_directories(jpg_dpath);
     std::filesystem::create_directories(png_dpath);
     std::ofstream().open(output_fpath);
@@ -97,9 +97,9 @@ TEST(sb_file_remover, test_sb_all_files_remover)
 TEST(sb_file_remover, test_sb_all_files_remover_rvalue)
 {
     std::filesystem::path rsc_dir = resource_dir();
-    std::filesystem::path jpg_dpath = rsc_dir/"jpg/";
-    std::filesystem::path png_dpath = rsc_dir/"png/";
-    std::filesystem::path output_fpath = png_dpath/"output_file.txt";
+    std::filesystem::path jpg_dpath = rsc_dir / "jpg/";
+    std::filesystem::path png_dpath = rsc_dir / "png/";
+    std::filesystem::path output_fpath = png_dpath / "output_file.txt";
     std::filesystem::create_directories(jpg_dpath);
     std::filesystem::create_directories(png_dpath);
     std::ofstream().open(output_fpath);
@@ -120,9 +120,9 @@ TEST(sb_file_remover, test_sb_all_files_remover_rvalue)
 TEST(sb_file_remover, test_sb_all_files_remover_ec)
 {
     std::filesystem::path rsc_dir = resource_dir();
-    std::filesystem::path jpg_dpath = rsc_dir/"jpg/";
-    std::filesystem::path png_dpath = rsc_dir/"png/";
-    std::filesystem::path output_fpath = png_dpath/"output_file.txt";
+    std::filesystem::path jpg_dpath = rsc_dir / "jpg/";
+    std::filesystem::path png_dpath = rsc_dir / "png/";
+    std::filesystem::path output_fpath = png_dpath / "output_file.txt";
     std::filesystem::create_directories(jpg_dpath);
     std::filesystem::create_directories(png_dpath);
     std::ofstream().open(output_fpath);
@@ -145,9 +145,9 @@ TEST(sb_file_remover, test_sb_all_files_remover_ec)
 TEST(sb_file_remover, test_sb_all_files_remover_ec_rvalue)
 {
     std::filesystem::path rsc_dir = resource_dir();
-    std::filesystem::path jpg_dpath = rsc_dir/"jpg/";
-    std::filesystem::path png_dpath = rsc_dir/"png/";
-    std::filesystem::path output_fpath = png_dpath/"output_file.txt";
+    std::filesystem::path jpg_dpath = rsc_dir / "jpg/";
+    std::filesystem::path png_dpath = rsc_dir / "png/";
+    std::filesystem::path output_fpath = png_dpath / "output_file.txt";
     std::filesystem::create_directories(jpg_dpath);
     std::filesystem::create_directories(png_dpath);
     std::ofstream().open(output_fpath);
