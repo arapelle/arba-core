@@ -63,7 +63,6 @@ set(headers
     include/arba/core/sbrm/sbrm.hpp
     include/arba/core/span.hpp
     include/arba/core/string/fixed_string.hpp
-    include/arba/core/string/string_conversion.hpp
     include/arba/core/string/string_tokenizer.hpp
     include/arba/core/string/trim.hpp
     include/arba/core/template/default_type.hpp
@@ -72,14 +71,6 @@ set(headers
     include/arba/core/template/thread_policy.hpp
     include/arba/core/type_traits.hpp
     include/arba/core/uuid.hpp
-    include/arba/core/version/concepts/semantic_version.hpp
-    include/arba/core/version/concepts/tri_version.hpp
-    include/arba/core/version/is_compatible_with.hpp
-    include/arba/core/version/_private/extract_semantic_version.hpp
-    include/arba/core/version/_private/extract_tri_version.hpp
-    include/arba/core/version/semantic_version.hpp
-    include/arba/core/version/tri_version.hpp
-    include/arba/core/version/tri_version_tag.hpp
 )
 
 ## Sources:
@@ -118,6 +109,15 @@ if(NOT WIN32)
         PRIVATE ${dl-static_path}
     )
 endif()
+if(NOT TARGET arba-vrsn)
+    find_package(arba-vrsn 0.1.0 REQUIRED CONFIG)
+endif()
+
+cpp_library_link_libraries(
+    SHARED ${PROJECT_NAME}
+    STATIC ${PROJECT_NAME}-static
+    PUBLIC arba-vrsn
+)
 
 ## Install C++ library:
 install_cpp_library(

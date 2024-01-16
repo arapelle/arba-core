@@ -16,16 +16,10 @@ add_cpp_library_basic_tests(GTest::gtest_main
         sbrm/sbrm_tests.cpp
         sbrm/sb_file_remover_tests.cpp
         string/fixed_string_tests.cpp
-        string/string_conversion_tests.cpp
         string/string_tokenizer_tests.cpp
         string/trim_tests.cpp
         template/default_type_tests.cpp
         template/request_type_tests.cpp
-        version/extract_semantic_version_tests.cpp
-        version/extract_tri_version_tests.cpp
-        version/tri_version_tests.cpp
-        version/tri_version_tag_tests.cpp
-        version/semantic_version_tests.cpp
         #
         algorithm_tests.cpp
         uuid_tests.cpp
