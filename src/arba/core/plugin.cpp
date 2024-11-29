@@ -112,6 +112,7 @@ void* plugin::find_symbol_pointer_(const std::string& symbol_name)
     }
     return reinterpret_cast<void*>(pointer);
 #else
+    dlerror();  // Clear any existing error
     void* pointer = dlsym(handle_, symbol_name.c_str());
     if (!pointer) [[unlikely]]
     {
