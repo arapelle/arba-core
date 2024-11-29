@@ -12,8 +12,11 @@ inline namespace arba
 namespace core
 {
 
+namespace private_
+{
 using plugin_function_register_type = std::any(*)(std::string_view);
 static constexpr std::string_view plugin_function_register_fname = "arba_core_plugin_function_register_";
+}
 
 /**
  * @brief The plugin class
@@ -49,8 +52,10 @@ public:
             && std::is_function_v<std::remove_cvref_t<decltype(*std::declval<FunctionSignatureType>)>>
     FunctionSignatureType find_function_ptr(std::string_view function_name)
     {
-        const plugin_function_register_type find_function_ptr_as_any =
-            reinterpret_cast<plugin_function_register_type>(this->find_symbol_pointer(std::string(plugin_function_register_fname)));
+        const auto find_function_ptr =
+            this->find_symbol_pointer(std::string(private_::plugin_function_register_fname));
+        const private_::plugin_function_register_type find_function_ptr_as_any =
+            reinterpret_cast<private_::plugin_function_register_type>(find_function_ptr);
 
         std::any any_value = find_function_ptr_as_any(function_name);
         if (any_value.has_value()) [[likely]]
@@ -78,8 +83,8 @@ public:
 #define ARBA_CORE_BEGIN_PLUGIN_FUNCTION_REGISTER() \
 extern "C" std::any arba_core_plugin_function_register_(std::string_view function_name) \
 { \
-    static_assert(arba::core::plugin_function_register_fname == __func__); \
-    static_assert(std::is_same_v<arba::core::plugin_function_register_type, decltype(&arba_core_plugin_function_register_)>); \
+    static_assert(arba::core::private_::plugin_function_register_fname == __func__); \
+    static_assert(std::is_same_v<arba::core::private_::plugin_function_register_type, decltype(&arba_core_plugin_function_register_)>); \
     static const std::unordered_map<std::string_view, std::any> function_register_{
 
 #define ARBA_CORE_REGISTER_PLUGIN_FUNCTION(function_) \
