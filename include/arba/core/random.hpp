@@ -382,7 +382,7 @@ template <std::int_fast64_t... IntParams>
 using urng_i64 = uniform_engine<std::mt19937_64, std::int_fast64_t, IntParams...>;
 
 template <std::byte... IntParams>
-using urng_byte = uniform_engine<std::mt19937_64, std::byte, IntParams...>;
+using urng_byte = uniform_engine<std::mt19937, std::byte, IntParams...>;
 
 }
 }
