@@ -57,10 +57,14 @@ set(headers
     include/arba/core/io/check_file.hpp
     include/arba/core/io/copy_stream.hpp
     include/arba/core/io/open_file.hpp
-    include/arba/core/plugin.hpp
+    include/arba/core/plugin/exception.hpp
+    include/arba/core/plugin/plugin.hpp
+    include/arba/core/plugin/plugin_base.hpp
+    include/arba/core/plugin/plugin_impl.hpp
+    include/arba/core/plugin/unsafe_plugin.hpp
     include/arba/core/random.hpp
-    include/arba/core/sbrm/sb_file_remover.hpp
     include/arba/core/sbrm/sbrm.hpp
+    include/arba/core/sbrm/sb_file_remover.hpp
     include/arba/core/span.hpp
     include/arba/core/string/fixed_string.hpp
     include/arba/core/string/string_tokenizer.hpp
@@ -83,7 +87,7 @@ set(sources
     src/arba/core/io/check_file.cpp
     src/arba/core/io/copy_stream.cpp
     src/arba/core/io/open_file.cpp
-    src/arba/core/plugin.cpp
+    src/arba/core/plugin/plugin_base.cpp
     src/arba/core/random.cpp
     src/arba/core/span.cpp
     src/arba/core/uuid.cpp

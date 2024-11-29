@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 // class to test
-#include <arba/core/plugin.hpp>
+#include <arba/core/plugin/plugin.hpp>
 
 #include <concat_interface/concat_interface.hpp>
 #include <format>

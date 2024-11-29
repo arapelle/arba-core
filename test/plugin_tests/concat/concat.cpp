@@ -1,7 +1,7 @@
 #include "concat.hpp"
 #include <format>
 #include <iostream>
-#include <arba/core/plugin.hpp>
+#include <arba/core/plugin/plugin.hpp>
 
 Concat::Concat()
     : Concat("", "")
