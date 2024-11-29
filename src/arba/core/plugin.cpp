@@ -2,7 +2,6 @@
 #include <cassert>
 #include <format>
 #include <iostream>
-#include <type_traits>
 #ifdef WIN32
 #include <windows.h>
 #else
@@ -20,12 +19,12 @@ namespace core
 // UNIX API (dl):
 //   https://linux.die.net/man/3/dlopen
 
-plugin::plugin(const std::filesystem::path& plugin_path)
+plugin_base::plugin_base(const std::filesystem::path& plugin_path)
 {
-    load_from_file(plugin_path);
+    load(plugin_path);
 }
 
-plugin::~plugin()
+plugin_base::~plugin_base()
 {
     if (is_loaded())
     {
@@ -41,7 +40,25 @@ plugin::~plugin()
     }
 }
 
-void plugin::load_from_file(const std::filesystem::path& plugin_path)
+plugin_base::plugin_base(plugin_base &&other)
+{
+    handle_ = other.handle_;
+    other.handle_ = nullptr;
+}
+
+plugin_base &plugin_base::operator=(plugin_base &&other)
+{
+    if (&other != this)
+    {
+        if (handle_)
+            unload();
+        handle_ = other.handle_;
+        other.handle_ = nullptr;
+    }
+    return *this;
+}
+
+void plugin_base::load(const std::filesystem::path& plugin_path)
 {
     assert(!is_loaded());
 #ifdef WIN32
@@ -52,8 +69,8 @@ void plugin::load_from_file(const std::filesystem::path& plugin_path)
     if (!instance) [[unlikely]]
     {
         std::error_code error_code(GetLastError(), std::system_category());
-        throw plugin_error(error_code,
-                           std::format("Exception occurred while loading {}", plugin_path.generic_string()));
+        throw plugin_load_error(error_code,
+                                std::format("Exception occurred while loading plugin: {}", plugin_path.generic_string()));
     }
     handle_ = static_cast<void*>(instance);
 #else
@@ -70,13 +87,13 @@ void plugin::load_from_file(const std::filesystem::path& plugin_path)
     if (!handle) [[unlikely]]
     {
         std::string error_message(dlerror());
-        throw plugin_error(std::format("Exception occurred while loading plugin: {}", error_message));
+        throw plugin_load_error(std::format("Exception occurred while loading plugin: {}", error_message));
     }
     handle_ = handle;
 #endif
 }
 
-void plugin::unload()
+void plugin_base::unload()
 {
     assert(is_loaded());
 #ifdef WIN32
@@ -84,21 +101,21 @@ void plugin::unload()
     if (result == 0) [[unlikely]]
     {
         std::error_code error_code(GetLastError(), std::system_category());
-        throw plugin_error(error_code,
-                           std::format("A problem occured while unloading plugin: {}", error_code.message()));
+        throw plugin_unload_error(error_code,
+                                  std::format("A problem occured while unloading plugin: {}", error_code.message()));
     }
 #else
     int result = dlclose(handle_);
     if (result != 0) [[unlikely]]
     {
         std::string error_message(dlerror());
-        throw plugin_error(std::format("A problem occured while unloading plugin: {}", error_message));
+        throw plugin_unload_error(std::format("A problem occured while unloading plugin: {}", error_message));
     }
 #endif
     handle_ = nullptr;
 }
 
-void* plugin::find_symbol_pointer_(const std::string& symbol_name)
+void* plugin_base::find_symbol_pointer(const std::string& symbol_name)
 {
     assert(is_loaded());
 #ifdef WIN32
@@ -108,7 +125,8 @@ void* plugin::find_symbol_pointer_(const std::string& symbol_name)
     if (!pointer) [[unlikely]]
     {
         std::error_code error_code(GetLastError(), std::system_category());
-        throw plugin_error(error_code, std::format("Exception occurred while looking for address of {}", symbol_name));
+        throw plugin_find_symbol_error(error_code,
+                                       std::format("Exception occurred while looking for address of {}", symbol_name));
     }
     return reinterpret_cast<void*>(pointer);
 #else
@@ -117,7 +135,8 @@ void* plugin::find_symbol_pointer_(const std::string& symbol_name)
     if (!pointer) [[unlikely]]
     {
         std::string error_message(dlerror());
-        throw plugin_error(std::format("Exception occurred while looking for address of symbol: {}", error_message));
+        throw plugin_find_symbol_error(std::format("Exception occurred while looking for address of symbol: {}",
+                                                   error_message));
     }
     return pointer;
 #endif
