@@ -6,7 +6,6 @@
 #include <format>
 #include <unordered_map>
 
-
 inline namespace arba
 {
 namespace core
@@ -14,7 +13,7 @@ namespace core
 
 namespace private_
 {
-using plugin_function_register_type = std::any(*)(std::string_view);
+using plugin_function_register_type = std::any (*)(std::string_view);
 static constexpr std::string_view plugin_function_register_fname = "arba_core_plugin_function_register_";
 }
 
@@ -49,11 +48,10 @@ public:
      */
     template <typename FunctionSignatureType>
         requires std::is_pointer_v<FunctionSignatureType>
-            && std::is_function_v<std::remove_cvref_t<decltype(*std::declval<FunctionSignatureType>)>>
+                 && std::is_function_v<std::remove_cvref_t<decltype(*std::declval<FunctionSignatureType>)>>
     FunctionSignatureType find_function_ptr(std::string_view function_name)
     {
-        const auto find_function_ptr =
-            this->find_symbol_pointer(std::string(private_::plugin_function_register_fname));
+        const auto find_function_ptr = this->find_symbol_pointer(std::string(private_::plugin_function_register_fname));
         const private_::plugin_function_register_type find_function_ptr_as_any =
             reinterpret_cast<private_::plugin_function_register_type>(find_function_ptr);
 
@@ -73,25 +71,28 @@ public:
 
         std::ignore = this->find_symbol_pointer(std::string(function_name));
         throw std::runtime_error(std::format("Function '{}' exists in plugin, but its type cannot be checked. "
-                                             "Did you forget to use ARBA_CORE_REGISTER_PLUGIN_FUNCTION() ?", function_name));
+                                             "Did you forget to use ARBA_CORE_REGISTER_PLUGIN_FUNCTION() ?",
+                                             function_name));
     }
 };
 
 }
 }
 
-#define ARBA_CORE_BEGIN_PLUGIN_FUNCTION_REGISTER() \
-extern "C" std::any arba_core_plugin_function_register_(std::string_view function_name) \
-{ \
-    static_assert(arba::core::private_::plugin_function_register_fname == __func__); \
-    static_assert(std::is_same_v<arba::core::private_::plugin_function_register_type, decltype(&arba_core_plugin_function_register_)>); \
-    static const std::unordered_map<std::string_view, std::any> function_register_{
+#define ARBA_CORE_BEGIN_PLUGIN_FUNCTION_REGISTER()                                                                     \
+    extern "C" std::any arba_core_plugin_function_register_(std::string_view function_name)                            \
+    {                                                                                                                  \
+        static_assert(arba::core::private_::plugin_function_register_fname == __func__);                               \
+        static_assert(std::is_same_v<arba::core::private_::plugin_function_register_type,                              \
+                                     decltype(&arba_core_plugin_function_register_)>);                                 \
+        static const std::unordered_map<std::string_view, std::any> function_register_                                 \
+        {
 
-#define ARBA_CORE_REGISTER_PLUGIN_FUNCTION(function_) \
-            { #function_, &function_ },
+#define ARBA_CORE_REGISTER_PLUGIN_FUNCTION(function_) { #function_, &function_ },
 
-#define ARBA_CORE_END_PLUGIN_FUNCTION_REGISTER() \
-        }; \
-    const auto iter = function_register_.find(function_name); \
-        return iter != function_register_.cend() ? iter->second : std::any(); \
-}
+#define ARBA_CORE_END_PLUGIN_FUNCTION_REGISTER()                                                                       \
+    }                                                                                                                  \
+    ;                                                                                                                  \
+    const auto iter = function_register_.find(function_name);                                                          \
+    return iter != function_register_.cend() ? iter->second : std::any();                                              \
+    }

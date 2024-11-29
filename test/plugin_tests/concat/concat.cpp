@@ -1,10 +1,10 @@
 #include "concat.hpp"
+
+#include <arba/core/plugin/plugin.hpp>
 #include <format>
 #include <iostream>
-#include <arba/core/plugin/plugin.hpp>
 
-Concat::Concat()
-    : Concat("", "")
+Concat::Concat() : Concat("", "")
 {
 }
 
@@ -18,13 +18,13 @@ std::string Concat::concat(std::string_view left_value, std::string_view right_v
     return std::format("{}{}-{}{}", left_decorator_, left_value, right_value, right_decorator_);
 }
 
-
 extern "C" std::unique_ptr<ConcatInterface> make_unique_instance()
 {
     return std::make_unique<Concat>();
 }
 
-// The purpose is to test that all ways of providing an argument is working well with (unsafe_)plugin::make_unique_instance():
+// The purpose is to test that all ways of providing an argument is working well with
+// (unsafe_)plugin::make_unique_instance():
 // - value copy with first_left_decorator
 // - value reference with second_left_decorator
 // - value const reference with right_decorator
@@ -41,7 +41,8 @@ extern "C" std::shared_ptr<ConcatInterface> make_shared_instance()
     return std::make_shared<Concat>();
 }
 
-// The purpose is to test that all ways of providing an argument is working well with (unsafe_)plugin::make_shared_instance():
+// The purpose is to test that all ways of providing an argument is working well with
+// (unsafe_)plugin::make_shared_instance():
 // - value copy with first_left_decorator
 // - value reference with second_left_decorator
 // - value const reference with right_decorator
@@ -53,7 +54,8 @@ extern "C" std::shared_ptr<ConcatInterface> make_shared_instance_from_args(std::
     return std::make_shared<Concat>(second_left_decorator, right_decorator);
 }
 
-// The purpose is to test that all ways of providing an argument is working well with (unsafe_)plugin::find_function_ptr():
+// The purpose is to test that all ways of providing an argument is working well with
+// (unsafe_)plugin::find_function_ptr():
 // - value copy with left_value
 // - value reference with res
 // - value const reference with right_value
@@ -74,7 +76,10 @@ extern "C" const ConcatInterface& default_const_concat()
     return instance;
 }
 
-extern "C" int unregistered_function(std::string_view) { return 0; }
+extern "C" int unregistered_function(std::string_view)
+{
+    return 0;
+}
 
 ARBA_CORE_BEGIN_PLUGIN_FUNCTION_REGISTER()
 ARBA_CORE_REGISTER_PLUGIN_FUNCTION(make_unique_instance)

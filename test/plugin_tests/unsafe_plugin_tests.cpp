@@ -2,7 +2,6 @@
 
 // class to test
 #include <arba/core/plugin/unsafe_plugin.hpp>
-
 #include <concat_interface/concat_interface.hpp>
 #include <format>
 
@@ -45,7 +44,7 @@ TEST(UnsafePluginTest, Constructor_UnfoundLibrary_ExpectException)
         core::unsafe_plugin plugin(std::filesystem::current_path() / "concat/libunfound");
         FAIL();
     }
-    catch(const core::plugin_load_error& exception)
+    catch (const core::plugin_load_error& exception)
     {
         std::string expected_msg(std::format("Exception occurred while loading plugin: {}", lib_path.generic_string()));
         std::string err_msg(exception.what());
@@ -131,7 +130,7 @@ TEST(UnsafePluginTest, FindFunctionPtr_FunctionName_ReturnNotNullFunctionPtr)
 {
     std::string res;
     core::unsafe_plugin plugin(plugin_dir / "libconcat");
-    auto execute = plugin.find_function_ptr<void(*)(std::string&, std::string_view, const std::string&)>("execute");
+    auto execute = plugin.find_function_ptr<void (*)(std::string&, std::string_view, const std::string&)>("execute");
     ASSERT_NE(execute, nullptr);
     execute(res, "a", "b");
     ASSERT_EQ(res, "a-b");
@@ -144,9 +143,9 @@ TEST(UnsafePluginTest, FindFunctionPtr_FunctionName_ExpectException)
     try
     {
         core::unsafe_plugin plugin(plugin_dir / "libconcat");
-        plugin.find_function_ptr<void(*)(int&)>(function_name);
+        plugin.find_function_ptr<void (*)(int&)>(function_name);
     }
-    catch(const core::plugin_find_symbol_error& exception)
+    catch (const core::plugin_find_symbol_error& exception)
     {
         std::string msg(exception.what());
         ASSERT_EQ(msg.find("Exception occurred while looking for address of"), 0);
@@ -181,8 +180,8 @@ TEST(UnsafePluginTest, MakeUniqueInstance_FunctionTakingArgsExists_ReturnUniqueP
     std::string z = "))";
 
     ASSERT_EQ(b, "(");
-    instance = plugin.make_unique_instance<ConcatInterface,
-                                           std::string_view, std::string&, const std::string&>(function_name, a, b, z);
+    instance = plugin.make_unique_instance<ConcatInterface, std::string_view, std::string&, const std::string&>(
+        function_name, a, b, z);
     std::string str = instance->concat("aa", "bb");
     ASSERT_EQ(str, "((aa-bb))");
     ASSERT_EQ(b, "((");
@@ -210,8 +209,8 @@ TEST(UnsafePluginTest, MakeSharedInstance_FunctionTakingArgsExists_ReturnSharedP
     core::unsafe_plugin plugin(plugin_dir / "libconcat");
     ASSERT_EQ(b, "(");
     std::shared_ptr<ConcatInterface> instance =
-        plugin.make_shared_instance<ConcatInterface,
-                                    std::string_view, std::string&, const std::string&>(function_name, a, b, z);
+        plugin.make_shared_instance<ConcatInterface, std::string_view, std::string&, const std::string&>(function_name,
+                                                                                                         a, b, z);
     std::string str = instance->concat("aa", "bb");
     ASSERT_EQ(str, "((aa-bb))");
     ASSERT_EQ(b, "((");

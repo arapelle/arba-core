@@ -46,7 +46,7 @@ plugin_base::plugin_base(plugin_base&& other)
     other.handle_ = nullptr;
 }
 
-plugin_base &plugin_base::operator=(plugin_base&& other)
+plugin_base& plugin_base::operator=(plugin_base&& other)
 {
     if (&other != this)
     {
@@ -69,8 +69,8 @@ void plugin_base::load(const std::filesystem::path& plugin_path)
     if (!instance) [[unlikely]]
     {
         std::error_code error_code(GetLastError(), std::system_category());
-        throw plugin_load_error(error_code,
-                                std::format("Exception occurred while loading plugin: {}", plugin_path.generic_string()));
+        throw plugin_load_error(
+            error_code, std::format("Exception occurred while loading plugin: {}", plugin_path.generic_string()));
     }
     handle_ = static_cast<void*>(instance);
 #else
@@ -130,13 +130,13 @@ void* plugin_base::find_symbol_pointer(const std::string& symbol_name)
     }
     return reinterpret_cast<void*>(pointer);
 #else
-    dlerror();  // Clear any existing error
+    dlerror(); // Clear any existing error
     void* pointer = dlsym(handle_, symbol_name.c_str());
     if (!pointer) [[unlikely]]
     {
         std::string error_message(dlerror());
-        throw plugin_find_symbol_error(std::format("Exception occurred while looking for address of symbol: {}",
-                                                   error_message));
+        throw plugin_find_symbol_error(
+            std::format("Exception occurred while looking for address of symbol: {}", error_message));
     }
     return pointer;
 #endif

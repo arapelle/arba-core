@@ -6,7 +6,6 @@
 #include <memory>
 #include <type_traits>
 
-
 inline namespace arba
 {
 namespace core
@@ -79,9 +78,9 @@ public:
      * @warning There is no guarantee that the global variable getter function returns the wanted type.
      */
     template <typename ClassType>
-    requires std::has_virtual_destructor_v<ClassType>
-        std::unique_ptr<ClassType>
-        make_unique_instance(const std::string_view maker_function_name = default_make_unique_func_name)
+        requires std::has_virtual_destructor_v<ClassType>
+    std::unique_ptr<ClassType>
+    make_unique_instance(const std::string_view maker_function_name = default_make_unique_func_name)
     {
         using InstanceMaker = std::unique_ptr<ClassType> (*)();
         PluginType& self = static_cast<PluginType&>(*this);
@@ -103,7 +102,7 @@ public:
      */
     template <typename ClassType, typename... ArgsT>
         requires std::has_virtual_destructor_v<ClassType> && (sizeof...(ArgsT) > 0)
-        std::unique_ptr<ClassType> make_unique_instance(const std::string_view maker_function_name, ArgsT... args)
+    std::unique_ptr<ClassType> make_unique_instance(const std::string_view maker_function_name, ArgsT... args)
     {
         using InstanceMaker = std::unique_ptr<ClassType> (*)(ArgsT...);
         PluginType& self = static_cast<PluginType&>(*this);
@@ -123,9 +122,9 @@ public:
      * @warning There is no guarantee that the global variable getter function returns the wanted type.
      */
     template <typename ClassType>
-    requires std::has_virtual_destructor_v<ClassType>
-        std::shared_ptr<ClassType>
-        make_shared_instance(const std::string_view maker_function_name = default_make_shared_func_name)
+        requires std::has_virtual_destructor_v<ClassType>
+    std::shared_ptr<ClassType>
+    make_shared_instance(const std::string_view maker_function_name = default_make_shared_func_name)
     {
         using InstanceMaker = std::shared_ptr<ClassType> (*)();
         PluginType& self = static_cast<PluginType&>(*this);
@@ -147,7 +146,7 @@ public:
      */
     template <typename ClassType, typename... ArgsT>
         requires std::has_virtual_destructor_v<ClassType> && (sizeof...(ArgsT) > 0)
-        std::shared_ptr<ClassType> make_shared_instance(const std::string_view maker_function_name, ArgsT... args)
+    std::shared_ptr<ClassType> make_shared_instance(const std::string_view maker_function_name, ArgsT... args)
     {
         using InstanceMaker = std::shared_ptr<ClassType> (*)(ArgsT...);
         PluginType& self = static_cast<PluginType&>(*this);

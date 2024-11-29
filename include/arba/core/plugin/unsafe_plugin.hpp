@@ -5,12 +5,10 @@
 #include <memory>
 #include <type_traits>
 
-
 inline namespace arba
 {
 namespace core
 {
-
 
 /**
  * @brief The unsafe_plugin class
@@ -41,9 +39,9 @@ public:
      * @warning There is no guarantee that the function has the wanted signature.
      */
     template <typename FunctionSignatureType>
-    requires std::is_pointer_v<FunctionSignatureType>
-        && std::is_function_v<std::remove_cvref_t<decltype(*std::declval<FunctionSignatureType>)>>
-            FunctionSignatureType find_function_ptr(std::string_view function_name)
+        requires std::is_pointer_v<FunctionSignatureType>
+                 && std::is_function_v<std::remove_cvref_t<decltype(*std::declval<FunctionSignatureType>)>>
+    FunctionSignatureType find_function_ptr(std::string_view function_name)
     {
         return reinterpret_cast<FunctionSignatureType>(this->find_symbol_pointer(std::string(function_name)));
     }

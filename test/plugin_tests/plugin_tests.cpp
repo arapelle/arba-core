@@ -2,7 +2,6 @@
 
 // class to test
 #include <arba/core/plugin/plugin.hpp>
-
 #include <concat_interface/concat_interface.hpp>
 #include <format>
 #include <iostream>
@@ -67,7 +66,7 @@ TEST(PluginTest, Constructor_UnfoundLibrary_ExpectException)
         core::plugin plugin(std::filesystem::current_path() / "concat/libunfound");
         FAIL();
     }
-    catch(const core::plugin_load_error& exception)
+    catch (const core::plugin_load_error& exception)
     {
         std::string expected_msg(std::format("Exception occurred while loading plugin: {}", lib_path.generic_string()));
         std::string err_msg(exception.what());
@@ -153,7 +152,7 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ReturnNotNullFunctionPtr)
 {
     std::string res;
     core::plugin plugin(plugin_dir / "libconcat");
-    auto execute = plugin.find_function_ptr<void(*)(std::string&, std::string_view, const std::string&)>("execute");
+    auto execute = plugin.find_function_ptr<void (*)(std::string&, std::string_view, const std::string&)>("execute");
     ASSERT_NE(execute, nullptr);
     execute(res, "a", "b");
     ASSERT_EQ(res, "a-b");
@@ -186,7 +185,8 @@ TEST(PluginTest, FindFunctionPtr_UnregisteredFunction_ExpectException)
     {
         std::string err_str(err.what());
         ASSERT_TRUE(err_str.find("Function 'unregistered_function' exists in plugin, but its type cannot be checked. "
-                                 "Did you forget to use ARBA_CORE_REGISTER_PLUGIN_FUNCTION() ?") != std::string::npos);
+                                 "Did you forget to use ARBA_CORE_REGISTER_PLUGIN_FUNCTION() ?")
+                    != std::string::npos);
     }
 }
 
@@ -197,9 +197,9 @@ TEST(PluginTest, FindFunctionPtr_FunctionName_ExpectException)
     try
     {
         core::plugin plugin(plugin_dir / "libconcat");
-        plugin.find_function_ptr<void(*)(int&)>(function_name);
+        plugin.find_function_ptr<void (*)(int&)>(function_name);
     }
-    catch(const core::plugin_find_symbol_error& exception)
+    catch (const core::plugin_find_symbol_error& exception)
     {
         std::string msg(exception.what());
         ASSERT_EQ(msg.find("Exception occurred while looking for address of"), 0);
@@ -234,8 +234,8 @@ TEST(PluginTest, MakeUniqueInstance_FunctionTakingArgsExists_ReturnUniquePtr)
     std::string z = "))";
 
     ASSERT_EQ(b, "(");
-    instance = plugin.make_unique_instance<ConcatInterface,
-                                           std::string_view, std::string&, const std::string&>(function_name, a, b, z);
+    instance = plugin.make_unique_instance<ConcatInterface, std::string_view, std::string&, const std::string&>(
+        function_name, a, b, z);
     std::string str = instance->concat("aa", "bb");
     ASSERT_EQ(str, "((aa-bb))");
     ASSERT_EQ(b, "((");
@@ -263,8 +263,8 @@ TEST(PluginTest, MakeSharedInstance_FunctionTakingArgsExists_ReturnSharedPtr)
     core::plugin plugin(plugin_dir / "libconcat");
     ASSERT_EQ(b, "(");
     std::shared_ptr<ConcatInterface> instance =
-        plugin.make_shared_instance<ConcatInterface,
-                                    std::string_view, std::string&, const std::string&>(function_name, a, b, z);
+        plugin.make_shared_instance<ConcatInterface, std::string_view, std::string&, const std::string&>(function_name,
+                                                                                                         a, b, z);
     std::string str = instance->concat("aa", "bb");
     ASSERT_EQ(str, "((aa-bb))");
     ASSERT_EQ(b, "((");

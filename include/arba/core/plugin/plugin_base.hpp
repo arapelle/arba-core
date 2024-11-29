@@ -1,9 +1,8 @@
 #pragma once
 
-#include <filesystem>
-
 #include "exception.hpp"
 
+#include <filesystem>
 
 inline namespace arba
 {
