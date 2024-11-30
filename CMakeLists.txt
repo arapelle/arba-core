@@ -114,7 +114,7 @@ if(NOT WIN32)
     )
 endif()
 if(NOT TARGET arba-vrsn)
-    find_package(arba-vrsn 0.1.0 REQUIRED CONFIG)
+    find_package(arba-vrsn 0.3.0 REQUIRED CONFIG)
 endif()
 
 cpp_library_link_libraries(
