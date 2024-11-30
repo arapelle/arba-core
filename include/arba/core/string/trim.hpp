@@ -29,9 +29,7 @@ inline string_type& right_trim(string_type& str)
 
 template <class string_view_type>
     requires requires(string_view_type& str, std::size_t len) {
-        {
-            str.remove_prefix(len)
-        };
+        { str.remove_prefix(len) };
     }
 inline string_view_type& left_trim(string_view_type& str)
 {
@@ -42,9 +40,7 @@ inline string_view_type& left_trim(string_view_type& str)
 
 template <class string_view_type>
     requires requires(string_view_type& str, std::size_t len) {
-        {
-            str.remove_suffix(len)
-        };
+        { str.remove_suffix(len) };
     }
 inline string_view_type& right_trim(string_view_type& str)
 {

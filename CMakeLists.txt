@@ -15,7 +15,7 @@ set_build_type_ifndef()
 
 set_project_name(NAMESPACE "arba" BASE_NAME "core")
 string(TIMESTAMP configure_datetime "%Y%m%d-%H%M%S" UTC)
-set_project_semantic_version("0.26.0"
+set_project_semantic_version("0.27.0"
     BUILD_METADATA "${configure_datetime}"
 )
 
@@ -56,10 +56,14 @@ set(headers
     include/arba/core/io/check_file.hpp
     include/arba/core/io/copy_stream.hpp
     include/arba/core/io/open_file.hpp
-    include/arba/core/plugin.hpp
+    include/arba/core/plugin/exception.hpp
+    include/arba/core/plugin/plugin.hpp
+    include/arba/core/plugin/plugin_base.hpp
+    include/arba/core/plugin/plugin_impl.hpp
+    include/arba/core/plugin/unsafe_plugin.hpp
     include/arba/core/random.hpp
-    include/arba/core/sbrm/sb_file_remover.hpp
     include/arba/core/sbrm/sbrm.hpp
+    include/arba/core/sbrm/sb_file_remover.hpp
     include/arba/core/span.hpp
     include/arba/core/string/fixed_string.hpp
     include/arba/core/string/string_tokenizer.hpp
@@ -82,7 +86,7 @@ set(sources
     src/arba/core/io/check_file.cpp
     src/arba/core/io/copy_stream.cpp
     src/arba/core/io/open_file.cpp
-    src/arba/core/plugin.cpp
+    src/arba/core/plugin/plugin_base.cpp
     src/arba/core/random.cpp
     src/arba/core/span.cpp
     src/arba/core/uuid.cpp
@@ -109,7 +113,7 @@ if(NOT WIN32)
     )
 endif()
 if(NOT TARGET arba-vrsn)
-    find_package(arba-vrsn 0.1.0 REQUIRED CONFIG)
+    find_package(arba-vrsn 0.3.0 REQUIRED CONFIG)
 endif()
 
 cpp_library_link_libraries(

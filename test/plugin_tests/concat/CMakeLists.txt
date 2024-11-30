@@ -1,0 +1,6 @@
+add_library(arba_core_concat SHARED concat.cpp)
+target_sources(arba_core_concat PUBLIC FILE_SET HEADERS FILES concat.hpp)
+target_compile_features(arba_core_concat PUBLIC cxx_std_20)
+target_link_libraries(arba_core_concat PUBLIC arba_core_concat_interface ${PROJECT_NAME})
+set_property(TARGET arba_core_concat PROPERTY POSITION_INDEPENDENT_CODE 1)
+set_target_properties(arba_core_concat PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

@@ -115,9 +115,7 @@ inline T byte_swap(T value)
 
 template <typename T>
 concept byte_swappable = requires(T value) {
-    {
-        byte_swap(value)
-    } -> std::same_as<T>;
+    { byte_swap(value) } -> std::same_as<T>;
 };
 
 }

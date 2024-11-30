@@ -1,13 +1,13 @@
 #pragma once
 
-#include <arba/vrsn/semantic_version.hpp>
+#include <arba/vrsn/semver.hpp>
 
 inline namespace @PROJECT_NAMESPACE@
 {
 namespace @PROJECT_BASE_NAME@
 {
 
-constexpr ::arba::vrsn::semantic_version version("@PROJECT_SEMANTIC_VERSION@");
+constexpr ::arba::vrsn::semver version("@PROJECT_SEMANTIC_VERSION@");
 
 }
 }
