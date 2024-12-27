@@ -1,23 +1,39 @@
 # Concept #
 
-C++ core tools (UUID class, hash functions, htow/wtoh...)
+C++ core tools
+- Host TO World / World TO Host (htow/wtoh)
+- Scope-Bound Resource Management (sbrm)
+- Trim string
+...
 
 # Install #
 ## Requirements ##
 
 Binaries:
 
-- A C++20 compiler (ex: g++-13)
+- A C++20 compiler (ex: g++-14)
 - CMake 3.26 or later
 
 Testing Libraries (optional):
 
-- [Google Test](https://github.com/google/googletest) 1.13 or later (optional)
+- [Google Test](https://github.com/google/googletest) 1.14 or later (optional)
 
 ## Clone
 
 ```
-git clone https://github.com/arapelle/arba-core --recurse-submodules
+git clone https://github.com/arapelle/arba-core
+```
+
+## Use with `conan`
+
+Create the conan package.
+```
+conan create . --build=missing -c
+```
+Add a requirement in your conanfile project file.
+```python
+    def requirements(self):
+        self.requires("arba-core/0.28.0")
 ```
 
 ## Quick Install ##
@@ -39,22 +55,19 @@ cmake -P uninstall.cmake
 ```
 
 # How to use
-## Example - Print UUID
+## Example - Trim string
 ```c++
-#include <arba/core/uuid.hpp>
+#include <arba/core/string/trim.hpp>
+#include <cstdlib>
 #include <iostream>
 
 int main()
 {
-    core::uuid id("f192c2c7-1e5e-4211-b540-b40ba0009624");
-    std::cout << id << std::endl;
+    std::cout << core::trim_view("  __example__  ") << std::endl;
+    std::cout << "EXAMPLE SUCCESS" << std::endl;
     return EXIT_SUCCESS;
 }
-
 ```
-
-## Example - Using *arba-core* in a CMake project
-See *basic_cmake_project* in example, and more specifically the *CMakeLists.txt* to see how to use *arba-core* in your CMake projects.
 
 # License
 
