@@ -41,6 +41,7 @@ set(headers
     include/arba/core/bit/byte_swap.hpp
     include/arba/core/bit/htow.hpp
     include/arba/core/compile_time_error.hpp
+    include/arba/core/program_args.hpp
     include/arba/core/sbrm/sb_file_remover.hpp
     include/arba/core/sbrm/sbrm.hpp
     include/arba/core/string/fixed_string.hpp

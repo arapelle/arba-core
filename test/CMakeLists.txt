@@ -11,5 +11,6 @@ add_cpp_library_basic_tests(${PROJECT_NAME} GTest::gtest_main
         sbrm/sb_file_remover_tests.cpp
         string/fixed_string_tests.cpp
         string/trim_tests.cpp
+        program_args_tests.cpp
         project_version_tests.cpp
 )
