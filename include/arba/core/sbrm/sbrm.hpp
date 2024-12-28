@@ -32,5 +32,5 @@ private:
     std::optional<deleter_type> deleter_;
 };
 
-}
-}
+} // namespace core
+} // namespace arba

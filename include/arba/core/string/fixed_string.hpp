@@ -35,5 +35,5 @@ basic_fixed_string(const CharT (&str)[N]) -> basic_fixed_string<CharT, N - 1>;
 template <std::size_t N>
 using fixed_string = basic_fixed_string<char, N>;
 
-}
-}
+} // namespace core
+} // namespace arba

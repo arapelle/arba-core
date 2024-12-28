@@ -10,7 +10,7 @@ namespace core
 {
 // Host TO World:
 
-template <byte_swappable T>
+template <ByteSwappable T>
 inline T htow(T value)
 {
     if constexpr (std::endian::native == std::endian::little)
@@ -21,7 +21,7 @@ inline T htow(T value)
 
 // World TO Host:
 
-template <byte_swappable T>
+template <ByteSwappable T>
 inline T wtoh(T value)
 {
     if constexpr (std::endian::native == std::endian::little)
@@ -30,5 +30,5 @@ inline T wtoh(T value)
         return value;
 }
 
-}
-}
+} // namespace core
+} // namespace arba
