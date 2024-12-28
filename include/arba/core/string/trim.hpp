@@ -92,5 +92,5 @@ inline std::string_view trim_view(std::string_view str)
     return trim(str);
 }
 
-}
-}
+} // namespace core
+} // namespace arba

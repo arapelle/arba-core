@@ -30,5 +30,5 @@ inline T wtoh(T value)
         return value;
 }
 
-}
-}
+} // namespace core
+} // namespace arba

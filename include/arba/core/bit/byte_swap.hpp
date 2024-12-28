@@ -118,5 +118,5 @@ concept ByteSwappable = requires(T value) {
     { byte_swap(value) } -> std::same_as<T>;
 };
 
-}
-}
+} // namespace core
+} // namespace arba

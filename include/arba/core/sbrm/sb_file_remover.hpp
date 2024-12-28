@@ -54,5 +54,5 @@ inline auto make_sb_all_files_remover(std::filesystem::path&& path, std::error_c
     return sbrm(std::bind(static_cast<function_type>(&std::filesystem::remove_all), path, std::ref(ec)));
 }
 
-}
-}
+} // namespace core
+} // namespace arba
