@@ -1,4 +1,5 @@
 #include <arba/core/program_args.hpp>
+
 #include <gtest/gtest.h>
 
 using namespace std::string_literals;

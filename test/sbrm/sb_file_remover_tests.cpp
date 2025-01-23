@@ -1,6 +1,8 @@
 #include <arba/core/sbrm/sb_file_remover.hpp>
-#include <fstream>
+
 #include <gtest/gtest.h>
+
+#include <fstream>
 
 std::filesystem::path resource_dir()
 {
