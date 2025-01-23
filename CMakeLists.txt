@@ -43,6 +43,7 @@ set(headers
     include/arba/core/program_args.hpp
     include/arba/core/sbrm/sb_file_remover.hpp
     include/arba/core/sbrm/sbrm.hpp
+    include/arba/core/string/string_tokenizer.hpp
     include/arba/core/string/trim.hpp
 )
 
