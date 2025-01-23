@@ -58,10 +58,10 @@ add_cpp_library(${PROJECT_NAME} HEADER_ONLY
 add_library("${PROJECT_NAMESPACE}::${PROJECT_BASE_NAME}${LIBRARY_TYPE_POSTFIX}" ALIAS ${PROJECT_NAME})
 
 ## Link C++ targets:
-find_package(arba-vrsn 0.4 REQUIRED CONFIG)
+find_package(arba-cppx 0.1.0 REQUIRED CONFIG)
 target_link_libraries(${PROJECT_NAME}
     INTERFACE
-        arba::vrsn
+        arba::cppx
 )
 
 ## Add tests:
