@@ -1,23 +1,19 @@
 #include <arba/core/sbrm/sb_file_remover.hpp>
-#include <fstream>
+
 #include <gtest/gtest.h>
 
-std::filesystem::path resource_dir()
+#include <fstream>
+
+std::filesystem::path resource_dir(const std::filesystem::path& test_dir)
 {
-    std::filesystem::path root_dpath = std::filesystem::temp_directory_path() / "arba/core" / "sbrm_tests";
-    if (std::filesystem::exists(root_dpath))
-        std::filesystem::remove_all(root_dpath);
-    std::filesystem::create_directories(root_dpath);
-
-    std::filesystem::path rsc_dpath = root_dpath / "rsc";
+    std::filesystem::path rsc_dpath = std::filesystem::temp_directory_path() / "arba/core" / "sbrm_tests" / test_dir / "rsc";
     std::filesystem::create_directories(rsc_dpath);
-
     return rsc_dpath;
 }
 
 TEST(sb_file_remover, test_sb_file_remover)
 {
-    std::filesystem::path rsc_dir = resource_dir();
+    std::filesystem::path rsc_dir = resource_dir("test_sb_file_remover");
     std::filesystem::path output_fpath = rsc_dir / "output_file.txt";
     std::ofstream().open(output_fpath);
 
@@ -30,7 +26,7 @@ TEST(sb_file_remover, test_sb_file_remover)
 
 TEST(sb_file_remover, test_sb_file_remover_rvalue)
 {
-    std::filesystem::path rsc_dir = resource_dir();
+    std::filesystem::path rsc_dir = resource_dir("test_sb_file_remover_rvalue");
     std::filesystem::path output_fpath = rsc_dir / "output_file.txt";
     std::ofstream().open(output_fpath);
 
@@ -43,7 +39,7 @@ TEST(sb_file_remover, test_sb_file_remover_rvalue)
 
 TEST(sb_file_remover, test_sb_file_remover_ec)
 {
-    std::filesystem::path rsc_dir = resource_dir();
+    std::filesystem::path rsc_dir = resource_dir("test_sb_file_remover_ec");
     std::filesystem::path output_fpath = rsc_dir / "output_file.txt";
     std::ofstream().open(output_fpath);
 
@@ -58,7 +54,7 @@ TEST(sb_file_remover, test_sb_file_remover_ec)
 
 TEST(sb_file_remover, test_sb_file_remover_ec_rvalue)
 {
-    std::filesystem::path rsc_dir = resource_dir();
+    std::filesystem::path rsc_dir = resource_dir("test_sb_file_remover_ec_rvalue");
     std::filesystem::path output_fpath = rsc_dir / "output_file.txt";
     std::ofstream().open(output_fpath);
 
@@ -73,7 +69,7 @@ TEST(sb_file_remover, test_sb_file_remover_ec_rvalue)
 
 TEST(sb_file_remover, test_sb_all_files_remover)
 {
-    std::filesystem::path rsc_dir = resource_dir();
+    std::filesystem::path rsc_dir = resource_dir("test_sb_all_files_remover");
     std::filesystem::path jpg_dpath = rsc_dir / "jpg/";
     std::filesystem::path png_dpath = rsc_dir / "png/";
     std::filesystem::path output_fpath = png_dpath / "output_file.txt";
@@ -96,7 +92,7 @@ TEST(sb_file_remover, test_sb_all_files_remover)
 
 TEST(sb_file_remover, test_sb_all_files_remover_rvalue)
 {
-    std::filesystem::path rsc_dir = resource_dir();
+    std::filesystem::path rsc_dir = resource_dir("test_sb_all_files_remover_rvalue");
     std::filesystem::path jpg_dpath = rsc_dir / "jpg/";
     std::filesystem::path png_dpath = rsc_dir / "png/";
     std::filesystem::path output_fpath = png_dpath / "output_file.txt";
@@ -119,7 +115,7 @@ TEST(sb_file_remover, test_sb_all_files_remover_rvalue)
 
 TEST(sb_file_remover, test_sb_all_files_remover_ec)
 {
-    std::filesystem::path rsc_dir = resource_dir();
+    std::filesystem::path rsc_dir = resource_dir("test_sb_all_files_remover_ec");
     std::filesystem::path jpg_dpath = rsc_dir / "jpg/";
     std::filesystem::path png_dpath = rsc_dir / "png/";
     std::filesystem::path output_fpath = png_dpath / "output_file.txt";
@@ -144,7 +140,7 @@ TEST(sb_file_remover, test_sb_all_files_remover_ec)
 
 TEST(sb_file_remover, test_sb_all_files_remover_ec_rvalue)
 {
-    std::filesystem::path rsc_dir = resource_dir();
+    std::filesystem::path rsc_dir = resource_dir("test_sb_all_files_remover_ec_rvalue");
     std::filesystem::path jpg_dpath = rsc_dir / "jpg/";
     std::filesystem::path png_dpath = rsc_dir / "png/";
     std::filesystem::path output_fpath = png_dpath / "output_file.txt";

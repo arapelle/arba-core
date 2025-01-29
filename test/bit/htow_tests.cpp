@@ -1,6 +1,8 @@
 #include <arba/core/bit/htow.hpp>
-#include <cstdlib>
+
 #include <gtest/gtest.h>
+
+#include <cstdlib>
 
 TEST(htow_tests, test_htow_u16)
 {

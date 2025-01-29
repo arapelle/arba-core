@@ -10,11 +10,11 @@ namespace core
 
 // Scope-Bound Resource Manager
 // https://en.cppreference.com/w/cpp/language/raii
-template <class functor_type>
+template <class FunctorType>
 class sbrm
 {
 public:
-    using deleter_type = functor_type;
+    using deleter_type = FunctorType;
 
     sbrm(const deleter_type& deleter) : deleter_(deleter) {}
 

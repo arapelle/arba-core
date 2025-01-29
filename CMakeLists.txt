@@ -19,7 +19,7 @@ set_build_type_ifndef()
 
 set_project_name(NAMESPACE "arba" BASE_NAME "core")
 string(TIMESTAMP configure_datetime "%Y%m%d-%H%M%S")
-set_project_semantic_version("0.28.0" BUILD_METADATA "${configure_datetime}")
+set_project_semantic_version("0.29.0" BUILD_METADATA "${configure_datetime}")
 
 project(${PROJECT_NAME}
     VERSION ${PROJECT_VERSION}
@@ -40,11 +40,10 @@ configure_headers(configured_headers
 set(headers
     include/arba/core/bit/byte_swap.hpp
     include/arba/core/bit/htow.hpp
-    include/arba/core/compile_time_error.hpp
     include/arba/core/program_args.hpp
     include/arba/core/sbrm/sb_file_remover.hpp
     include/arba/core/sbrm/sbrm.hpp
-    include/arba/core/string/fixed_string.hpp
+    include/arba/core/string/string_tokenizer.hpp
     include/arba/core/string/trim.hpp
 )
 
@@ -58,10 +57,10 @@ add_cpp_library(${PROJECT_NAME} HEADER_ONLY
 add_library("${PROJECT_NAMESPACE}::${PROJECT_BASE_NAME}${LIBRARY_TYPE_POSTFIX}" ALIAS ${PROJECT_NAME})
 
 ## Link C++ targets:
-find_package(arba-vrsn 0.4 REQUIRED CONFIG)
+find_package(arba-cppx 0.1.0 REQUIRED CONFIG)
 target_link_libraries(${PROJECT_NAME}
     INTERFACE
-        arba::vrsn
+        arba::cppx
 )
 
 ## Add tests:

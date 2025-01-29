@@ -1,6 +1,8 @@
 #include <arba/core/bit/byte_swap.hpp>
-#include <cstdlib>
+
 #include <gtest/gtest.h>
+
+#include <cstdlib>
 
 TEST(byte_swap_tests, test_byte_swap_u16)
 {
