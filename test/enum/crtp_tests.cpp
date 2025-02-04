@@ -3,58 +3,58 @@
 
 #include <gtest/gtest.h>
 
+template <class>
+class no_rebind_and_rebase;
 
-template <class SelfType = void>
+template <class SelfType = void, template <class> class CrtpTemplate = no_rebind_and_rebase>
 class crtp_base;
 
 template <>
-class crtp_base<void>
+class crtp_base<>
+{
+};
+
+template <template <class> class CrtpTemplate>
+class crtp_base<void, CrtpTemplate> : public crtp_base<void>
 {
 public:
-    static constexpr bool is_concrete = false;
-
-    crtp_base()
-    {
-        std::string func = __PRETTY_FUNCTION__;
-        std::cout << func << " " << is_concrete << std::endl << std::flush;
-    }
-
     template <class OtherType>
-    using rebind_t = crtp_base<OtherType>;
+    using rebind_t = CrtpTemplate<OtherType>;
+
+    template <class OtherBaseType>
+    using rebase_t = CrtpTemplate<void>;
 };
 
 template <class SelfType>
-class crtp_base //: public crtp_base<void>
+class crtp_base<SelfType> : public crtp_base<>
 {
 public:
-    static constexpr bool is_concrete = true;
-
-    crtp_base()
-    {
-        std::string func = __PRETTY_FUNCTION__;
-        std::cout << func << " " << is_concrete << std::endl << std::flush;
-    }
-
-    template <class OtherType>
-    using rebind_t = crtp_base<OtherType>;
-
     using self_type = SelfType;
 
     [[nodiscard]] inline const self_type& self() const noexcept { return static_cast<const self_type&>(*this); }
     [[nodiscard]] inline self_type& self() noexcept { return static_cast<self_type&>(*this); }
 };
 
+template <class SelfType, template <class> class CrtpTemplate>
+class crtp_base : public crtp_base<SelfType, no_rebind_and_rebase>
+{
+public:
+    template <class OtherType>
+    using rebind_t = CrtpTemplate<OtherType>;
+
+    template <class OtherBaseType>
+    using rebase_t = CrtpTemplate<SelfType>;
+};
+
 template <class Base, class Concrete>
 struct concrete_crtp_base
 {
-    using type = std::conditional_t<Base::is_concrete
-//                                    requires (Base& base, const Base& cbase)
-//                                    {
-//                                        typename Base::self_type;
-//                                        { base.self() } -> std::same_as<typename Base::self_type&>;
-//                                        { cbase.self() } -> std::same_as<const typename Base::self_type&>;
-//                                    }
-                                    ,
+    using type = std::conditional_t<requires (Base& base, const Base& cbase)
+                                    {
+                                        typename Base::self_type;
+                                        { base.self() } -> std::same_as<typename Base::self_type&>;
+                                        { cbase.self() } -> std::same_as<const typename Base::self_type&>;
+                                    },
                                     Base,
                                     typename Base::template rebind_t<Concrete>
                                     >;
@@ -82,102 +82,54 @@ using rebase_t = typename Base::template rebase_t<OtherBaseType>;
 // ------
 
 template <class SelfType = void>
-class computer : public crtp_base<SelfType>
+class computer : public crtp_base<SelfType, computer>
 {
-    using base_ = crtp_base<SelfType>;
-
 public:
-    template <class OtherType>
-    using rebind_t = computer<OtherType>;
-
-    computer()
+    int generate() const
     {
-        std::string func = __PRETTY_FUNCTION__;
-        std::cout << func << std::endl << std::flush;
+        return this->self().seed() + 1000;
     }
-
-    unsigned generate() const
-    {
-        return this->self().scale_value() * 1 + this->self().offset_value();
-    }
-
-    unsigned scale_value() const { return 1; }
-
-    unsigned offset_value() const { return 0; }
 };
 
-template <class Base, int Scale>
-class scale : public concrete_crtp_base_t<Base, scale<Base, Scale>>
+template <class Base, int Seed>
+class factor : public concrete_crtp_base_t<Base, factor<Base, Seed>>
 {
 public:
     template <class OtherType>
-    using rebind_t = scale<rebind_t<Base, OtherType>, Scale>;
+    using rebind_t = factor<rebind_t<Base, OtherType>, Seed>;
 
-    scale()
+    int seed() const
     {
-        std::string func = __PRETTY_FUNCTION__;
-        std::cout << func << " " << this->is_concrete << std::endl << std::flush;
+        return Seed * this->self().seed_factor();
     }
 
-    unsigned scale_value() const
-    {
-        return (Scale << this->self().scale_bit_factor());
-    }
-
-    unsigned scale_bit_factor() const { return 0; }
-};
-
-template <class Base, int Offset>
-class offset : public //concrete_crtp_base_t<Base, offset<Base, Offset>>
-                   std::conditional_t<Base::is_concrete,
-                                      Base,
-                                      typename Base::template rebind_t<offset<Base, Offset>>
-                                      >
-{
-public:
-    template <class OtherType>
-    using rebind_t = offset<rebind_t<Base, OtherType>, Offset>;
-
-    offset()
-    {
-        std::string func = __PRETTY_FUNCTION__;
-        std::cout << func << " " << Base::is_concrete << std::endl << std::flush;
-    }
-
-    unsigned offset_value() const
-    {
-        return (Offset << this->self().offset_bit_factor());
-    }
-
-    unsigned offset_bit_factor() const { return 0; }
+    int seed_factor() const { return 6; }
 };
 
 TEST(crtp_tests, test_crtp_using)
 {
-    using mytype = offset<scale<computer<>, 6>, 1000>;
+    using mytype = factor<computer<>, 6>;
     mytype var;
-    unsigned value = var.generate();
-    ASSERT_EQ(value, 1006);
+    int value = var.generate();
+    ASSERT_EQ(value, 1036);
 }
 
-class myclass : public scale<offset<computer<myclass>, 1000>, 6>
+class myclass : public factor<computer<myclass>, 6>
 {
-    using base_ = scale<offset<computer<myclass>, 1000>, 6>;
+    using base_ = factor<computer<myclass>, 6>;
 
 public:
-    unsigned scale_value() const
+    int seed() const
     {
-        return 1 + this->base_::scale_value();
+        return 100 + this->base_::seed();
     }
 
-    unsigned scale_bit_factor() const { return 1; }
-
-    unsigned offset_bit_factor() const { return 1; }
+    int seed_factor() const { return 7; }
 };
 
 TEST(crtp_tests, test_crtp_class)
 {
     myclass var;
-    unsigned value = var.generate();
-    ASSERT_EQ(value, 2013);
+    int value = var.generate();
+    ASSERT_EQ(value, 1142);
 }
