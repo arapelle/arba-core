@@ -4,9 +4,9 @@
 #include <gtest/gtest.h>
 
 template <class>
-class no_rebase;
+class no_rebase_definition;
 
-template <class SelfType, template <class> class CrtpTemplate = no_rebase>
+template <class SelfType, template <class> class CrtpTemplate = no_rebase_definition>
     requires std::is_class_v<SelfType>
 class crtp_base;
 
