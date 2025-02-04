@@ -6,27 +6,11 @@
 template <class>
 class no_rebind_and_rebase;
 
-template <class SelfType = void, template <class> class CrtpTemplate = no_rebind_and_rebase>
+template <class SelfType, template <class> class CrtpTemplate = no_rebind_and_rebase>
 class crtp_base;
 
-template <>
-class crtp_base<>
-{
-};
-
-template <template <class> class CrtpTemplate>
-class crtp_base<void, CrtpTemplate> : public crtp_base<void>
-{
-public:
-    template <class OtherType>
-    using rebind_t = CrtpTemplate<OtherType>;
-
-    template <class OtherBaseType>
-    using rebase_t = CrtpTemplate<void>;
-};
-
 template <class SelfType>
-class crtp_base<SelfType> : public crtp_base<>
+class crtp_base<SelfType>
 {
 public:
     using self_type = SelfType;
@@ -36,7 +20,7 @@ public:
 };
 
 template <class SelfType, template <class> class CrtpTemplate>
-class crtp_base : public crtp_base<SelfType, no_rebind_and_rebase>
+class crtp_base : public crtp_base<SelfType>
 {
 public:
     template <class OtherType>
@@ -45,24 +29,6 @@ public:
     template <class OtherBaseType>
     using rebase_t = CrtpTemplate<SelfType>;
 };
-
-template <class Base, class Concrete>
-struct concrete_crtp_base
-{
-    using type = std::conditional_t<requires (Base& base, const Base& cbase)
-                                    {
-                                        typename Base::self_type;
-                                        { base.self() } -> std::same_as<typename Base::self_type&>;
-                                        { cbase.self() } -> std::same_as<const typename Base::self_type&>;
-                                    }
-                                    ,
-                                    Base,
-                                    typename Base::template rebind_t<Concrete>
-                                    >;
-};
-
-template <class Base, class Concrete>
-using concrete_crtp_base_t = typename concrete_crtp_base<Base, Concrete>::type;
 
 template <class Base, class OtherType>
 using rebind_t = typename Base::template rebind_t<OtherType>;
@@ -82,7 +48,7 @@ using rebase_t = typename Base::template rebase_t<OtherBaseType>;
 
 // ------
 
-template <class SelfType = void>
+template <class SelfType>
 class computer : public crtp_base<SelfType, computer>
 {
 public:
@@ -95,7 +61,7 @@ public:
 };
 
 template <class Base, int Seed>
-class factor : public concrete_crtp_base_t<Base, factor<Base, Seed>>
+class factor : public Base
 {
 public:
     template <class OtherType>
@@ -110,32 +76,17 @@ public:
 };
 
 template <class Base, int Offset>
-class offset : public concrete_crtp_base_t<Base, offset<Base, Offset>>
+class offset : public Base
 {
 public:
     template <class OtherType>
     using rebind_t = offset<rebind_t<Base, OtherType>, Offset>;
-
-    static constexpr bool is_valid = std::is_base_of_v<offset, typename Base::self_type>;
-
-    offset()
-    {
-        std::cout << __PRETTY_FUNCTION__ << " " << is_valid << std::endl << std::flush;
-    }
 
     int offset_value() const
     {
         return Offset;
     }
 };
-
-TEST(crtp_tests, test_crtp_using)
-{
-    using mytype = offset<factor<computer<>, 6>, 10000>;
-    mytype var;
-    int value = var.generate();
-    ASSERT_EQ(value, 11036);
-}
 
 class myclass : public factor<offset<computer<myclass>, 10000>, 6>
 {
