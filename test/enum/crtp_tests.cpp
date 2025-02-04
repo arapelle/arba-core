@@ -35,9 +35,6 @@ class decorator
 {
 public:
     template <class>
-    using rebind_t = decorator;
-
-    template <class>
     using rebase_t = decorator;
 };
 
