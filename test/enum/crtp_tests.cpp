@@ -3,52 +3,58 @@
 
 #include <gtest/gtest.h>
 
-template <class>
-class no_rebind_and_rebase;
 
-template <class SelfType = void, template <class> class CrtpTemplate = no_rebind_and_rebase>
+template <class SelfType = void>
 class crtp_base;
 
 template <>
-class crtp_base<>
-{
-};
-
-template <template <class> class CrtpTemplate>
-class crtp_base<void, CrtpTemplate> : public crtp_base<void>
+class crtp_base<void>
 {
 public:
+    static constexpr bool is_concrete = false;
+
+    crtp_base()
+    {
+        std::string func = __PRETTY_FUNCTION__;
+        std::cout << func << " " << is_concrete << std::endl << std::flush;
+    }
+
     template <class OtherType>
-    using rebind_t = CrtpTemplate<OtherType>;
+    using rebind_t = crtp_base<OtherType>;
 };
 
 template <class SelfType>
-class crtp_base<SelfType> : public crtp_base<>
+class crtp_base //: public crtp_base<void>
 {
 public:
+    static constexpr bool is_concrete = true;
+
+    crtp_base()
+    {
+        std::string func = __PRETTY_FUNCTION__;
+        std::cout << func << " " << is_concrete << std::endl << std::flush;
+    }
+
+    template <class OtherType>
+    using rebind_t = crtp_base<OtherType>;
+
     using self_type = SelfType;
 
     [[nodiscard]] inline const self_type& self() const noexcept { return static_cast<const self_type&>(*this); }
     [[nodiscard]] inline self_type& self() noexcept { return static_cast<self_type&>(*this); }
 };
 
-template <class SelfType, template <class> class CrtpTemplate>
-class crtp_base : public crtp_base<SelfType, no_rebind_and_rebase>
-{
-public:
-    template <class OtherType>
-    using rebind_t = CrtpTemplate<OtherType>;
-};
-
 template <class Base, class Concrete>
 struct concrete_crtp_base
 {
-    using type = std::conditional_t<requires (Base& base, const Base& cbase)
-                                    {
-                                        typename Base::self_type;
-                                        { base.self() } -> std::same_as<typename Base::self_type&>;
-                                        { cbase.self() } -> std::same_as<const typename Base::self_type&>;
-                                    },
+    using type = std::conditional_t<Base::is_concrete
+//                                    requires (Base& base, const Base& cbase)
+//                                    {
+//                                        typename Base::self_type;
+//                                        { base.self() } -> std::same_as<typename Base::self_type&>;
+//                                        { cbase.self() } -> std::same_as<const typename Base::self_type&>;
+//                                    }
+                                    ,
                                     Base,
                                     typename Base::template rebind_t<Concrete>
                                     >;
@@ -78,9 +84,17 @@ using rebase_t = typename Base::template rebase_t<OtherBaseType>;
 template <class SelfType = void>
 class computer : public crtp_base<SelfType>
 {
+    using base_ = crtp_base<SelfType>;
+
 public:
     template <class OtherType>
     using rebind_t = computer<OtherType>;
+
+    computer()
+    {
+        std::string func = __PRETTY_FUNCTION__;
+        std::cout << func << std::endl << std::flush;
+    }
 
     unsigned generate() const
     {
@@ -99,6 +113,12 @@ public:
     template <class OtherType>
     using rebind_t = scale<rebind_t<Base, OtherType>, Scale>;
 
+    scale()
+    {
+        std::string func = __PRETTY_FUNCTION__;
+        std::cout << func << " " << this->is_concrete << std::endl << std::flush;
+    }
+
     unsigned scale_value() const
     {
         return (Scale << this->self().scale_bit_factor());
@@ -108,11 +128,21 @@ public:
 };
 
 template <class Base, int Offset>
-class offset : public concrete_crtp_base_t<Base, offset<Base, Offset>>
+class offset : public //concrete_crtp_base_t<Base, offset<Base, Offset>>
+                   std::conditional_t<Base::is_concrete,
+                                      Base,
+                                      typename Base::template rebind_t<offset<Base, Offset>>
+                                      >
 {
 public:
     template <class OtherType>
     using rebind_t = offset<rebind_t<Base, OtherType>, Offset>;
+
+    offset()
+    {
+        std::string func = __PRETTY_FUNCTION__;
+        std::cout << func << " " << Base::is_concrete << std::endl << std::flush;
+    }
 
     unsigned offset_value() const
     {
