@@ -4,9 +4,9 @@
 #include <gtest/gtest.h>
 
 template <class>
-class no_rebind_and_rebase;
+class no_rebase;
 
-template <class SelfType, template <class> class CrtpTemplate = no_rebind_and_rebase>
+template <class SelfType, template <class> class CrtpTemplate = no_rebase>
 class crtp_base;
 
 template <class SelfType>
@@ -23,15 +23,9 @@ template <class SelfType, template <class> class CrtpTemplate>
 class crtp_base : public crtp_base<SelfType>
 {
 public:
-    template <class OtherType>
-    using rebind_t = CrtpTemplate<OtherType>;
-
-    template <class OtherBaseType>
+    template <class>
     using rebase_t = CrtpTemplate<SelfType>;
 };
-
-template <class Base, class OtherType>
-using rebind_t = typename Base::template rebind_t<OtherType>;
 
 class decorator
 {
@@ -45,6 +39,9 @@ public:
 
 template <class Base, class OtherBaseType>
 using rebase_t = typename Base::template rebase_t<OtherBaseType>;
+
+template <class Base, class ThenT, class ElseT>
+using conditional_rebase_t = std::conditional<std::is_same_v<Base, decorator>, ThenT, ElseT>;
 
 // ------
 
@@ -60,12 +57,13 @@ public:
     int offset_value() const { return 0; }
 };
 
+
 template <class Base, int Seed>
 class factor : public Base
 {
 public:
-    template <class OtherType>
-    using rebind_t = factor<rebind_t<Base, OtherType>, Seed>;
+    template <class OtherBase>
+    using rebase_t = conditional_rebase_t<Base, factor<OtherBase, Seed>, factor<rebase_t<Base, OtherBase>, Seed>>;
 
     int seed() const
     {
@@ -79,9 +77,6 @@ template <class Base, int Offset>
 class offset : public Base
 {
 public:
-    template <class OtherType>
-    using rebind_t = offset<rebind_t<Base, OtherType>, Offset>;
-
     int offset_value() const
     {
         return Offset;
