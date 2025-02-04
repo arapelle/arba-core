@@ -7,9 +7,11 @@ template <class>
 class no_rebase;
 
 template <class SelfType, template <class> class CrtpTemplate = no_rebase>
+    requires std::is_class_v<SelfType>
 class crtp_base;
 
 template <class SelfType>
+    requires std::is_class_v<SelfType>
 class crtp_base<SelfType>
 {
 public:
@@ -21,6 +23,7 @@ protected:
 };
 
 template <class SelfType, template <class> class CrtpTemplate>
+    requires std::is_class_v<SelfType>
 class crtp_base : public crtp_base<SelfType>
 {
 public:
