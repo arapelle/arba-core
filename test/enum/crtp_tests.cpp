@@ -54,7 +54,8 @@ struct concrete_crtp_base
                                         typename Base::self_type;
                                         { base.self() } -> std::same_as<typename Base::self_type&>;
                                         { cbase.self() } -> std::same_as<const typename Base::self_type&>;
-                                    },
+                                    }
+                                    ,
                                     Base,
                                     typename Base::template rebind_t<Concrete>
                                     >;
@@ -87,8 +88,10 @@ class computer : public crtp_base<SelfType, computer>
 public:
     int generate() const
     {
-        return this->self().seed() + 1000;
+        return this->self().seed() + 1000 + this->self().offset_value();
     }
+
+    int offset_value() const { return 0; }
 };
 
 template <class Base, int Seed>
@@ -106,17 +109,37 @@ public:
     int seed_factor() const { return 6; }
 };
 
+template <class Base, int Offset>
+class offset : public concrete_crtp_base_t<Base, offset<Base, Offset>>
+{
+public:
+    template <class OtherType>
+    using rebind_t = offset<rebind_t<Base, OtherType>, Offset>;
+
+    static constexpr bool is_valid = std::is_base_of_v<offset, typename Base::self_type>;
+
+    offset()
+    {
+        std::cout << __PRETTY_FUNCTION__ << " " << is_valid << std::endl << std::flush;
+    }
+
+    int offset_value() const
+    {
+        return Offset;
+    }
+};
+
 TEST(crtp_tests, test_crtp_using)
 {
-    using mytype = factor<computer<>, 6>;
+    using mytype = offset<factor<computer<>, 6>, 10000>;
     mytype var;
     int value = var.generate();
-    ASSERT_EQ(value, 1036);
+    ASSERT_EQ(value, 11036);
 }
 
-class myclass : public factor<computer<myclass>, 6>
+class myclass : public factor<offset<computer<myclass>, 10000>, 6>
 {
-    using base_ = factor<computer<myclass>, 6>;
+    using base_ = factor<offset<computer<myclass>, 10000>, 6>;
 
 public:
     int seed() const
@@ -131,5 +154,5 @@ TEST(crtp_tests, test_crtp_class)
 {
     myclass var;
     int value = var.generate();
-    ASSERT_EQ(value, 1142);
+    ASSERT_EQ(value, 11142);
 }
