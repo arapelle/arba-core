@@ -15,6 +15,7 @@ class crtp_base<SelfType>
 public:
     using self_type = SelfType;
 
+protected:
     [[nodiscard]] inline const self_type& self() const noexcept { return static_cast<const self_type&>(*this); }
     [[nodiscard]] inline self_type& self() noexcept { return static_cast<self_type&>(*this); }
 };
