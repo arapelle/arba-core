@@ -1,4 +1,5 @@
 //#include <arba/core/enum/enum.hpp>
+#include <array>
 
 #include <gtest/gtest.h>
 
@@ -70,7 +71,7 @@
 //}
 
 template <class EnumerationType>
-class Enumerator;
+class EnumeratorBase;
 
 template <class EnumeratorType, class SelfType>
 class Enumeration;
@@ -82,28 +83,36 @@ protected:
     template <class... ArgsTypes>
     static consteval auto make_enumerator_(int val, ArgsTypes&&... args)
     {
-        return SelfType::make_enumerator__(Enumerator<SelfType>(val), std::forward<ArgsTypes>(args)...);
+        return SelfType::make_enumerator__(EnumeratorBase<SelfType>(val), std::forward<ArgsTypes>(args)...);
     }
 };
 
 template <class EnumerationType>
-class Enumerator
+class EnumeratorBase
 {
 public:
-    constexpr Enumerator() {}
-
-//    constexpr std::string_view to_string() const noexcept
-//        requires (requires{ {SelfType::enumerator_strings[std::declval<int_type>()]} -> std::convertible_to<std::string_view>; })
-//    {
-//        return SelfType::enumerator_strings[value];
-//    }
+    constexpr EnumeratorBase() {}
 
 private:
-    consteval Enumerator(int val) : value(val) {}
+    consteval EnumeratorBase(int val) : value(val) {}
     friend EnumerationBase<EnumerationType>;
 
 protected:
     int value;
+};
+
+template <class EnumerationType, class SelfType>
+class Enumerator : public EnumeratorBase<EnumerationType>
+{
+public:
+    constexpr Enumerator() {}
+    consteval Enumerator(const EnumeratorBase<EnumerationType>& val) : EnumeratorBase<EnumerationType>(val) {}
+
+    constexpr std::string_view to_string() const noexcept
+        requires (requires{ {SelfType::enumerator_strings[std::declval<int>()]} -> std::convertible_to<std::string_view>; })
+    {
+        return SelfType::enumerator_strings[this->value];
+    }
 };
 
 template <class EnumeratorType, class SelfType>
@@ -121,7 +130,7 @@ protected:
 
 private:
     template <class... ArgsTypes>
-    static consteval EnumeratorType make_enumerator__(Enumerator<SelfType> val, ArgsTypes&&... args)
+    static consteval EnumeratorType make_enumerator__(EnumeratorBase<SelfType> val, ArgsTypes&&... args)
     {
         return EnumeratorType(val, std::forward<ArgsTypes>(args)...);
     }
@@ -134,13 +143,14 @@ private:
 // --------
 
 class Cities;
-class City;
 
-class City : public Enumerator<Cities>
+class City : public Enumerator<Cities, City>
 {
 public:
-    constexpr City() : Enumerator<Cities>() {}
-    consteval City(const Enumerator<Cities>& val) : Enumerator<Cities>(val) {}
+    constexpr City() {}
+    consteval City(const EnumeratorBase<Cities>& val) : Enumerator<Cities, City>(val) {}
+
+    static constexpr std::array enumerator_strings = { "paris", "london" };
 };
 
 class Cities : public Enumeration<City, Cities>
@@ -156,4 +166,5 @@ TEST(enum_tests, test_Enum)
 {
     City city;
     city = Cities::paris;
+    ASSERT_EQ(city.to_string(), "paris");
 }
