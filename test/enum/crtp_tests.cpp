@@ -4,21 +4,29 @@
 #include <gtest/gtest.h>
 
 template <class>
-class no_rebind_and_rebase;
+class no_rebind;
 
-template <class SelfType, template <class> class CrtpTemplate = no_rebind_and_rebase>
+class bad_crtp_base
+{
+private:
+    ~bad_crtp_base() = delete;
+};
+
+template <class SelfType, template <class> class CrtpTemplate = no_rebind>
 class crtp_base;
 
 template <template <class> class CrtpTemplate>
 class crtp_base<void, CrtpTemplate>
 {
+protected:
+    template <class>
+    using rebase_t = bad_crtp_base;
 };
 
 template <class SelfType>
-class crtp_base<SelfType>
+    requires (std::is_class_v<SelfType>)
+class crtp_base<SelfType> : public crtp_base<void>
 {
-    static_assert(std::is_class_v<SelfType>);
-
 public:
     using self_type = SelfType;
 
@@ -30,17 +38,14 @@ protected:
 template <class SelfType, template <class> class CrtpTemplate>
 class crtp_base : public crtp_base<SelfType>
 {
-public:
+protected:
     template <class OtherType>
     using rebind_t = CrtpTemplate<OtherType>;
-
-    template <class>
-    using rebase_t = CrtpTemplate<SelfType>;
 };
 
 class crtp_deco
 {
-public:
+protected:
     template <class>
     using rebind_t = crtp_deco;
 
@@ -51,11 +56,11 @@ public:
 template <class Base, class OtherType>
 using rebind_t = typename Base::template rebind_t<OtherType>;
 
-template <class SelfT, class ThisT>
-using conditional_base_t = std::conditional_t<std::is_void_v<SelfT>, ThisT, SelfT>;
-
 template <class Base, class OtherBaseType>
 using rebase_t = typename Base::template rebase_t<OtherBaseType>;
+
+template <class SelfT, class ThisT>
+using conditional_base_t = std::conditional_t<std::is_void_v<SelfT>, ThisT, SelfT>;
 
 template <class Base, class RebasedType, class RecRebasedType>
 using conditional_rebase_t = std::conditional_t<std::is_same_v<Base, crtp_deco>, RebasedType, RecRebasedType>;
