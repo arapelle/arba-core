@@ -6,12 +6,6 @@
 template <class>
 class no_rebind;
 
-class bad_crtp_base
-{
-private:
-    ~bad_crtp_base() = delete;
-};
-
 template <class SelfType, template <class> class CrtpTemplate = no_rebind>
 class crtp_base;
 
@@ -20,7 +14,7 @@ class crtp_base<void, CrtpTemplate>
 {
 protected:
     template <class>
-    using rebase_t = bad_crtp_base;
+    using rebase_t = crtp_base;
 };
 
 template <class SelfType>
@@ -43,6 +37,9 @@ protected:
     using rebind_t = CrtpTemplate<OtherType>;
 };
 
+template <class Type>
+concept CrtpBase = std::is_base_of_v<crtp_base<void>, Type>;
+
 class crtp_deco
 {
 protected:
@@ -53,6 +50,12 @@ protected:
     using rebase_t = crtp_deco;
 };
 
+template <class Type>
+concept CrtpDeco = std::is_base_of_v<crtp_deco, Type>;
+
+template <class Type>
+concept CrtpType = CrtpBase<Type> || CrtpDeco<Type>;
+
 template <class Base, class OtherType>
 using rebind_t = typename Base::template rebind_t<OtherType>;
 
@@ -62,22 +65,22 @@ using rebase_t = typename Base::template rebase_t<OtherBaseType>;
 template <class SelfT, class ThisT>
 using conditional_base_t = std::conditional_t<std::is_void_v<SelfT>, ThisT, SelfT>;
 
-template <class Base, class RebasedType, class RecRebasedType>
+template <CrtpDeco Base, CrtpBase RebasedType, CrtpType RecRebasedType>
 using conditional_rebase_t = std::conditional_t<std::is_same_v<Base, crtp_deco>, RebasedType, RecRebasedType>;
 
-template <class Base, class Decorator, class OtherSelf>
+template <CrtpBase Base, CrtpDeco Decorator, class OtherSelf>
 struct decorate
 {
     using type = rebind_t<rebase_t<Decorator, Base>, OtherSelf>;
 };
 
-template <class Base, class OtherSelf>
+template <CrtpBase Base, class OtherSelf>
 struct decorate<Base, crtp_deco, OtherSelf>
 {
     using type = rebind_t<Base, OtherSelf>;
 };
 
-template <class Base, class Decorator, class OtherSelf>
+template <CrtpBase Base, CrtpDeco Decorator, class OtherSelf>
 using decorate_t = typename decorate<Base, Decorator, OtherSelf>::type;
 
 // ------
@@ -101,7 +104,7 @@ public:
     template <class OtherSelf>
     using rebind_t = factor<rebind_t<Base, OtherSelf>, Seed>;
 
-    template <class OtherBase>
+    template <CrtpBase OtherBase>
     using rebase_t = conditional_rebase_t<Base,
                                           factor<OtherBase, Seed>,
                                           factor<rebase_t<Base, OtherBase>, Seed>>;
@@ -121,7 +124,7 @@ public:
     template <class OtherSelf>
     using rebind_t = offset<rebind_t<Base, OtherSelf>, Offset>;
 
-    template <class OtherBase>
+    template <CrtpBase OtherBase>
     using rebase_t = conditional_rebase_t<Base,
                                           offset<OtherBase, Offset>,
                                           offset<rebase_t<Base, OtherBase>, Offset>>;
