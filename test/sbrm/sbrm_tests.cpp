@@ -1,4 +1,5 @@
 #include <arba/core/sbrm/sbrm.hpp>
+
 #include <gtest/gtest.h>
 
 TEST(sbrm_tests, test_sbrm)

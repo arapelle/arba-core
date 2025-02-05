@@ -22,3 +22,4 @@ target_link_libraries(${test_program}
 )
 
 target_compile_features(${test_program} PRIVATE cxx_std_20)
+target_compile_definitions(${test_program} PRIVATE -DARBA_CPPX_VERBOSE_VERSION)
