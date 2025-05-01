@@ -246,7 +246,7 @@ TEST(byte_swap_tests, test_byte_swap_enum_float)
     float swapped_value = core::byte_swap(value);
     float expected_value = -12.358f;
     ASSERT_NE(swapped_value, expected_value);
-    ASSERT_FLOAT_EQ(swapped_value, 6.7111732e+18);
+    ASSERT_FLOAT_EQ(swapped_value, 6.7111732e+18f);
     swapped_value = core::byte_swap(swapped_value);
     ASSERT_EQ(swapped_value, expected_value);
 }

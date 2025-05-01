@@ -4,7 +4,7 @@
 
 inline namespace @PROJECT_NAMESPACE@
 {
-namespace @PROJECT_BASE_NAME@
+namespace @PROJECT_FEATURE_NAME@
 {
 constexpr arba::cppx::semver version("@PROJECT_SEMANTIC_VERSION@");
 
