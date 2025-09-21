@@ -10,5 +10,6 @@ add_cpp_library_basic_tests(${PROJECT_NAME} GTest::gtest_main
 )
 
 add_subdirectory(bit)
+add_subdirectory(container)
 add_subdirectory(sbrm)
 add_subdirectory(string)
