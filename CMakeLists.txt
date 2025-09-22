@@ -40,6 +40,7 @@ configure_headers(configured_headers
 set(headers
     include/arba/core/bit/byte_swap.hpp
     include/arba/core/bit/htow.hpp
+    include/arba/core/bit/htow_when.hpp
     include/arba/core/container/span.hpp
     include/arba/core/program_args.hpp
     include/arba/core/sbrm/sb_file_remover.hpp
