@@ -106,5 +106,26 @@ as_writable_span(std::span<std::byte, Extent> bytes)
     return as_writable_span<Type>(bytes, std::nothrow);
 }
 
+// as_bytes()
+
+template <std::integral Type>
+std::span<const std::byte, sizeof(Type)> as_bytes(const Type& value)
+{
+    return std::span<const std::byte, sizeof(Type)>(reinterpret_cast<const std::byte*>(&value),
+                                                    reinterpret_cast<const std::byte*>(&value) + sizeof(Type));
+}
+
+template <std::integral Type>
+std::span<const std::byte, sizeof(Type)> as_bytes(const Type&& value) = delete;
+
+// as_writable_bytes()
+
+template <std::integral Type>
+std::span<std::byte, sizeof(Type)> as_writable_bytes(Type& value)
+{
+    return std::span<std::byte, sizeof(Type)>(reinterpret_cast<std::byte*>(&value),
+                                              reinterpret_cast<std::byte*>(&value) + sizeof(Type));
+}
+
 } // namespace core
 } // namespace arba

@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <array>
 
 struct tri_char
@@ -139,7 +140,7 @@ TEST(span_tests, as_span__maythrow__throw_span_size_error)
     }
 }
 
-// as_wriatable_span() tests
+// as_writable_span() tests
 
 TEST(span_tests, as_writable_span_N__nothrow__no_throw_span_size_2)
 {
@@ -244,4 +245,73 @@ TEST(span_tests, as_writable_span__maythrow__throw_span_size_error)
     {
         FAIL() << err.what();
     }
+}
+
+// as_bytes() tests
+
+template <std::integral Type>
+unsigned count_bytes(const Type& value)
+{
+    unsigned counter = 0;
+    std::span<const std::byte, sizeof(value)> bytes = core::as_bytes(value);
+    std::ranges::for_each(bytes, [&](const std::byte& b){ if (b == std::byte{0x01}) ++counter; });
+    return counter;
+}
+
+TEST(span_tests, as_bytes__uint_t__ok)
+{
+    uint8_t u8value = 0x01;
+    ASSERT_EQ(count_bytes(u8value), 1);
+    uint16_t u16value = 0x0101;
+    ASSERT_EQ(count_bytes(u16value), 2);
+    uint32_t u32value = 0x01010101;
+    ASSERT_EQ(count_bytes(u32value), 4);
+    uint64_t u64value = 0x0101010101010101;
+    ASSERT_EQ(count_bytes(u64value), 8);
+}
+
+TEST(span_tests, as_bytes__int_t__ok)
+{
+    int8_t i8value = 0x01;
+    ASSERT_EQ(count_bytes(i8value), 1);
+    int16_t i16value = 0x0101;
+    ASSERT_EQ(count_bytes(i16value), 2);
+    int32_t i32value = 0x01010101;
+    ASSERT_EQ(count_bytes(i32value), 4);
+    int64_t i64value = 0x0101010101010101;
+    ASSERT_EQ(count_bytes(i64value), 8);
+}
+
+// as_writable_bytes() tests
+
+template <std::integral Type>
+Type& transform_integer(Type& value)
+{
+    std::span<std::byte, sizeof(value)> bytes = core::as_writable_bytes(value);
+    std::ranges::for_each(bytes, [](std::byte& b){ b = std::byte{0x02}; });
+    return value;
+}
+
+TEST(span_tests, as_writable_bytes__uint_t__ok)
+{
+    uint8_t u8value = 0x01;
+    ASSERT_EQ(transform_integer(u8value), 0x02);
+    uint16_t u16value = 0x0101;
+    ASSERT_EQ(transform_integer(u16value), 0x0202);
+    uint32_t u32value = 0x01010101;
+    ASSERT_EQ(transform_integer(u32value), 0x02020202);
+    uint64_t u64value = 0x0101010101010101;
+    ASSERT_EQ(transform_integer(u64value), 0x0202020202020202);
+}
+
+TEST(span_tests, as_writable_bytes__int_t__ok)
+{
+    int8_t i8value = 0x01;
+    ASSERT_EQ(transform_integer(i8value), 0x02);
+    int16_t i16value = 0x0101;
+    ASSERT_EQ(transform_integer(i16value), 0x0202);
+    int32_t i32value = 0x01010101;
+    ASSERT_EQ(transform_integer(i32value), 0x02020202);
+    int64_t i64value = 0x0101010101010101;
+    ASSERT_EQ(transform_integer(i64value), 0x0202020202020202);
 }
