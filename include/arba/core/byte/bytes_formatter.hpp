@@ -16,7 +16,7 @@ inline namespace arba
 {
 namespace core
 {
-inline namespace bytes_formatter_kwargs
+namespace bytes_formatter_kwargs
 {
 
 ARBA_META_KWARG(unit_format, std::string);
@@ -30,22 +30,25 @@ ARBA_META_KWARG(force_chunk_end, bool);
 
 }
 
+template <class T>
+concept BytesFormatterKwarg = meta::Kwarg<T,
+                            bytes_formatter_kwargs::unit_format,
+                            bytes_formatter_kwargs::unit_sep,
+                            bytes_formatter_kwargs::seq_beginning,
+                            bytes_formatter_kwargs::seq_end,
+                            bytes_formatter_kwargs::chunk_beginning,
+                            bytes_formatter_kwargs::chunk_end,
+                            bytes_formatter_kwargs::nb_units_per_chunk,
+                            bytes_formatter_kwargs::force_chunk_end
+                            >;
+
 class bytes_formatter
 {
     static constexpr std::size_t buffer_size = 64 * 1024;
 
 public:
     template <typename... Kwargs>
-        requires (meta::Kwarg<Kwargs,
-                         bytes_formatter_kwargs::unit_format,
-                         bytes_formatter_kwargs::unit_sep,
-                         bytes_formatter_kwargs::seq_beginning,
-                         bytes_formatter_kwargs::seq_end,
-                         bytes_formatter_kwargs::chunk_beginning,
-                         bytes_formatter_kwargs::chunk_end,
-                         bytes_formatter_kwargs::nb_units_per_chunk,
-                         bytes_formatter_kwargs::force_chunk_end
-                         > && ...)
+        requires (BytesFormatterKwarg<Kwargs> && ...)
     bytes_formatter(Kwargs&&... kwargs)
     {
         meta::kwargs_parser<Kwargs...> k_parser(std::forward<Kwargs>(kwargs)...);
@@ -86,11 +89,11 @@ public:
 public:
     void format_binary_stream_to(std::istream &input_stream, std::ostream& output_stream, std::size_t first_unit_index = 0) const;
     void format_binary_cstream_to(FILE* input_stream, std::ostream& output_stream, std::size_t first_unit_index = 0) const;
-    void format_bytes_to(std::span<const std::byte> bytes, std::ostream& output_stream, std::size_t first_unit_index = 0);
+    void format_bytes_to(std::span<const std::byte> bytes, std::ostream& output_stream, std::size_t first_unit_index = 0) const;
 
     [[nodiscard]] std::string format_binary_stream(std::istream &input_stream, std::size_t first_unit_index = 0) const;
     [[nodiscard]] std::string format_binary_cstream(FILE* input_stream, std::size_t first_unit_index = 0) const;
-    [[nodiscard]] std::string format_bytes(std::span<const std::byte> bytes, std::size_t first_byte_index = 0);
+    [[nodiscard]] std::string format_bytes(std::span<const std::byte> bytes, std::size_t first_byte_index = 0) const;
 
 private:
     [[nodiscard]] inline bool uses_simple_format_() const { return unit_format_ == "{}"; }
@@ -176,7 +179,7 @@ inline void bytes_formatter::format_binary_cstream_to(FILE *input_stream, std::o
     output_stream << seq_end_;
 }
 
-inline void bytes_formatter::format_bytes_to(std::span<const std::byte> bytes, std::ostream &output_stream, std::size_t unit_index)
+inline void bytes_formatter::format_bytes_to(std::span<const std::byte> bytes, std::ostream &output_stream, std::size_t unit_index) const
 {
     output_stream << seq_beginning_;
     if (bytes.size() > 0) [[likely]]
@@ -202,7 +205,7 @@ inline std::string bytes_formatter::format_binary_cstream(FILE *input_stream, st
     return stream.str();
 }
 
-inline std::string bytes_formatter::format_bytes(std::span<const std::byte> bytes, std::size_t first_byte_index)
+inline std::string bytes_formatter::format_bytes(std::span<const std::byte> bytes, std::size_t first_byte_index) const
 {
     std::ostringstream stream;
     format_bytes_to(bytes, stream, first_byte_index);
@@ -235,6 +238,22 @@ inline bool bytes_formatter::format_byte_to_(std::byte byte, std::ostream& outpu
     else
         output_stream << unit_separator;
     return false;
+}
+
+template <typename... Kwargs>
+    requires (BytesFormatterKwarg<Kwargs> && ...)
+[[nodiscard]] inline std::string format_bytes(std::span<const std::byte> bytes, Kwargs&&... kwargs)
+{
+    const bytes_formatter formatter(std::forward<Kwargs>(kwargs)...);
+    return formatter.format_bytes(bytes);
+}
+
+template <typename... Kwargs>
+    requires (BytesFormatterKwarg<Kwargs> && ...)
+[[nodiscard]] inline std::string format_bytes(std::span<const std::byte> bytes, std::size_t first_byte_index, Kwargs&&... kwargs)
+{
+    const bytes_formatter formatter(std::forward<Kwargs>(kwargs)...);
+    return formatter.format_bytes(bytes, first_byte_index);
 }
 
 }
