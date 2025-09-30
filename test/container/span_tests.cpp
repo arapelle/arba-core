@@ -250,43 +250,37 @@ TEST(span_tests, as_writable_span__maythrow__throw_span_size_error)
 // as_bytes() tests
 
 template <std::integral Type>
-unsigned count_bytes(const Type& value)
+unsigned count_bytes()
 {
+    Type value = 0;
     unsigned counter = 0;
     std::span<const std::byte, sizeof(value)> bytes = core::as_bytes(value);
-    std::ranges::for_each(bytes, [&](const std::byte& b){ if (b == std::byte{0x01}) ++counter; });
+    std::ranges::for_each(bytes, [&](const std::byte& b){ if (b == std::byte{0x00}) ++counter; });
     return counter;
 }
 
 TEST(span_tests, as_bytes__uint_t__ok)
 {
-    uint8_t u8value = 0x01;
-    ASSERT_EQ(count_bytes(u8value), 1);
-    uint16_t u16value = 0x0101;
-    ASSERT_EQ(count_bytes(u16value), 2);
-    uint32_t u32value = 0x01010101;
-    ASSERT_EQ(count_bytes(u32value), 4);
-    uint64_t u64value = 0x0101010101010101;
-    ASSERT_EQ(count_bytes(u64value), 8);
+    ASSERT_EQ(count_bytes<uint8_t>(), 1);
+    ASSERT_EQ(count_bytes<uint16_t>(), 2);
+    ASSERT_EQ(count_bytes<uint32_t>(), 4);
+    ASSERT_EQ(count_bytes<uint64_t>(), 8);
 }
 
 TEST(span_tests, as_bytes__int_t__ok)
 {
-    int8_t i8value = 0x01;
-    ASSERT_EQ(count_bytes(i8value), 1);
-    int16_t i16value = 0x0101;
-    ASSERT_EQ(count_bytes(i16value), 2);
-    int32_t i32value = 0x01010101;
-    ASSERT_EQ(count_bytes(i32value), 4);
-    int64_t i64value = 0x0101010101010101;
-    ASSERT_EQ(count_bytes(i64value), 8);
+    ASSERT_EQ(count_bytes<int8_t>(), 1);
+    ASSERT_EQ(count_bytes<int16_t>(), 2);
+    ASSERT_EQ(count_bytes<int32_t>(), 4);
+    ASSERT_EQ(count_bytes<int64_t>(), 8);
 }
 
 // as_writable_bytes() tests
 
 template <std::integral Type>
-Type& transform_integer(Type& value)
+Type transform_integer()
 {
+    Type value;
     std::span<std::byte, sizeof(value)> bytes = core::as_writable_bytes(value);
     std::ranges::for_each(bytes, [](std::byte& b){ b = std::byte{0x02}; });
     return value;
@@ -294,24 +288,206 @@ Type& transform_integer(Type& value)
 
 TEST(span_tests, as_writable_bytes__uint_t__ok)
 {
-    uint8_t u8value = 0x01;
-    ASSERT_EQ(transform_integer(u8value), 0x02);
-    uint16_t u16value = 0x0101;
-    ASSERT_EQ(transform_integer(u16value), 0x0202);
-    uint32_t u32value = 0x01010101;
-    ASSERT_EQ(transform_integer(u32value), 0x02020202);
-    uint64_t u64value = 0x0101010101010101;
-    ASSERT_EQ(transform_integer(u64value), 0x0202020202020202);
+    ASSERT_EQ(transform_integer<uint8_t>(), 0x02);
+    ASSERT_EQ(transform_integer<uint16_t>(), 0x0202);
+    ASSERT_EQ(transform_integer<uint32_t>(), 0x02020202);
+    ASSERT_EQ(transform_integer<uint64_t>(), 0x0202020202020202);
 }
 
 TEST(span_tests, as_writable_bytes__int_t__ok)
 {
-    int8_t i8value = 0x01;
-    ASSERT_EQ(transform_integer(i8value), 0x02);
-    int16_t i16value = 0x0101;
-    ASSERT_EQ(transform_integer(i16value), 0x0202);
-    int32_t i32value = 0x01010101;
-    ASSERT_EQ(transform_integer(i32value), 0x02020202);
-    int64_t i64value = 0x0101010101010101;
-    ASSERT_EQ(transform_integer(i64value), 0x0202020202020202);
+    ASSERT_EQ(transform_integer<int8_t>(), 0x02);
+    ASSERT_EQ(transform_integer<int16_t>(), 0x0202);
+    ASSERT_EQ(transform_integer<int32_t>(), 0x02020202);
+    ASSERT_EQ(transform_integer<int64_t>(), 0x0202020202020202);
+}
+
+// as_uint(), as_int(), as_integer()
+
+template <std::integral Type>
+Type const_bytes_to_const_integer()
+{
+    std::array<std::byte, sizeof(Type)> bytes;
+    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::span<const std::byte, sizeof(Type)> bytes_span(bytes);
+    const Type& cref = core::as_integer<Type>(bytes_span);
+    return cref;
+}
+
+template <std::size_t BitSize>
+auto const_bytes_to_const_uint()
+{
+    std::array<std::byte, BitSize / 8> bytes;
+    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::span<const std::byte, sizeof(bytes)> bytes_span(bytes);
+    const meta::uint_n_t<BitSize>& cref = core::as_uint<BitSize>(bytes_span);
+    return cref;
+}
+
+template <std::size_t BitSize>
+auto const_bytes_to_const_int()
+{
+    std::array<std::byte, BitSize / 8> bytes;
+    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::span<const std::byte, sizeof(bytes)> bytes_span(bytes);
+    const meta::int_n_t<BitSize>& cref = core::as_int<BitSize>(bytes_span);
+    return cref;
+}
+
+template <std::integral Type>
+Type bytes_to_const_integer()
+{
+    std::array<std::byte, sizeof(Type)> bytes;
+    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::span<std::byte, sizeof(Type)> bytes_span(bytes);
+    const Type& cref = core::as_integer<Type>(bytes_span);
+    return cref;
+}
+
+template <std::size_t BitSize>
+auto bytes_to_const_uint()
+{
+    std::array<std::byte, BitSize / 8> bytes;
+    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::span<std::byte, sizeof(bytes)> bytes_span(bytes);
+    const meta::uint_n_t<BitSize>& cref = core::as_uint<BitSize>(bytes_span);
+    return cref;
+}
+
+template <std::size_t BitSize>
+auto bytes_to_const_int()
+{
+    std::array<std::byte, BitSize / 8> bytes;
+    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::span<std::byte, sizeof(bytes)> bytes_span(bytes);
+    const meta::int_n_t<BitSize>& cref = core::as_int<BitSize>(bytes_span);
+    return cref;
+}
+
+TEST(span_tests, as_integer__from_const_bytes_to_uint_t__ok)
+{
+    ASSERT_EQ(const_bytes_to_const_integer<uint8_t>(), 0x02);
+    ASSERT_EQ(const_bytes_to_const_integer<uint16_t>(), 0x0202);
+    ASSERT_EQ(const_bytes_to_const_integer<uint32_t>(), 0x02020202);
+    ASSERT_EQ(const_bytes_to_const_integer<uint64_t>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_integer__from_const_bytes_to_int_t__ok)
+{
+    ASSERT_EQ(const_bytes_to_const_integer<int8_t>(), 0x02);
+    ASSERT_EQ(const_bytes_to_const_integer<int16_t>(), 0x0202);
+    ASSERT_EQ(const_bytes_to_const_integer<int32_t>(), 0x02020202);
+    ASSERT_EQ(const_bytes_to_const_integer<int64_t>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_uint__from_const_bytes_to_u8_to_u64__ok)
+{
+    ASSERT_EQ(const_bytes_to_const_uint<8>(), 0x02);
+    ASSERT_EQ(const_bytes_to_const_uint<16>(), 0x0202);
+    ASSERT_EQ(const_bytes_to_const_uint<32>(), 0x02020202);
+    ASSERT_EQ(const_bytes_to_const_uint<64>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_int__from_const_bytes_to_i8_to_i64__ok)
+{
+    ASSERT_EQ(const_bytes_to_const_int<8>(), 0x02);
+    ASSERT_EQ(const_bytes_to_const_int<16>(), 0x0202);
+    ASSERT_EQ(const_bytes_to_const_int<32>(), 0x02020202);
+    ASSERT_EQ(const_bytes_to_const_int<64>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_integer__from_bytes_to_uint_t__ok)
+{
+    ASSERT_EQ(bytes_to_const_integer<uint8_t>(), 0x02);
+    ASSERT_EQ(bytes_to_const_integer<uint16_t>(), 0x0202);
+    ASSERT_EQ(bytes_to_const_integer<uint32_t>(), 0x02020202);
+    ASSERT_EQ(bytes_to_const_integer<uint64_t>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_integer__from_bytes_to_int_t__ok)
+{
+    ASSERT_EQ(bytes_to_const_integer<int8_t>(), 0x02);
+    ASSERT_EQ(bytes_to_const_integer<int16_t>(), 0x0202);
+    ASSERT_EQ(bytes_to_const_integer<int32_t>(), 0x02020202);
+    ASSERT_EQ(bytes_to_const_integer<int64_t>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_uint__from_bytes_to_u8_to_u64__ok)
+{
+    ASSERT_EQ(bytes_to_const_uint<8>(), 0x02);
+    ASSERT_EQ(bytes_to_const_uint<16>(), 0x0202);
+    ASSERT_EQ(bytes_to_const_uint<32>(), 0x02020202);
+    ASSERT_EQ(bytes_to_const_uint<64>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_int__from_bytes_to_i8_to_i64__ok)
+{
+    ASSERT_EQ(bytes_to_const_int<8>(), 0x02);
+    ASSERT_EQ(bytes_to_const_int<16>(), 0x0202);
+    ASSERT_EQ(bytes_to_const_int<32>(), 0x02020202);
+    ASSERT_EQ(bytes_to_const_int<64>(), 0x0202020202020202);
+}
+
+//
+
+template <std::integral Type>
+Type bytes_to_integer()
+{
+    std::array<std::byte, sizeof(Type)> bytes;
+    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::span<std::byte, sizeof(Type)> bytes_span(bytes);
+    Type& ref = core::as_writable_integer<Type>(bytes_span);
+    return ref;
+}
+
+template <std::size_t BitSize>
+auto bytes_to_uint()
+{
+    std::array<std::byte, BitSize / 8> bytes;
+    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::span<std::byte, sizeof(bytes)> bytes_span(bytes);
+    meta::uint_n_t<BitSize>& ref = core::as_writable_uint<BitSize>(bytes_span);
+    return ref;
+}
+
+template <std::size_t BitSize>
+auto bytes_to_int()
+{
+    std::array<std::byte, BitSize / 8> bytes;
+    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::span<std::byte, sizeof(bytes)> bytes_span(bytes);
+    meta::int_n_t<BitSize>& ref = core::as_writable_int<BitSize>(bytes_span);
+    return ref;
+}
+
+TEST(span_tests, as_writable_integer__from_bytes_to_uint_t__ok)
+{
+    ASSERT_EQ(bytes_to_integer<uint8_t>(), 0x02);
+    ASSERT_EQ(bytes_to_integer<uint16_t>(), 0x0202);
+    ASSERT_EQ(bytes_to_integer<uint32_t>(), 0x02020202);
+    ASSERT_EQ(bytes_to_integer<uint64_t>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_writable_integer__from_bytes_to_int_t__ok)
+{
+    ASSERT_EQ(bytes_to_integer<int8_t>(), 0x02);
+    ASSERT_EQ(bytes_to_integer<int16_t>(), 0x0202);
+    ASSERT_EQ(bytes_to_integer<int32_t>(), 0x02020202);
+    ASSERT_EQ(bytes_to_integer<int64_t>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_writable_uint__from_bytes_to_u8_to_u64__ok)
+{
+    ASSERT_EQ(bytes_to_uint<8>(), 0x02);
+    ASSERT_EQ(bytes_to_uint<16>(), 0x0202);
+    ASSERT_EQ(bytes_to_uint<32>(), 0x02020202);
+    ASSERT_EQ(bytes_to_uint<64>(), 0x0202020202020202);
+}
+
+TEST(span_tests, as_writable_int__from_bytes_to_i8_to_i64__ok)
+{
+    ASSERT_EQ(bytes_to_int<8>(), 0x02);
+    ASSERT_EQ(bytes_to_int<16>(), 0x0202);
+    ASSERT_EQ(bytes_to_int<32>(), 0x02020202);
+    ASSERT_EQ(bytes_to_int<64>(), 0x0202020202020202);
 }

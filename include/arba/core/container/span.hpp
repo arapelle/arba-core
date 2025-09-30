@@ -1,6 +1,7 @@
 #pragma once
 
 #include <arba/meta/policy/exception_policy.hpp>
+#include <arba/meta/type_traits/integer_n.hpp>
 
 #include <format>
 #include <span>
@@ -30,12 +31,18 @@ public:
 
 // as_span()
 
-template <class Type>
-inline std::span<const Type> as_span(std::span<std::byte> bytes, meta::maythrow_t)
+template <class Type, size_t Extent>
+    requires(Extent == std::dynamic_extent || (Extent % sizeof(Type) == 0))
+inline std::span<const Type, Extent == std::dynamic_extent ? std::dynamic_extent : Extent / sizeof(Type)>
+as_span(std::span<std::byte, Extent> bytes, meta::maythrow_t)
 {
-    if (bytes.size() % sizeof(Type) != 0) [[unlikely]]
-        throw span_size_error(bytes, sizeof(Type));
-    return std::span<const Type>{ reinterpret_cast<const Type*>(bytes.data()), bytes.size() / sizeof(Type) };
+    if constexpr (Extent == std::dynamic_extent)
+    {
+        if (bytes.size() % sizeof(Type) != 0) [[unlikely]]
+            throw span_size_error(bytes, sizeof(Type));
+    }
+    constexpr auto extent = Extent == std::dynamic_extent ? std::dynamic_extent : Extent / sizeof(Type);
+    return std::span<const Type, extent>{ reinterpret_cast<const Type*>(bytes.data()), bytes.size() / sizeof(Type) };
 }
 
 template <class Type, size_t Extent>
@@ -118,6 +125,35 @@ std::span<const std::byte, sizeof(Type)> as_bytes(const Type& value)
 template <std::integral Type>
 std::span<const std::byte, sizeof(Type)> as_bytes(const Type&& value) = delete;
 
+// as_uint(), as_int(), as_integer()
+
+template <std::integral Type, typename ByteType, size_t Extent>
+    requires std::is_same_v<std::remove_const_t<ByteType>, std::byte>
+    && (Extent == std::dynamic_extent || Extent == sizeof(Type))
+const Type&
+as_integer(std::span<ByteType, Extent> bytes)
+{
+    return *reinterpret_cast<const Type*>(bytes.data());
+}
+
+template <unsigned BitSize, typename ByteType, std::size_t Extent>
+    requires std::is_same_v<std::remove_const_t<ByteType>, std::byte>
+    && (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
+const meta::uint_n_t<BitSize>&
+as_uint(std::span<ByteType, Extent> bytes)
+{
+    return *reinterpret_cast<const meta::uint_n_t<BitSize>*>(bytes.data());
+}
+
+template <unsigned BitSize, typename ByteType, std::size_t Extent>
+    requires std::is_same_v<std::remove_const_t<ByteType>, std::byte>
+    && (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
+const meta::int_n_t<BitSize>&
+as_int(std::span<ByteType, Extent> bytes)
+{
+    return *reinterpret_cast<const meta::int_n_t<BitSize>*>(bytes.data());
+}
+
 // as_writable_bytes()
 
 template <std::integral Type>
@@ -125,6 +161,32 @@ std::span<std::byte, sizeof(Type)> as_writable_bytes(Type& value)
 {
     return std::span<std::byte, sizeof(Type)>(reinterpret_cast<std::byte*>(&value),
                                               reinterpret_cast<std::byte*>(&value) + sizeof(Type));
+}
+
+// as_writable_uint(), as_writable_int(), as_writable_integer()
+
+template <std::integral Type, size_t Extent>
+    requires(!std::is_const_v<Type>) && (Extent == std::dynamic_extent || Extent == sizeof(Type))
+Type&
+as_writable_integer(std::span<std::byte, Extent> bytes)
+{
+    return *reinterpret_cast<Type*>(bytes.data());
+}
+
+template <unsigned BitSize, size_t Extent>
+    requires (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
+meta::uint_n_t<BitSize>&
+as_writable_uint(std::span<std::byte, Extent> bytes)
+{
+    return *reinterpret_cast<meta::uint_n_t<BitSize>*>(bytes.data());
+}
+
+template <unsigned BitSize, std::size_t Extent>
+    requires (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
+meta::int_n_t<BitSize>&
+as_writable_int(std::span<std::byte, Extent> bytes)
+{
+    return *reinterpret_cast<meta::int_n_t<BitSize>*>(bytes.data());
 }
 
 } // namespace core
