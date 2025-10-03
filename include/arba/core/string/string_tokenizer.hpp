@@ -180,7 +180,8 @@ private:
 
 public:
     string_view_tokenizer() = default;
-    string_view_tokenizer(typename base_::string_view str, TokenizerFunction is_ch_sep) : base_(str, std::move(is_ch_sep))
+    string_view_tokenizer(typename base_::string_view str, TokenizerFunction is_ch_sep)
+        : base_(str, std::move(is_ch_sep))
     {
     }
 };
@@ -196,7 +197,8 @@ private:
 
 public:
     string_view_tokenizer() = default;
-    string_view_tokenizer(typename base_::string_view str, CharType ch_sep) : base_(str, char_tokenizer<CharType>(ch_sep))
+    string_view_tokenizer(typename base_::string_view str, CharType ch_sep)
+        : base_(str, char_tokenizer<CharType>(ch_sep))
     {
     }
 };
@@ -258,7 +260,8 @@ template <class TokenizerFunction, class CharType = char>
 class string_tokenizer;
 
 template <class TokenizerFunction, class CharType>
-class string_tokenizer : public impl::str_tokenizer_<TokenizerFunction, string_token_iterator<TokenizerFunction, CharType>>
+class string_tokenizer
+    : public impl::str_tokenizer_<TokenizerFunction, string_token_iterator<TokenizerFunction, CharType>>
 {
 private:
     using base_ = impl::str_tokenizer_<TokenizerFunction, string_token_iterator<TokenizerFunction, CharType>>;
@@ -287,8 +290,8 @@ class string_tokenizer<const CharType*, CharType>
                                   string_token_iterator<char_set_tokenizer<CharType>, CharType>>
 {
 private:
-    using base_ =
-        impl::str_tokenizer_<char_set_tokenizer<CharType>, string_token_iterator<char_set_tokenizer<CharType>, CharType>>;
+    using base_ = impl::str_tokenizer_<char_set_tokenizer<CharType>,
+                                       string_token_iterator<char_set_tokenizer<CharType>, CharType>>;
 
 public:
     string_tokenizer() = default;
@@ -304,8 +307,8 @@ class string_tokenizer<std::basic_string_view<CharType>, CharType>
                                   string_token_iterator<char_set_tokenizer<CharType>, CharType>>
 {
 private:
-    using base_ =
-        impl::str_tokenizer_<char_set_tokenizer<CharType>, string_token_iterator<char_set_tokenizer<CharType>, CharType>>;
+    using base_ = impl::str_tokenizer_<char_set_tokenizer<CharType>,
+                                       string_token_iterator<char_set_tokenizer<CharType>, CharType>>;
 
 public:
     string_tokenizer() = default;
@@ -321,8 +324,8 @@ class string_tokenizer<std::basic_string<CharType>, CharType>
                                   string_token_iterator<char_set_tokenizer<CharType>, CharType>>
 {
 private:
-    using base_ =
-        impl::str_tokenizer_<char_set_tokenizer<CharType>, string_token_iterator<char_set_tokenizer<CharType>, CharType>>;
+    using base_ = impl::str_tokenizer_<char_set_tokenizer<CharType>,
+                                       string_token_iterator<char_set_tokenizer<CharType>, CharType>>;
 
 public:
     string_tokenizer() = default;
