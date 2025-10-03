@@ -14,7 +14,7 @@ struct std::formatter<std::byte, CharT>
         auto iter = ctx.begin();
         if (iter == ctx.end())
             return iter;
-        constexpr std::array<CharT, 7> chs = {'u', 'i', 'x', 'b', 'o', 'c', '0'};
+        constexpr std::array<CharT, 7> chs = { 'u', 'i', 'x', 'b', 'o', 'c', '0' };
         constexpr uint8_t zero_ch_index = 6;
         auto find_iter = std::ranges::find(chs, *iter);
         if (find_iter == chs.end()) [[unlikely]]

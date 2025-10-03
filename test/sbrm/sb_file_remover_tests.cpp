@@ -6,7 +6,8 @@
 
 std::filesystem::path resource_dir(const std::filesystem::path& test_dir)
 {
-    std::filesystem::path rsc_dpath = std::filesystem::temp_directory_path() / "arba/core" / "sbrm_tests" / test_dir / "rsc";
+    std::filesystem::path rsc_dpath =
+        std::filesystem::temp_directory_path() / "arba/core" / "sbrm_tests" / test_dir / "rsc";
     std::filesystem::create_directories(rsc_dpath);
     return rsc_dpath;
 }

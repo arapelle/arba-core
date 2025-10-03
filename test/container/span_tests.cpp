@@ -255,7 +255,12 @@ unsigned count_bytes()
     Type value = 0;
     unsigned counter = 0;
     std::span<const std::byte, sizeof(value)> bytes = core::as_bytes(value);
-    std::ranges::for_each(bytes, [&](const std::byte& b){ if (b == std::byte{0x00}) ++counter; });
+    std::ranges::for_each(bytes,
+                          [&](const std::byte& b)
+                          {
+                              if (b == std::byte{ 0x00 })
+                                  ++counter;
+                          });
     return counter;
 }
 
@@ -282,7 +287,7 @@ Type transform_integer()
 {
     Type value;
     std::span<std::byte, sizeof(value)> bytes = core::as_writable_bytes(value);
-    std::ranges::for_each(bytes, [](std::byte& b){ b = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& b) { b = std::byte{ 0x02 }; });
     return value;
 }
 
@@ -308,7 +313,7 @@ template <std::integral Type>
 Type const_bytes_to_const_integer()
 {
     std::array<std::byte, sizeof(Type)> bytes;
-    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& value) { value = std::byte{ 0x02 }; });
     std::span<const std::byte, sizeof(Type)> bytes_span(bytes);
     const Type& cref = core::as_integer<Type>(bytes_span);
     return cref;
@@ -318,7 +323,7 @@ template <std::size_t BitSize>
 auto const_bytes_to_const_uint()
 {
     std::array<std::byte, BitSize / 8> bytes;
-    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& value) { value = std::byte{ 0x02 }; });
     std::span<const std::byte, sizeof(bytes)> bytes_span(bytes);
     const meta::uint_n_t<BitSize>& cref = core::as_uint<BitSize>(bytes_span);
     return cref;
@@ -328,7 +333,7 @@ template <std::size_t BitSize>
 auto const_bytes_to_const_int()
 {
     std::array<std::byte, BitSize / 8> bytes;
-    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& value) { value = std::byte{ 0x02 }; });
     std::span<const std::byte, sizeof(bytes)> bytes_span(bytes);
     const meta::int_n_t<BitSize>& cref = core::as_int<BitSize>(bytes_span);
     return cref;
@@ -338,7 +343,7 @@ template <std::integral Type>
 Type bytes_to_const_integer()
 {
     std::array<std::byte, sizeof(Type)> bytes;
-    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& value) { value = std::byte{ 0x02 }; });
     std::span<std::byte, sizeof(Type)> bytes_span(bytes);
     const Type& cref = core::as_integer<Type>(bytes_span);
     return cref;
@@ -348,7 +353,7 @@ template <std::size_t BitSize>
 auto bytes_to_const_uint()
 {
     std::array<std::byte, BitSize / 8> bytes;
-    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& value) { value = std::byte{ 0x02 }; });
     std::span<std::byte, sizeof(bytes)> bytes_span(bytes);
     const meta::uint_n_t<BitSize>& cref = core::as_uint<BitSize>(bytes_span);
     return cref;
@@ -358,7 +363,7 @@ template <std::size_t BitSize>
 auto bytes_to_const_int()
 {
     std::array<std::byte, BitSize / 8> bytes;
-    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& value) { value = std::byte{ 0x02 }; });
     std::span<std::byte, sizeof(bytes)> bytes_span(bytes);
     const meta::int_n_t<BitSize>& cref = core::as_int<BitSize>(bytes_span);
     return cref;
@@ -434,7 +439,7 @@ template <std::integral Type>
 Type bytes_to_integer()
 {
     std::array<std::byte, sizeof(Type)> bytes;
-    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& value) { value = std::byte{ 0x02 }; });
     std::span<std::byte, sizeof(Type)> bytes_span(bytes);
     Type& ref = core::as_writable_integer<Type>(bytes_span);
     return ref;
@@ -444,7 +449,7 @@ template <std::size_t BitSize>
 auto bytes_to_uint()
 {
     std::array<std::byte, BitSize / 8> bytes;
-    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& value) { value = std::byte{ 0x02 }; });
     std::span<std::byte, sizeof(bytes)> bytes_span(bytes);
     meta::uint_n_t<BitSize>& ref = core::as_writable_uint<BitSize>(bytes_span);
     return ref;
@@ -454,7 +459,7 @@ template <std::size_t BitSize>
 auto bytes_to_int()
 {
     std::array<std::byte, BitSize / 8> bytes;
-    std::ranges::for_each(bytes, [](std::byte& value){ value = std::byte{0x02}; });
+    std::ranges::for_each(bytes, [](std::byte& value) { value = std::byte{ 0x02 }; });
     std::span<std::byte, sizeof(bytes)> bytes_span(bytes);
     meta::int_n_t<BitSize>& ref = core::as_writable_int<BitSize>(bytes_span);
     return ref;

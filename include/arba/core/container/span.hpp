@@ -19,12 +19,14 @@ class span_size_error : public std::invalid_argument
 {
 public:
     span_size_error(const std::span<std::byte>& bytes, std::size_t type_size)
-        : std::invalid_argument(std::format("Bytes size ({}) does not match N size of Type ({}).", bytes.size(), type_size))
+        : std::invalid_argument(
+              std::format("Bytes size ({}) does not match N size of Type ({}).", bytes.size(), type_size))
     {
     }
 
     span_size_error(const std::span<const std::byte>& bytes, std::size_t type_size)
-        : std::invalid_argument(std::format("Bytes size ({}) does not match N size of Type ({}).", bytes.size(), type_size))
+        : std::invalid_argument(
+              std::format("Bytes size ({}) does not match N size of Type ({}).", bytes.size(), type_size))
     {
     }
 };
@@ -129,27 +131,24 @@ std::span<const std::byte, sizeof(Type)> as_bytes(const Type&& value) = delete;
 
 template <std::integral Type, typename ByteType, size_t Extent>
     requires std::is_same_v<std::remove_const_t<ByteType>, std::byte>
-    && (Extent == std::dynamic_extent || Extent == sizeof(Type))
-const Type&
-as_integer(std::span<ByteType, Extent> bytes)
+             && (Extent == std::dynamic_extent || Extent == sizeof(Type))
+const Type& as_integer(std::span<ByteType, Extent> bytes)
 {
     return *reinterpret_cast<const Type*>(bytes.data());
 }
 
 template <unsigned BitSize, typename ByteType, std::size_t Extent>
     requires std::is_same_v<std::remove_const_t<ByteType>, std::byte>
-    && (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
-const meta::uint_n_t<BitSize>&
-as_uint(std::span<ByteType, Extent> bytes)
+             && (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
+const meta::uint_n_t<BitSize>& as_uint(std::span<ByteType, Extent> bytes)
 {
     return *reinterpret_cast<const meta::uint_n_t<BitSize>*>(bytes.data());
 }
 
 template <unsigned BitSize, typename ByteType, std::size_t Extent>
     requires std::is_same_v<std::remove_const_t<ByteType>, std::byte>
-    && (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
-const meta::int_n_t<BitSize>&
-as_int(std::span<ByteType, Extent> bytes)
+             && (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
+const meta::int_n_t<BitSize>& as_int(std::span<ByteType, Extent> bytes)
 {
     return *reinterpret_cast<const meta::int_n_t<BitSize>*>(bytes.data());
 }
@@ -167,24 +166,21 @@ std::span<std::byte, sizeof(Type)> as_writable_bytes(Type& value)
 
 template <std::integral Type, size_t Extent>
     requires(!std::is_const_v<Type>) && (Extent == std::dynamic_extent || Extent == sizeof(Type))
-Type&
-as_writable_integer(std::span<std::byte, Extent> bytes)
+Type& as_writable_integer(std::span<std::byte, Extent> bytes)
 {
     return *reinterpret_cast<Type*>(bytes.data());
 }
 
 template <unsigned BitSize, size_t Extent>
-    requires (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
-meta::uint_n_t<BitSize>&
-as_writable_uint(std::span<std::byte, Extent> bytes)
+    requires(Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
+meta::uint_n_t<BitSize>& as_writable_uint(std::span<std::byte, Extent> bytes)
 {
     return *reinterpret_cast<meta::uint_n_t<BitSize>*>(bytes.data());
 }
 
 template <unsigned BitSize, std::size_t Extent>
-    requires (Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
-meta::int_n_t<BitSize>&
-as_writable_int(std::span<std::byte, Extent> bytes)
+    requires(Extent == std::dynamic_extent || ((Extent * 8) == BitSize))
+meta::int_n_t<BitSize>& as_writable_int(std::span<std::byte, Extent> bytes)
 {
     return *reinterpret_cast<meta::int_n_t<BitSize>*>(bytes.data());
 }

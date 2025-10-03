@@ -5,12 +5,12 @@
 #include <arba/meta/type_traits/kwargs.hpp>
 
 #include <cstdint>
-#include <span>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <optional>
 #include <format>
+#include <fstream>
+#include <optional>
+#include <span>
+#include <sstream>
+#include <string>
 
 inline namespace arba
 {
@@ -28,19 +28,14 @@ ARBA_META_KWARG(chunk_end, std::string);
 ARBA_META_KWARG(nb_units_per_chunk, uint32_t);
 ARBA_META_KWARG(force_chunk_end, bool);
 
-}
+} // namespace bytes_formatter_kwargs
 
 template <class T>
-concept BytesFormatterKwarg = meta::Kwarg<T,
-                            bytes_formatter_kwargs::unit_format,
-                            bytes_formatter_kwargs::unit_sep,
-                            bytes_formatter_kwargs::seq_beginning,
-                            bytes_formatter_kwargs::seq_end,
-                            bytes_formatter_kwargs::chunk_beginning,
-                            bytes_formatter_kwargs::chunk_end,
-                            bytes_formatter_kwargs::nb_units_per_chunk,
-                            bytes_formatter_kwargs::force_chunk_end
-                            >;
+concept BytesFormatterKwarg =
+    meta::Kwarg<T, bytes_formatter_kwargs::unit_format, bytes_formatter_kwargs::unit_sep,
+                bytes_formatter_kwargs::seq_beginning, bytes_formatter_kwargs::seq_end,
+                bytes_formatter_kwargs::chunk_beginning, bytes_formatter_kwargs::chunk_end,
+                bytes_formatter_kwargs::nb_units_per_chunk, bytes_formatter_kwargs::force_chunk_end>;
 
 class bytes_formatter
 {
@@ -48,7 +43,7 @@ class bytes_formatter
 
 public:
     template <typename... Kwargs>
-        requires (BytesFormatterKwarg<Kwargs> && ...)
+        requires(BytesFormatterKwarg<Kwargs> && ...)
     bytes_formatter(Kwargs&&... kwargs)
     {
         meta::kwargs_parser<Kwargs...> k_parser(std::forward<Kwargs>(kwargs)...);
@@ -59,7 +54,8 @@ public:
         chunk_beginning_ = k_parser.template arg_or_default<bytes_formatter_kwargs::chunk_beginning>("");
         chunk_end_ = k_parser.template arg_or_default<bytes_formatter_kwargs::chunk_end>("\n");
         nb_units_per_chunk_ = k_parser.template arg_or_default<bytes_formatter_kwargs::nb_units_per_chunk>(32);
-        force_chunk_end_ = k_parser.template arg_or_default<bytes_formatter_kwargs::force_chunk_end>(!chunk_beginning_.empty());
+        force_chunk_end_ =
+            k_parser.template arg_or_default<bytes_formatter_kwargs::force_chunk_end>(!chunk_beginning_.empty());
     }
 
     [[nodiscard]] inline const std::string& unit_format() const { return unit_format_; }
@@ -87,25 +83,28 @@ public:
     inline void set_force_chunk_end(bool force_chunk_end) { force_chunk_end_ = force_chunk_end; }
 
 public:
-    void format_binary_stream_to(std::istream &input_stream, std::ostream& output_stream, std::size_t first_unit_index = 0) const;
-    void format_binary_cstream_to(FILE* input_stream, std::ostream& output_stream, std::size_t first_unit_index = 0) const;
-    void format_bytes_to(std::span<const std::byte> bytes, std::ostream& output_stream, std::size_t first_unit_index = 0) const;
+    void format_binary_stream_to(std::istream& input_stream, std::ostream& output_stream,
+                                 std::size_t first_unit_index = 0) const;
+    void format_binary_cstream_to(FILE* input_stream, std::ostream& output_stream,
+                                  std::size_t first_unit_index = 0) const;
+    void format_bytes_to(std::span<const std::byte> bytes, std::ostream& output_stream,
+                         std::size_t first_unit_index = 0) const;
 
-    [[nodiscard]] std::string format_binary_stream(std::istream &input_stream, std::size_t first_unit_index = 0) const;
+    [[nodiscard]] std::string format_binary_stream(std::istream& input_stream, std::size_t first_unit_index = 0) const;
     [[nodiscard]] std::string format_binary_cstream(FILE* input_stream, std::size_t first_unit_index = 0) const;
     [[nodiscard]] std::string format_bytes(std::span<const std::byte> bytes, std::size_t first_byte_index = 0) const;
 
 private:
     [[nodiscard]] inline bool uses_simple_format_() const { return unit_format_ == "{}"; }
-    void format_bytes_to_(std::span<const std::byte> bytes, std::ostream& output_stream,
-                          std::size_t& unit_counter, std::size_t& unit_index) const;
-    bool format_byte_to_(std::byte byte, std::ostream& output_stream,
-                         std::size_t& unit_counter, std::size_t& unit_index,
-                         std::string_view unit_sep, bool use_simple_format) const;
-    inline void format_last_byte_to_(std::byte byte, std::ostream& output_stream,
-                                     std::size_t& unit_counter, std::size_t& unit_index) const
+    void format_bytes_to_(std::span<const std::byte> bytes, std::ostream& output_stream, std::size_t& unit_counter,
+                          std::size_t& unit_index) const;
+    bool format_byte_to_(std::byte byte, std::ostream& output_stream, std::size_t& unit_counter,
+                         std::size_t& unit_index, std::string_view unit_sep, bool use_simple_format) const;
+    inline void format_last_byte_to_(std::byte byte, std::ostream& output_stream, std::size_t& unit_counter,
+                                     std::size_t& unit_index) const
     {
-        if (!format_byte_to_(byte, output_stream, unit_counter, unit_index, "", uses_simple_format_()) && force_chunk_end_)
+        if (!format_byte_to_(byte, output_stream, unit_counter, unit_index, "", uses_simple_format_())
+            && force_chunk_end_)
             output_stream << chunk_end_;
     }
 
@@ -120,7 +119,8 @@ private:
     bool force_chunk_end_;
 };
 
-inline void bytes_formatter::format_binary_stream_to(std::istream& input_stream, std::ostream& output_stream, std::size_t unit_index) const
+inline void bytes_formatter::format_binary_stream_to(std::istream& input_stream, std::ostream& output_stream,
+                                                     std::size_t unit_index) const
 {
     const std::size_t current_pos = input_stream.tellg();
     input_stream.seekg(0, std::ios::end);
@@ -155,7 +155,8 @@ inline void bytes_formatter::format_binary_stream_to(std::istream& input_stream,
     output_stream << seq_end_;
 }
 
-inline void bytes_formatter::format_binary_cstream_to(FILE *input_stream, std::ostream &output_stream, std::size_t unit_index) const
+inline void bytes_formatter::format_binary_cstream_to(FILE* input_stream, std::ostream& output_stream,
+                                                      std::size_t unit_index) const
 {
     output_stream << seq_beginning_;
 
@@ -179,7 +180,8 @@ inline void bytes_formatter::format_binary_cstream_to(FILE *input_stream, std::o
     output_stream << seq_end_;
 }
 
-inline void bytes_formatter::format_bytes_to(std::span<const std::byte> bytes, std::ostream &output_stream, std::size_t unit_index) const
+inline void bytes_formatter::format_bytes_to(std::span<const std::byte> bytes, std::ostream& output_stream,
+                                             std::size_t unit_index) const
 {
     output_stream << seq_beginning_;
     if (bytes.size() > 0) [[likely]]
@@ -191,14 +193,14 @@ inline void bytes_formatter::format_bytes_to(std::span<const std::byte> bytes, s
     output_stream << seq_end_;
 }
 
-inline std::string bytes_formatter::format_binary_stream(std::istream &input_stream, std::size_t first_unit_index) const
+inline std::string bytes_formatter::format_binary_stream(std::istream& input_stream, std::size_t first_unit_index) const
 {
     std::ostringstream stream;
     format_binary_stream_to(input_stream, stream, first_unit_index);
     return stream.str();
 }
 
-inline std::string bytes_formatter::format_binary_cstream(FILE *input_stream, std::size_t first_unit_index) const
+inline std::string bytes_formatter::format_binary_cstream(FILE* input_stream, std::size_t first_unit_index) const
 {
     std::ostringstream stream;
     format_binary_cstream_to(input_stream, stream, first_unit_index);
@@ -221,7 +223,8 @@ inline void bytes_formatter::format_bytes_to_(std::span<const std::byte> bytes, 
 }
 
 inline bool bytes_formatter::format_byte_to_(std::byte byte, std::ostream& output_stream, std::size_t& unit_counter,
-                                             std::size_t &unit_index, std::string_view unit_separator, bool use_simple_format) const
+                                             std::size_t& unit_index, std::string_view unit_separator,
+                                             bool use_simple_format) const
 {
     if (unit_counter == 0) [[unlikely]]
         output_stream << chunk_beginning_;
@@ -241,7 +244,7 @@ inline bool bytes_formatter::format_byte_to_(std::byte byte, std::ostream& outpu
 }
 
 template <typename... Kwargs>
-    requires (BytesFormatterKwarg<Kwargs> && ...)
+    requires(BytesFormatterKwarg<Kwargs> && ...)
 [[nodiscard]] inline std::string format_bytes(std::span<const std::byte> bytes, Kwargs&&... kwargs)
 {
     const bytes_formatter formatter(std::forward<Kwargs>(kwargs)...);
@@ -249,12 +252,13 @@ template <typename... Kwargs>
 }
 
 template <typename... Kwargs>
-    requires (BytesFormatterKwarg<Kwargs> && ...)
-[[nodiscard]] inline std::string format_bytes(std::span<const std::byte> bytes, std::size_t first_byte_index, Kwargs&&... kwargs)
+    requires(BytesFormatterKwarg<Kwargs> && ...)
+[[nodiscard]] inline std::string format_bytes(std::span<const std::byte> bytes, std::size_t first_byte_index,
+                                              Kwargs&&... kwargs)
 {
     const bytes_formatter formatter(std::forward<Kwargs>(kwargs)...);
     return formatter.format_bytes(bytes, first_byte_index);
 }
 
-}
-}
+} // namespace core
+} // namespace arba

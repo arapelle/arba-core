@@ -31,5 +31,5 @@ template <std::ranges::view ViewType>
     return div_range_(std::move(view), chunk_size);
 }
 
-}
-}
+} // namespace core
+} // namespace arba

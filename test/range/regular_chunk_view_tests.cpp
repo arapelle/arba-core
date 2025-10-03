@@ -3,12 +3,14 @@
 #include <gtest/gtest.h>
 
 #include <cstdlib>
-#include <vector>
 #include <list>
+#include <vector>
 
 TEST(regular_chunk_view_tests, regular_chunk_range__fit_vector__ok)
 {
-    std::vector<int> data = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24};
+    std::vector<int> data = {
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24
+    };
 
     using range_iterator_t = std::ranges::iterator_t<decltype(data)>;
     using regular_chunk_iterator_t = core::regular_chunk_iterator<range_iterator_t>;
@@ -59,7 +61,8 @@ TEST(regular_chunk_view_tests, regular_chunk_range__fit_vector__ok)
 
 TEST(regular_chunk_view_tests, regular_chunk_range__vector__ok)
 {
-    std::vector<int> data = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28};
+    std::vector<int> data = { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14,
+                              15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 };
 
     auto data_view = std::views::all(data);
 
@@ -86,7 +89,7 @@ TEST(regular_chunk_view_tests, regular_chunk_range__vector__ok)
 
 TEST(regular_chunk_view_tests, regular_chunk_range__fit_list__ok)
 {
-    std::list<int> data = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24};
+    std::list<int> data = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 };
 
     using range_iterator_t = std::ranges::iterator_t<decltype(data)>;
     using regular_chunk_iterator_t = core::regular_chunk_iterator<range_iterator_t>;
@@ -140,7 +143,8 @@ TEST(regular_chunk_view_tests, regular_chunk_range__fit_list__ok)
 
 TEST(regular_chunk_view_tests, regular_chunk_range__list__ok)
 {
-    std::list<int> data = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28};
+    std::list<int> data = { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14,
+                            15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 };
 
     auto data_view = std::views::all(data);
 

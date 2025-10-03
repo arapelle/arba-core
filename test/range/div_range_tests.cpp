@@ -3,12 +3,13 @@
 #include <gtest/gtest.h>
 
 #include <cstdlib>
-#include <vector>
 #include <list>
+#include <vector>
 
 TEST(div_range_tests, div_range__vector__ok)
 {
-    std::vector<int> data = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26};
+    std::vector<int> data = { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+                              14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26 };
 
     const std::size_t chunk_size = 6;
     auto [chunks, remain_chunk] = core::div_range(data, chunk_size);
@@ -38,7 +39,8 @@ TEST(div_range_tests, div_range__vector__ok)
 
 TEST(div_range_tests, div_range__vector_view__ok)
 {
-    std::vector<int> data = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26};
+    std::vector<int> data = { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+                              14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26 };
 
     const std::size_t chunk_size = 6;
     auto [chunks, remain_chunk] = core::div_range(std::views::take(data, 26), chunk_size);
