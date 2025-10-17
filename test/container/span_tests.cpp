@@ -105,7 +105,7 @@ TEST(span_tests, as_span__maythrow__no_throw)
     {
         std::array<uint8_t, 6> bytes{ 'a', 'b', 'c', 'd', 'e', 'f' };
         std::span<std::byte> bytes_span = std::as_writable_bytes(std::span(bytes));
-        std::span<const tri_char> tri_char_span = core::as_span<tri_char>(bytes_span, meta::maythrow);
+        std::span<const tri_char> tri_char_span = core::as_span<tri_char>(bytes_span, cppx::maythrow);
         ASSERT_EQ(reinterpret_cast<const void*>(tri_char_span.data()), reinterpret_cast<void*>(bytes.data()));
         ASSERT_EQ(tri_char_span.size(), 2);
         ASSERT_EQ(tri_char_span[0].first, 'a');
@@ -127,7 +127,7 @@ TEST(span_tests, as_span__maythrow__throw_span_size_error)
     {
         std::array<uint8_t, 5> bytes{ 'a', 'b', 'c', 'd', 'e' };
         std::span<std::byte> bytes_span = std::as_writable_bytes(std::span(bytes));
-        [[maybe_unused]] std::span<const tri_char> tri_char_span = core::as_span<tri_char>(bytes_span, meta::maythrow);
+        [[maybe_unused]] std::span<const tri_char> tri_char_span = core::as_span<tri_char>(bytes_span, cppx::maythrow);
         FAIL();
     }
     catch (const core::span_size_error& err)
@@ -211,7 +211,7 @@ TEST(span_tests, as_writable_span__maythrow__no_throw_span_size_2)
     {
         std::array<uint8_t, 6> bytes{ 'a', 'b', 'c', 'd', 'e', 'f' };
         std::span<std::byte> bytes_span = std::as_writable_bytes(std::span(bytes));
-        std::span<tri_char> tri_char_span = core::as_writable_span<tri_char>(bytes_span, meta::maythrow);
+        std::span<tri_char> tri_char_span = core::as_writable_span<tri_char>(bytes_span, cppx::maythrow);
         ASSERT_EQ(reinterpret_cast<void*>(tri_char_span.data()), reinterpret_cast<void*>(bytes.data()));
         ASSERT_EQ(tri_char_span.size(), 2);
         ASSERT_EQ(tri_char_span[0].first, 'a');
@@ -234,7 +234,7 @@ TEST(span_tests, as_writable_span__maythrow__throw_span_size_error)
         std::array<uint8_t, 5> bytes{ 'a', 'b', 'c', 'd', 'e' };
         std::span<std::byte> bytes_span = std::as_writable_bytes(std::span(bytes));
         [[maybe_unused]] std::span<const tri_char> tri_char_span =
-            core::as_writable_span<tri_char>(bytes_span, meta::maythrow);
+            core::as_writable_span<tri_char>(bytes_span, cppx::maythrow);
         FAIL();
     }
     catch (const core::span_size_error& err)
