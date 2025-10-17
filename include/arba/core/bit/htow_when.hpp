@@ -2,7 +2,7 @@
 
 #include "htow.hpp"
 
-#include <arba/meta/policy/endianness_policy.hpp>
+#include <arba/meta/concept/policy/endianness_policy.hpp>
 
 inline namespace arba
 {

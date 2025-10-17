@@ -1,6 +1,6 @@
 #pragma once
 
-#include <arba/meta/policy/exception_policy.hpp>
+#include <arba/meta/concept/policy/exception_policy.hpp>
 #include <arba/meta/type_traits/integer_n.hpp>
 
 #include <format>
