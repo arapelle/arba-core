@@ -2,7 +2,7 @@
 
 #include "htow.hpp"
 
-#include <arba/meta/policy/endianness_policy.hpp>
+#include <arba/cppx/policy/endianness_policy.hpp>
 
 inline namespace arba
 {
@@ -11,13 +11,13 @@ namespace core
 // Host TO World:
 
 template <ByteSwappable T>
-inline T htow_when(T value, meta::endianness_neutral_t)
+inline T htow_when(T value, cppx::endianness_neutral_t)
 {
     return htow(value);
 }
 
 template <ByteSwappable T>
-inline T htow_when(T value, meta::endianness_specific_t)
+inline T htow_when(T value, cppx::endianness_specific_t)
 {
     return value;
 }
@@ -25,13 +25,13 @@ inline T htow_when(T value, meta::endianness_specific_t)
 // World TO Host:
 
 template <ByteSwappable T>
-inline T wtoh_when(T value, meta::endianness_neutral_t)
+inline T wtoh_when(T value, cppx::endianness_neutral_t)
 {
     return wtoh(value);
 }
 
 template <ByteSwappable T>
-inline T wtoh_when(T value, meta::endianness_specific_t)
+inline T wtoh_when(T value, cppx::endianness_specific_t)
 {
     return value;
 }
